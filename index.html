@@ -1,584 +1,570 @@
 <!DOCTYPE html>
-<html lang="th">
+<html lang="en">
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>ตารางสอนพิเศษ</title>
+<title>Tutor Schedule</title>
+<link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;500;600;700;800;900&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
 <style>
-  * { box-sizing: border-box; margin: 0; padding: 0; }
-  :root {
-    --bg: #ffffff; --bg2: #f7f7f5; --bg3: #f0efe9;
-    --text: #1a1a1a; --text2: #6b6b6b; --text3: #9a9a9a;
-    --border: rgba(0,0,0,0.1); --border2: rgba(0,0,0,0.18);
-    --math: #EEEDFE; --math-t: #3C3489;
-    --phy: #E1F5EE; --phy-t: #085041;
-    --py: #FAEEDA; --py-t: #633806;
-    --radius: 10px; --radius-sm: 6px;
-  }
-  @media (prefers-color-scheme: dark) {
-    :root {
-      --bg: #1c1c1e; --bg2: #2c2c2e; --bg3: #3a3a3c;
-      --text: #f2f2f7; --text2: #aeaeb2; --text3: #636366;
-      --border: rgba(255,255,255,0.1); --border2: rgba(255,255,255,0.18);
-    }
-  }
-  body { font-family: -apple-system, 'Sarabun', sans-serif; background: var(--bg3); color: var(--text); min-height: 100vh; }
-  .app { max-width: 900px; margin: 0 auto; padding: 16px; }
-  h1 { font-size: 20px; font-weight: 600; margin-bottom: 4px; }
-  .subtitle { font-size: 13px; color: var(--text2); margin-bottom: 16px; }
+:root{
+--bg:#e8f6ef;--bg2:#f0faf4;--white:#fff;--sidebar:#fff;
+--border:#d2e8da;--border2:#e4f0e8;
+--tx:#1a2e22;--tx2:#4a6b55;--tx3:#8aaa95;
+--grn:#2ecc71;--grn2:#27ae60;--grn3:#1e8449;--grnL:rgba(46,204,113,.10);--grnL2:rgba(46,204,113,.18);
+--org:#f39c12;--orgL:rgba(243,156,18,.10);--orgF:#9a6e10;
+--pnk:#e84393;--pnkL:rgba(232,67,147,.10);--pnkF:#a32d68;
+--blu:#3498db;--bluL:rgba(52,152,219,.10);--bluF:#2271a3;
+--red:#e74c3c;--redL:rgba(231,76,60,.10);--redF:#a93226;
+--mathBg:#fff8e1;--mathF:#7c6210;--mathB:#ffd54f;
+--phyBg:#fce4ec;--phyF:#880e4f;--phyB:#f06292;
+--pyBg:#e0f2f1;--pyF:#004d40;--pyB:#26a69a;
+--r:20px;--r2:14px;--r3:10px;
+--sh:0 2px 16px rgba(0,0,0,.05);--sh2:0 8px 32px rgba(0,0,0,.07);
+}
+*{margin:0;padding:0;box-sizing:border-box}
+body{font-family:'Nunito',sans-serif;background:var(--bg);color:var(--tx);min-height:100vh;line-height:1.55}
+.mono{font-family:'JetBrains Mono',monospace}
 
-  /* Setup screen */
-  #setup-screen { background: var(--bg); border-radius: var(--radius); border: 1px solid var(--border); padding: 24px; margin-bottom: 16px; }
-  #setup-screen h2 { font-size: 16px; font-weight: 600; margin-bottom: 8px; }
-  #setup-screen p { font-size: 13px; color: var(--text2); margin-bottom: 16px; line-height: 1.6; }
-  .steps { display: flex; flex-direction: column; gap: 12px; margin-bottom: 20px; }
-  .step { display: flex; gap: 12px; align-items: flex-start; }
-  .step-num { width: 24px; height: 24px; border-radius: 50%; background: var(--math); color: var(--math-t); font-size: 12px; font-weight: 600; display: flex; align-items: center; justify-content: center; flex-shrink: 0; margin-top: 1px; }
-  .step-text { font-size: 13px; line-height: 1.6; color: var(--text); }
-  .step-text a { color: var(--math-t); }
-  .step-text code { background: var(--bg3); padding: 1px 5px; border-radius: 4px; font-size: 12px; font-family: monospace; }
-  .input-row { display: flex; gap: 8px; }
-  .input-row input { flex: 1; padding: 9px 12px; border-radius: var(--radius-sm); border: 1px solid var(--border2); background: var(--bg2); font-size: 13px; color: var(--text); font-family: inherit; }
-  .input-row input:focus { outline: none; border-color: var(--math-t); }
-  .btn { padding: 9px 18px; border-radius: var(--radius-sm); border: 1px solid var(--border2); background: var(--bg2); color: var(--text); font-size: 13px; cursor: pointer; font-family: inherit; font-weight: 500; }
-  .btn:hover { background: var(--bg3); }
-  .btn.primary { background: var(--math); color: var(--math-t); border-color: transparent; }
-  .btn.primary:hover { opacity: 0.85; }
-  .btn.danger { color: #A32D2D; border-color: #F09595; }
-  .btn.small { padding: 5px 12px; font-size: 12px; }
+/* LAYOUT */
+.app{display:flex;min-height:100vh}
 
-  /* Nav */
-  .nav { display: flex; gap: 6px; margin-bottom: 16px; flex-wrap: wrap; }
-  .nav button { padding: 6px 14px; border-radius: 20px; font-size: 13px; cursor: pointer; border: 1px solid var(--border2); background: var(--bg2); color: var(--text2); font-family: inherit; }
-  .nav button.on { background: var(--bg); color: var(--text); border-color: var(--border2); font-weight: 600; }
+/* SIDEBAR */
+.sb{width:230px;background:var(--sidebar);padding:20px 14px;display:flex;flex-direction:column;gap:2px;position:fixed;top:0;left:0;bottom:0;z-index:100;border-right:1px solid var(--border2);overflow-y:auto}
+.sb-logo{padding:12px 10px 28px;display:flex;align-items:center;gap:10px}
+.sb-ico{width:42px;height:42px;background:var(--grn);border-radius:14px;display:flex;align-items:center;justify-content:center;color:#fff;font-size:20px;font-weight:900}
+.sb-txt{font-size:20px;font-weight:900;letter-spacing:-.5px}
+.ni{padding:11px 14px;border-radius:var(--r2);cursor:pointer;font-size:15px;font-weight:700;color:var(--tx2);transition:all .2s;display:flex;align-items:center;gap:11px}
+.ni:hover{background:var(--grnL);color:var(--grn2)}
+.ni.on{background:var(--grn);color:#fff;box-shadow:0 4px 16px rgba(46,204,113,.35)}
+.ni-i{width:22px;text-align:center;font-size:17px}
+.ni-sep{height:1px;background:var(--border2);margin:10px 4px}
 
-  /* Cards */
-  .card { background: var(--bg); border-radius: var(--radius); border: 1px solid var(--border); padding: 14px 16px; margin-bottom: 10px; }
-  .card-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 12px; }
-  .card-header h3 { font-size: 14px; font-weight: 600; }
+/* PROMO CARD in sidebar */
+.sb-promo{margin-top:auto;padding:20px 16px;background:linear-gradient(135deg,var(--grnL2),var(--grnL));border-radius:var(--r);position:relative;overflow:hidden}
+.sb-promo::before{content:'';position:absolute;top:-20px;right:-20px;width:80px;height:80px;background:var(--grn);opacity:.15;border-radius:50%}
+.sb-promo::after{content:'';position:absolute;bottom:-15px;left:-15px;width:60px;height:60px;background:var(--grn);opacity:.1;border-radius:50%}
+.sb-promo-title{font-size:14px;font-weight:800;color:var(--grn3);position:relative;z-index:1}
+.sb-promo-sub{font-size:12px;color:var(--tx2);margin-top:4px;position:relative;z-index:1}
 
-  /* Stats */
-  .stat-grid { display: grid; grid-template-columns: repeat(3, minmax(0,1fr)); gap: 8px; margin-bottom: 14px; }
-  .stat { background: var(--bg2); border-radius: var(--radius-sm); padding: 10px 12px; }
-  .stat .label { font-size: 11px; color: var(--text2); margin-bottom: 3px; }
-  .stat .value { font-size: 22px; font-weight: 600; }
+.gcal-box{padding:14px;background:var(--bg2);border-radius:var(--r2);border:1.5px solid var(--border);margin-top:12px}
+.gcal-dot{display:inline-block;width:9px;height:9px;border-radius:50%;margin-right:6px}
+.gcal-dot.on{background:var(--grn);box-shadow:0 0 8px rgba(46,204,113,.5)}
+.gcal-dot.off{background:var(--red)}
+.gcal-lbl{font-size:13px;color:var(--tx2);font-weight:600}
+.gcal-btn{margin-top:10px;width:100%;padding:9px;border-radius:var(--r3);border:1.5px solid var(--border);background:var(--white);color:var(--tx2);cursor:pointer;font-family:'Nunito',sans-serif;font-size:13px;font-weight:700;transition:all .2s}
+.gcal-btn:hover{border-color:var(--grn);color:var(--grn)}
 
-  /* Week grid */
-  .week-nav { display: flex; align-items: center; gap: 10px; margin-bottom: 12px; }
-  .week-nav h3 { font-size: 14px; font-weight: 600; flex: 1; }
-  .week-grid { display: grid; grid-template-columns: 56px repeat(5, minmax(0,1fr)); gap: 3px; }
-  .wh { font-size: 11px; font-weight: 600; color: var(--text2); text-align: center; padding: 4px 2px; }
-  .wt { font-size: 10px; color: var(--text3); padding: 3px 2px; display: flex; align-items: center; }
-  .wc { min-height: 46px; background: var(--bg2); border-radius: 6px; border: 1px solid var(--border); padding: 3px; cursor: pointer; transition: border-color 0.15s; }
-  .wc:hover { border-color: var(--border2); }
-  .wc.has-event { background: var(--bg); }
-  .event-tag { border-radius: 4px; padding: 2px 5px; font-size: 10px; font-weight: 600; margin-bottom: 2px; display: flex; justify-content: space-between; gap: 3px; cursor: pointer; }
-  .tag-math { background: var(--math); color: var(--math-t); }
-  .tag-phy { background: var(--phy); color: var(--phy-t); }
-  .tag-py { background: var(--py); color: var(--py-t); }
-  .tag-other { background: var(--bg3); color: var(--text2); }
-  .gcal-tag { background: #E6F1FB; color: #0C447C; border-left: 2px solid #378ADD; }
+/* MAIN */
+.mn{flex:1;margin-left:230px;padding:28px 32px}
 
-  /* Pill */
-  .pill { font-size: 11px; padding: 2px 8px; border-radius: 20px; font-weight: 500; display: inline-block; }
-  .pill-math { background: var(--math); color: var(--math-t); }
-  .pill-phy { background: var(--phy); color: var(--phy-t); }
-  .pill-py { background: var(--py); color: var(--py-t); }
-  .pill-ok { background: #EAF3DE; color: #27500A; }
-  .pill-abs { background: #FCEBEB; color: #791F1F; }
-  .pill-blue { background: #E6F1FB; color: #0C447C; }
-  .pill-gcal { background: #E6F1FB; color: #0C447C; }
+/* GREETING */
+.greet{margin-bottom:24px}
+.greet h1{font-size:28px;font-weight:900;letter-spacing:-.5px}
+.greet p{font-size:15px;color:var(--tx2);margin-top:2px;font-weight:500}
 
-  /* Student cards */
-  .student-card { background: var(--bg); border: 1px solid var(--border); border-radius: var(--radius); padding: 12px 14px; margin-bottom: 8px; }
-  .stu-header { display: flex; align-items: center; gap: 10px; margin-bottom: 8px; }
-  .avatar { width: 36px; height: 36px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 13px; font-weight: 600; flex-shrink: 0; }
-  .av-math { background: var(--math); color: var(--math-t); }
-  .av-phy { background: var(--phy); color: var(--phy-t); }
-  .av-py { background: var(--py); color: var(--py-t); }
-  .av-gen { background: var(--bg3); color: var(--text2); }
+/* STATS */
+.stats{display:grid;grid-template-columns:repeat(4,1fr);gap:14px;margin-bottom:24px}
+.st{padding:20px;border-radius:var(--r);position:relative;overflow:hidden;transition:transform .2s;cursor:default}
+.st:hover{transform:translateY(-3px)}
+.st-ic{width:44px;height:44px;border-radius:14px;display:flex;align-items:center;justify-content:center;font-size:20px;margin-bottom:10px}
+.st-lb{font-size:13px;font-weight:700;opacity:.65}
+.st-v{font-size:30px;font-weight:900;margin-top:3px;letter-spacing:-1px}
+.st-s{font-size:12px;opacity:.55;margin-top:1px;font-weight:600}
+.st.g{background:var(--grnL2);color:var(--grn3)}.st.g .st-ic{background:var(--grn);color:#fff}
+.st.o{background:var(--orgL);color:var(--orgF)}.st.o .st-ic{background:var(--org);color:#fff}
+.st.p{background:var(--pnkL);color:var(--pnkF)}.st.p .st-ic{background:var(--pnk);color:#fff}
+.st.b{background:var(--bluL);color:var(--bluF)}.st.b .st-ic{background:var(--blu);color:#fff}
 
-  /* Income */
-  .income-row { display: flex; justify-content: space-between; align-items: center; padding: 8px 0; border-bottom: 1px solid var(--border); }
-  .income-row:last-child { border-bottom: none; }
-  .gcal-badge { font-size: 10px; background: #E6F1FB; color: #0C447C; padding: 1px 6px; border-radius: 10px; margin-left: 4px; }
+/* CARD */
+.cd{background:var(--white);border:1.5px solid var(--border);border-radius:var(--r);padding:22px;margin-bottom:16px;box-shadow:var(--sh)}
+.cd-h{display:flex;justify-content:space-between;align-items:center;margin-bottom:16px}
+.cd-t{font-size:17px;font-weight:800;letter-spacing:-.2px}
+.sa{font-size:13px;color:var(--grn2);cursor:pointer;font-weight:700}.sa:hover{text-decoration:underline}
 
-  /* Modal */
-  .overlay { position: fixed; inset: 0; background: rgba(0,0,0,0.4); display: flex; align-items: center; justify-content: center; z-index: 999; padding: 16px; }
-  .modal { background: var(--bg); border-radius: var(--radius); border: 1px solid var(--border2); padding: 20px; width: 320px; max-width: 100%; max-height: 90vh; overflow-y: auto; }
-  .modal h3 { font-size: 15px; font-weight: 600; margin-bottom: 14px; }
-  .form-group { margin-bottom: 10px; }
-  .form-group label { font-size: 12px; color: var(--text2); display: block; margin-bottom: 4px; }
-  .form-group input, .form-group select, .form-group textarea { width: 100%; padding: 8px 10px; border-radius: var(--radius-sm); border: 1px solid var(--border2); background: var(--bg2); font-size: 13px; color: var(--text); font-family: inherit; }
-  .form-group textarea { resize: vertical; min-height: 60px; }
-  .form-group input:focus, .form-group select:focus, .form-group textarea:focus { outline: none; border-color: var(--math-t); }
-  .btn-row { display: flex; gap: 8px; margin-top: 14px; }
-  .pg { display: none; } .pg.on { display: block; }
+/* BTN */
+.btn{padding:10px 20px;border-radius:var(--r3);border:none;cursor:pointer;font-family:'Nunito',sans-serif;font-size:14px;font-weight:700;transition:all .2s;display:inline-flex;align-items:center;gap:6px}
+.btn-g{background:var(--grn);color:#fff;box-shadow:0 4px 14px rgba(46,204,113,.3)}.btn-g:hover{background:var(--grn2);transform:translateY(-1px)}
+.btn-o{background:transparent;border:1.5px solid var(--border);color:var(--tx2)}.btn-o:hover{border-color:var(--grn);color:var(--grn)}
+.btn-d{background:var(--redL);color:var(--redF)}.btn-d:hover{background:var(--red);color:#fff}
+.btn-sm{padding:7px 14px;font-size:13px;border-radius:8px}
 
-  .sync-bar { display: flex; align-items: center; gap: 8px; background: #E6F1FB; border-radius: var(--radius-sm); padding: 8px 12px; margin-bottom: 12px; font-size: 12px; color: #0C447C; }
-  .sync-bar svg { flex-shrink: 0; }
-  .empty-state { text-align: center; padding: 2rem; font-size: 13px; color: var(--text3); }
-  .note-box { background: var(--bg2); border-radius: var(--radius-sm); padding: 7px 10px; font-size: 12px; color: var(--text2); margin-top: 6px; }
-  .del-btn { background: none; border: none; cursor: pointer; font-size: 13px; color: var(--text3); padding: 2px 5px; }
-  .del-btn:hover { color: #A32D2D; }
-  .connected-dot { width: 8px; height: 8px; border-radius: 50%; background: #639922; display: inline-block; margin-right: 4px; }
-  .disconnected-dot { width: 8px; height: 8px; border-radius: 50%; background: #E24B4A; display: inline-block; margin-right: 4px; }
+/* FORMS */
+input,textarea{background:var(--bg2);border:1.5px solid var(--border);border-radius:var(--r3);padding:11px 14px;color:var(--tx);font-family:'Nunito',sans-serif;font-size:14px;width:100%;outline:none;transition:all .2s;font-weight:600}
+input:focus,textarea:focus{border-color:var(--grn);background:#fff;box-shadow:0 0 0 3px rgba(46,204,113,.12)}
+label{font-size:13px;color:var(--tx2);margin-bottom:5px;display:block;font-weight:700}
+/* CUSTOM SELECT */
+.csel{position:relative;width:100%;user-select:none}
+.csel-display{background:var(--white);border:1.5px solid var(--border);border-radius:var(--r3);padding:11px 40px 11px 14px;color:var(--tx);font-family:'Nunito',sans-serif;font-size:14px;font-weight:600;cursor:pointer;transition:all .2s;position:relative;min-height:42px;display:flex;align-items:center}
+.csel-display:hover{border-color:var(--grn)}
+.csel-display.open{border-color:var(--grn);background:#fff;box-shadow:0 0 0 3px rgba(46,204,113,.12);border-radius:var(--r3) var(--r3) 0 0}
+.csel-display::after{content:'';position:absolute;right:14px;top:50%;transform:translateY(-50%);width:0;height:0;border-left:5px solid transparent;border-right:5px solid transparent;border-top:6px solid var(--tx3);transition:transform .2s}
+.csel-display.open::after{transform:translateY(-50%) rotate(180deg)}
+.csel-opts{position:absolute;top:100%;left:0;right:0;background:var(--white);border:1.5px solid var(--grn);border-top:none;border-radius:0 0 var(--r3) var(--r3);max-height:220px;overflow-y:auto;z-index:50;box-shadow:0 8px 24px rgba(0,0,0,.1);display:none}
+.csel-opts.show{display:block;animation:dropIn .15s ease-out}
+@keyframes dropIn{from{opacity:0;transform:translateY(-4px)}to{opacity:1;transform:translateY(0)}}
+.csel-opt{padding:10px 14px;font-size:14px;font-weight:600;cursor:pointer;transition:all .12s;display:flex;align-items:center;gap:8px}
+.csel-opt:hover{background:var(--grnL)}
+.csel-opt.active{background:var(--grnL2);color:var(--grn3)}
+.csel-opt:last-child{border-radius:0 0 8px 8px}
+.csel-opt .opt-icon{font-size:16px;width:22px;text-align:center}
+.csel-opt .opt-badge{display:inline-block;padding:2px 8px;border-radius:12px;font-size:11px;font-weight:800;margin-left:auto}
+/* hidden native select for form data */
+.csel select{position:absolute;opacity:0;pointer-events:none;width:0;height:0}
+
+/* BADGES */
+.bg{display:inline-flex;align-items:center;padding:4px 12px;border-radius:20px;font-size:12px;font-weight:800;gap:4px}
+.bg-m{background:var(--mathBg);color:var(--mathF)}
+.bg-ph{background:var(--phyBg);color:var(--phyF)}
+.bg-py{background:var(--pyBg);color:var(--pyF)}
+.bg-pd{background:var(--grnL2);color:var(--grn3)}
+.bg-up{background:var(--orgL);color:var(--orgF)}
+.bg-in{background:var(--grnL2);color:var(--grn3)}
+.bg-ex{background:var(--redL);color:var(--redF)}
+
+/* TABLE */
+table{width:100%;border-collapse:collapse}
+th{text-align:left;padding:10px 12px;font-size:12px;color:var(--tx3);font-weight:800;text-transform:uppercase;letter-spacing:.5px;border-bottom:2px solid var(--border)}
+td{padding:12px;font-size:14px;border-bottom:1px solid var(--border2);font-weight:500}
+tr:last-child td{border-bottom:none}
+tr:hover td{background:var(--bg2)}
+
+/* CALENDAR */
+.cc{display:flex;align-items:center;gap:10px;margin-bottom:16px}
+.cl{font-size:18px;font-weight:900;min-width:200px;text-align:center;letter-spacing:-.3px}
+.cg{display:grid;grid-template-columns:repeat(7,1fr);gap:4px}
+.ch{padding:8px;text-align:center;font-size:12px;font-weight:800;color:var(--tx3);text-transform:uppercase}
+.ce{min-height:90px;padding:7px 8px;background:var(--white);border:1.5px solid var(--border2);border-radius:var(--r2);cursor:pointer;transition:all .15s}
+.ce:hover{border-color:var(--grn);box-shadow:var(--sh)}
+.ce.td{border-color:var(--grn);background:var(--grnL)}
+.ce.td .dn{background:var(--grn);color:#fff;width:28px;height:28px;border-radius:50%;display:flex;align-items:center;justify-content:center}
+.ce.ot{opacity:.25}
+.dn{font-size:14px;font-weight:800;margin-bottom:3px}
+.cv{font-size:10px;padding:2px 6px;margin-bottom:2px;border-radius:6px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;font-weight:700;cursor:pointer}
+.cv.math{background:var(--mathBg);color:var(--mathF)}.cv.physics{background:var(--phyBg);color:var(--phyF)}.cv.python{background:var(--pyBg);color:var(--pyF)}
+
+/* WEEK */
+.wg{display:grid;grid-template-columns:56px repeat(7,1fr);border:1.5px solid var(--border);border-radius:var(--r);overflow:hidden;background:var(--white)}
+.wh{padding:10px 4px;text-align:center;font-size:12px;font-weight:700;color:var(--tx2);background:var(--bg2);border-bottom:1.5px solid var(--border);border-right:1px solid var(--border2)}
+.wh.wtd{color:var(--grn2)}
+.wh .wdn{font-size:20px;font-weight:900;display:block;margin-top:2px}
+.wt{padding:2px 6px;font-size:11px;color:var(--tx3);text-align:right;border-right:1px solid var(--border2);height:50px;font-family:'JetBrains Mono',monospace;font-weight:500}
+.ws{height:50px;border-bottom:1px solid var(--border2);border-right:1px solid var(--border2);position:relative;cursor:pointer}
+.ws:hover{background:var(--bg2)}
+.we{position:absolute;left:2px;right:2px;padding:3px 6px;border-radius:8px;font-size:11px;font-weight:700;overflow:hidden;z-index:2;cursor:pointer;border-left:3px solid}
+
+/* SCHEDULE CARDS (Travigo style) */
+.sch-card{display:flex;gap:14px;padding:14px;background:var(--bg2);border-radius:var(--r2);margin-bottom:10px;border:1.5px solid var(--border2);transition:all .2s;cursor:pointer}
+.sch-card:hover{border-color:var(--grn);box-shadow:var(--sh)}
+.sch-thumb{width:56px;height:56px;border-radius:var(--r2);display:flex;align-items:center;justify-content:center;font-size:26px;flex-shrink:0}
+.sch-thumb.math{background:var(--mathBg)}.sch-thumb.physics{background:var(--phyBg)}.sch-thumb.python{background:var(--pyBg)}
+.sch-info{flex:1;min-width:0}
+.sch-name{font-weight:800;font-size:14px;margin-bottom:2px}
+.sch-meta{font-size:12px;color:var(--tx3);font-weight:600}
+.sch-price{font-weight:900;font-size:16px;color:var(--grn3);white-space:nowrap;align-self:center}
+
+/* DASH COLS */
+.dc{display:grid;grid-template-columns:1fr 330px;gap:16px}
+
+/* MINI CAL */
+.mc-nav{display:flex;align-items:center;justify-content:space-between;margin-bottom:8px}
+.mc-lbl{font-size:16px;font-weight:900}
+.mc-g{display:grid;grid-template-columns:repeat(7,1fr);gap:2px;text-align:center}
+.mc-h{font-size:11px;font-weight:800;color:var(--tx3);padding:4px}
+.mc-d{font-size:13px;padding:6px;border-radius:50%;cursor:pointer;font-weight:600;color:var(--tx2);transition:background .15s}
+.mc-d:hover{background:var(--grnL)}
+.mc-d.td{background:var(--grn);color:#fff;font-weight:900}
+.mc-d.hev{color:var(--grn2);font-weight:900}
+.mc-d.ot{opacity:.2}
+
+/* MY SCHEDULE (right sidebar style) */
+.ms-item{display:flex;gap:12px;padding:14px;background:var(--bg2);border-radius:var(--r2);margin-bottom:8px;border:1.5px solid var(--border2);transition:all .15s}
+.ms-item:hover{border-color:var(--grn);transform:translateX(2px)}
+.ms-thumb{width:48px;height:48px;border-radius:var(--r2);display:flex;align-items:center;justify-content:center;font-size:22px;flex-shrink:0}
+.ms-thumb.math{background:var(--mathBg)}.ms-thumb.physics{background:var(--phyBg)}.ms-thumb.python{background:var(--pyBg)}
+.ms-info{flex:1}
+.ms-name{font-weight:800;font-size:14px}
+.ms-meta{font-size:12px;color:var(--tx3);font-weight:600;margin-top:1px}
+
+/* MODAL */
+.mo{position:fixed;inset:0;background:rgba(0,0,0,.3);backdrop-filter:blur(4px);display:flex;align-items:center;justify-content:center;z-index:1000;opacity:0;pointer-events:none;transition:opacity .25s}
+.mo.show{opacity:1;pointer-events:auto}
+.mo-box{background:var(--white);border-radius:24px;padding:30px;width:90%;max-width:520px;max-height:85vh;overflow-y:auto;transform:translateY(16px) scale(.97);transition:transform .25s cubic-bezier(.4,0,.2,1);box-shadow:var(--sh2)}
+.mo.show .mo-box{transform:translateY(0) scale(1)}
+.mo-t{font-size:20px;font-weight:900;margin-bottom:20px}
+.fg{margin-bottom:14px}.fr{display:grid;grid-template-columns:1fr 1fr;gap:12px}
+
+/* TABS */
+.tabs{display:inline-flex;gap:0;background:var(--bg2);border-radius:var(--r3);padding:4px;margin-bottom:20px;border:1.5px solid var(--border)}
+.tab{padding:8px 20px;border-radius:8px;cursor:pointer;font-size:14px;font-weight:700;color:var(--tx2);transition:all .2s}
+.tab:hover{color:var(--tx)}
+.tab.on{background:var(--white);color:var(--grn2);box-shadow:var(--sh)}
+
+/* TOGGLE */
+.tw{display:flex;align-items:center;gap:8px;cursor:pointer;font-weight:600;font-size:14px}
+.tg{width:42px;height:24px;background:var(--border);border-radius:12px;position:relative;transition:background .2s}
+.tg::after{content:'';position:absolute;top:3px;left:3px;width:18px;height:18px;background:#fff;border-radius:50%;transition:transform .2s;box-shadow:0 1px 3px rgba(0,0,0,.15)}
+.tg.on{background:var(--grn)}.tg.on::after{transform:translateX(18px)}
+
+/* ATTEND */
+.at-r{display:flex;align-items:center;gap:12px;padding:12px 0;border-bottom:1px solid var(--border2)}
+.at-c{width:26px;height:26px;border-radius:8px;border:2px solid var(--border);cursor:pointer;display:flex;align-items:center;justify-content:center;transition:all .15s;flex-shrink:0;font-size:14px;font-weight:900}
+.at-c.ck{background:var(--grnL2);border-color:var(--grn2);color:var(--grn2)}
+.at-c.ab{background:var(--redL);border-color:var(--redF);color:var(--redF)}
+
+.page{display:none}.page.active{display:block}
+.empty{text-align:center;padding:48px 20px;color:var(--tx3);font-weight:600}
+.empty-ic{font-size:48px;margin-bottom:12px;opacity:.35}
+
+.mob{display:none;position:fixed;top:14px;left:14px;z-index:200;background:var(--white);border:1.5px solid var(--border);border-radius:var(--r3);padding:8px 12px;color:var(--tx);cursor:pointer;font-size:18px;box-shadow:var(--sh)}
+@media(max-width:900px){.mob{display:block}.sb{transform:translateX(-100%);z-index:300}.sb.open{transform:translateX(0);box-shadow:var(--sh2)}.mn{margin-left:0;padding:20px 16px;padding-top:56px}.stats{grid-template-columns:1fr 1fr}.dc{grid-template-columns:1fr}.ce{min-height:60px}.fr{grid-template-columns:1fr}}
+
+::-webkit-scrollbar{width:5px}::-webkit-scrollbar-thumb{background:var(--border);border-radius:3px}
+@keyframes up{from{opacity:0;transform:translateY(14px)}to{opacity:1;transform:translateY(0)}}.an{animation:up .45s ease-out both}.a1{animation-delay:.06s}.a2{animation-delay:.12s}.a3{animation-delay:.18s}.a4{animation-delay:.24s}
 </style>
 </head>
 <body>
+<button class="mob" onclick="$('sidebar').classList.toggle('open')">☰</button>
 <div class="app">
-  <h1>ตารางสอนพิเศษ</h1>
-  <p class="subtitle" id="cal-status-bar">กำลังตรวจสอบ Google Calendar...</p>
-
-  <!-- Setup -->
-  <div id="setup-screen" style="display:none">
-    <h2>เชื่อมต่อ Google Calendar</h2>
-    <p>ทำครั้งเดียวแล้วใช้ได้ตลอดค่ะ ตาม 3 ขั้นตอนนี้:</p>
-    <div class="steps">
-      <div class="step">
-        <div class="step-num">1</div>
-        <div class="step-text">ไปที่ <a href="https://console.cloud.google.com/" target="_blank">Google Cloud Console</a> → สร้าง Project ใหม่ → เปิดใช้งาน <strong>Google Calendar API</strong></div>
-      </div>
-      <div class="step">
-        <div class="step-num">2</div>
-        <div class="step-text">ไปที่ <strong>APIs &amp; Services → Credentials</strong> → สร้าง <strong>OAuth 2.0 Client ID</strong> เลือก "Web application" → ใส่ <code>http://localhost</code> และ <code>file://</code> ใน Authorized origins</div>
-      </div>
-      <div class="step">
-        <div class="step-num">3</div>
-        <div class="step-text">คัดลอก <strong>Client ID</strong> แล้วใส่ด้านล่างค่ะ</div>
-      </div>
-    </div>
-    <div class="input-row">
-      <input type="text" id="client-id-input" placeholder="xxxx.apps.googleusercontent.com" />
-      <button class="btn primary" onclick="saveClientId()">บันทึก</button>
-    </div>
-    <p style="margin-top:10px;font-size:12px;color:var(--text3)">Client ID เก็บไว้ในเบราว์เซอร์ของหยกเท่านั้น ไม่ได้ส่งไปที่ไหนค่ะ</p>
+<aside class="sb" id="sidebar">
+  <div class="sb-logo"><div class="sb-ico">T</div><span class="sb-txt">Tutor Schedule</span></div>
+  <div class="ni on" data-p="dashboard" onclick="go('dashboard')"><span class="ni-i">📊</span>Dashboard</div>
+  <div class="ni" data-p="calendar" onclick="go('calendar')"><span class="ni-i">📅</span>Schedule</div>
+  <div class="ni" data-p="students" onclick="go('students')"><span class="ni-i">👥</span>Students</div>
+  <div class="ni" data-p="sessions" onclick="go('sessions')"><span class="ni-i">📝</span>Sessions</div>
+  <div class="ni" data-p="income" onclick="go('income')"><span class="ni-i">💰</span>Finance</div>
+  <div class="ni-sep"></div>
+  <div class="ni" data-p="settings" onclick="go('settings')"><span class="ni-i">⚙️</span>Settings</div>
+  <div class="sb-promo">
+    <div class="sb-promo-title">📚 Teaching Tip</div>
+    <div class="sb-promo-sub">Use spaced repetition to help your students retain concepts longer!</div>
   </div>
+  <div class="gcal-box"><div><span class="gcal-dot off" id="gcalDot"></span><span class="gcal-lbl" id="gcalLbl">Not connected</span></div><button class="gcal-btn" id="gcalBtn" onclick="handleGCal()">Connect Calendar</button></div>
+</aside>
 
-  <!-- Main nav -->
-  <div class="nav" id="main-nav" style="display:none">
-    <button class="on" onclick="showPg('week')">ตารางสัปดาห์</button>
-    <button onclick="showPg('students')">นักเรียน</button>
-    <button onclick="showPg('income')">รายได้</button>
-    <button onclick="showPg('stats')">สถิติ</button>
-    <button onclick="signIn()" id="signin-btn" style="display:none">เชื่อมต่อ Calendar</button>
-    <button onclick="signOut()" id="signout-btn" style="display:none" class="small">ออกจากระบบ</button>
-  </div>
-
-  <!-- Pages -->
-  <div id="pg-week" class="pg on">
-    <div class="card">
-      <div class="week-nav">
-        <button class="btn small" onclick="changeWeek(-1)">&#8592;</button>
-        <h3 id="week-label">สัปดาห์นี้</h3>
-        <button class="btn small" onclick="changeWeek(1)">&#8594;</button>
-        <button class="btn small primary" onclick="syncCalendar()" id="sync-btn">ซิงค์</button>
-        <button class="btn small" onclick="openAddSession()">+ เพิ่ม</button>
-      </div>
-      <div id="sync-status"></div>
-      <div class="week-grid" id="week-grid"></div>
+<main class="mn">
+<!-- DASHBOARD -->
+<div class="page active" id="page-dashboard">
+  <div class="greet an"><h1 id="greetH">Hello, Tutor! 👋</h1><p id="greetP"></p></div>
+  <div class="stats" id="dashSt"></div>
+  <div class="dc">
+    <div>
+      <div class="cd an a2"><div class="cd-h"><div class="cd-t">Upcoming Sessions</div><span class="sa" onclick="go('sessions')">Show all →</span></div><div id="upcoming"></div></div>
+      <div class="cd an a3"><div class="cd-h"><div class="cd-t">Monthly Summary 💰</div></div><div id="dashFin"></div></div>
+    </div>
+    <div>
+      <div class="cd an a2"><div class="mc" id="dashMC"></div><button class="btn btn-g" style="width:100%;justify-content:center;border-radius:var(--r2)" onclick="openSesM()">+ Add New Session</button></div>
+      <div class="cd an a3"><div class="cd-t" style="margin-bottom:14px">My Schedule</div><div id="todayTL"></div></div>
     </div>
   </div>
-
-  <div id="pg-students" class="pg">
-    <div class="card-header" style="margin-bottom:8px">
-      <h3 style="font-size:15px;font-weight:600">นักเรียนทั้งหมด</h3>
-      <button class="btn small primary" onclick="openAddStudent()">+ เพิ่ม</button>
-    </div>
-    <div id="student-list"></div>
-  </div>
-
-  <div id="pg-income" class="pg">
-    <div class="card">
-      <div class="card-header"><h3>รายได้เดือนนี้</h3></div>
-      <div class="stat-grid">
-        <div class="stat"><div class="label">รายได้รวม</div><div class="value" id="inc-total">0 ฿</div></div>
-        <div class="stat"><div class="label">คาบที่สอน</div><div class="value" id="inc-sessions">0</div></div>
-        <div class="stat"><div class="label">นักเรียน</div><div class="value" id="inc-students">0</div></div>
-      </div>
-      <div id="income-list"></div>
-    </div>
-  </div>
-
-  <div id="pg-stats" class="pg">
-    <div class="card">
-      <div class="card-header"><h3>สถิติรวม</h3></div>
-      <div class="stat-grid">
-        <div class="stat"><div class="label">นักเรียนทั้งหมด</div><div class="value" id="s-total">0</div></div>
-        <div class="stat"><div class="label">คาบทั้งหมด</div><div class="value" id="s-sessions">0</div></div>
-        <div class="stat"><div class="label">รายได้รวม</div><div class="value" id="s-income">0 ฿</div></div>
-      </div>
-      <div id="subject-stats"></div>
-    </div>
-  </div>
-
-  <!-- Modal container -->
-  <div id="modal-area"></div>
 </div>
 
-<!-- Google API -->
-<script src="https://apis.google.com/js/api.js"></script>
-<script src="https://accounts.google.com/gsi/client"></script>
+<!-- CALENDAR -->
+<div class="page" id="page-calendar">
+  <div class="greet an"><h1>📅 Schedule</h1></div>
+  <div class="tabs an a1"><div class="tab on" onclick="setCV('month')">Month</div><div class="tab" onclick="setCV('week')">Week</div></div>
+  <div class="cd an a2"><div class="cc"><button class="btn btn-o btn-sm" onclick="calN(-1)">◀</button><div class="cl" id="calLbl"></div><button class="btn btn-o btn-sm" onclick="calN(1)">▶</button><button class="btn btn-o btn-sm" onclick="calT()">Today</button><div style="flex:1"></div><button class="btn btn-g btn-sm" onclick="openSesM()">+ Add Session</button></div><div id="calBox"></div></div>
+</div>
+
+<!-- STUDENTS -->
+<div class="page" id="page-students">
+  <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:20px" class="an"><h1 style="font-size:24px;font-weight:900">👥 Students</h1><button class="btn btn-g btn-sm" onclick="openStM()">+ Add Student</button></div>
+  <div class="tabs an a1"><div class="tab on" onclick="setSV('individual')">Individual</div><div class="tab" onclick="setSV('group')">Group</div></div>
+  <div class="cd an a2" id="stList"></div>
+</div>
+
+<!-- SESSIONS -->
+<div class="page" id="page-sessions">
+  <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:20px" class="an"><h1 style="font-size:24px;font-weight:900">📝 Sessions</h1><button class="btn btn-g btn-sm" onclick="openSesM()">+ Add Session</button></div>
+  <div class="cd an a1"><div class="cd-h"><div style="display:flex;gap:8px"><div class="csel" id="csel-sfm" style="width:180px"><div class="csel-display" onclick="toggleCSel(this)">All Months</div><div class="csel-opts"></div><select id="sfm" onchange="rSes()"></select></div><div class="csel" id="csel-sfs" style="width:160px"><div class="csel-display" onclick="toggleCSel(this)">All Subjects</div><div class="csel-opts"></div><select id="sfs" onchange="rSes()"><option value="">All Subjects</option><option value="math" data-icon="🔢">Math</option><option value="physics" data-icon="⚛️">Physics</option><option value="python" data-icon="🐍">Python</option></select></div></div></div><div id="sesList"></div></div>
+</div>
+
+<!-- FINANCE -->
+<div class="page" id="page-income">
+  <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:20px" class="an"><h1 style="font-size:24px;font-weight:900">💰 Finance</h1><button class="btn btn-g btn-sm" onclick="openTxM()">+ Add Transaction</button></div>
+  <div class="stats" id="incSt"></div>
+  <div class="tabs an a1"><div class="tab on" onclick="setIV('overview')">Overview</div><div class="tab" onclick="setIV('student')">By Student</div><div class="tab" onclick="setIV('transactions')">All Transactions</div></div>
+  <div class="cd an a2"><div class="cd-h"><div class="cd-t" id="incT">Overview</div><div class="csel" id="csel-incMo" style="width:180px"><div class="csel-display" onclick="toggleCSel(this)">All Months</div><div class="csel-opts"></div><select id="incMo" onchange="rInc()"></select></div></div><div id="incB"></div></div>
+</div>
+
+<!-- SETTINGS -->
+<div class="page" id="page-settings">
+  <div class="greet an"><h1>⚙️ Settings</h1></div>
+  <div class="cd an a1"><div class="cd-t" style="margin-bottom:16px">Google Calendar</div>
+    <div class="fg"><label>Client ID</label><input id="sCI" placeholder="xxxx.apps.googleusercontent.com" onchange="saveSett()"></div>
+    <div class="fg"><label>Calendar ID</label><input id="sCL" placeholder="primary" onchange="saveSett()"></div>
+    <div style="padding:12px 16px;background:var(--orgL);border-radius:var(--r3);font-size:13px;color:var(--orgF);font-weight:600;margin-top:8px">⚠️ Add <code style="font-weight:800">https://napatjumpatip.github.io</code> to Authorized JavaScript Origins</div></div>
+  <div class="cd an a2"><div class="cd-t" style="margin-bottom:16px">Default Rates (฿/hr)</div>
+    <div class="fr"><div class="fg"><label>🔢 Math</label><input type="number" id="sRM" placeholder="500" onchange="saveSett()"></div><div class="fg"><label>⚛️ Physics</label><input type="number" id="sRP" placeholder="500" onchange="saveSett()"></div></div>
+    <div class="fg" style="max-width:calc(50% - 6px)"><label>🐍 Python</label><input type="number" id="sRY" placeholder="600" onchange="saveSett()"></div></div>
+  <div class="cd an a3"><div class="cd-t" style="margin-bottom:16px">Data</div><div style="display:flex;gap:8px;flex-wrap:wrap"><button class="btn btn-o" onclick="expD()">📤 Export</button><button class="btn btn-o" onclick="$('impF').click()">📥 Import</button><input type="file" id="impF" accept=".json" style="display:none" onchange="impD(event)"><button class="btn btn-d" onclick="clrD()">🗑️ Clear All</button></div></div>
+</div>
+</main>
+</div>
+
+<!-- STUDENT MODAL -->
+<div class="mo" id="stModal"><div class="mo-box"><div class="mo-t" id="stMT">Add Student</div>
+<div class="fg"><label>Full Name</label><input id="stN" placeholder="Student name"></div>
+<div class="fg"><label>Nickname</label><input id="stNK" placeholder="Nickname"></div>
+<div class="fg"><label>Type</label><div class="csel" id="csel-stTy"><div class="csel-display" onclick="toggleCSel(this)">👤 Individual</div><div class="csel-opts"></div><select id="stTy" onchange="_('stGW').style.display=this.value==='group'?'block':'none'"><option value="individual" data-icon="👤">Individual</option><option value="group" data-icon="👥">Group</option></select></div></div>
+<div class="fg" id="stGW" style="display:none"><label>Group Name</label><input id="stGN" placeholder="Group A"></div>
+<div class="fg"><label>Subjects</label><div style="display:flex;gap:14px;flex-wrap:wrap"><label class="tw"><div class="tg" id="stSM" onclick="this.classList.toggle('on')"></div>Math</label><label class="tw"><div class="tg" id="stSP" onclick="this.classList.toggle('on')"></div>Physics</label><label class="tw"><div class="tg" id="stSY" onclick="this.classList.toggle('on')"></div>Python</label></div></div>
+<div class="fg"><label>Custom Rate (฿/hr) — leave blank for default</label><div class="fr"><input type="number" id="stRM" placeholder="Math"><input type="number" id="stRP" placeholder="Physics"></div><div style="margin-top:8px;max-width:calc(50% - 6px)"><input type="number" id="stRY" placeholder="Python"></div></div>
+<div class="fg"><label>Contact</label><input id="stC" placeholder="Phone / Line"></div>
+<div class="fg"><label>Notes</label><textarea id="stNo" rows="2" placeholder="Notes"></textarea></div>
+<input type="hidden" id="stEI">
+<div style="display:flex;gap:8px;justify-content:flex-end;margin-top:20px"><button class="btn btn-o" onclick="clM('stModal')">Cancel</button><button class="btn btn-g" onclick="saveSt()">Save</button></div></div></div>
+
+<!-- SESSION MODAL -->
+<div class="mo" id="sesModal"><div class="mo-box"><div class="mo-t" id="sesMT">Add Session</div>
+<div class="fg"><label>Date</label><input type="date" id="seD"></div>
+<div class="fr"><div class="fg"><label>Start</label><input type="time" id="seS" value="17:00"></div><div class="fg"><label>End</label><input type="time" id="seE" value="18:00"></div></div>
+<div class="fg"><label>Subject</label><div class="csel" id="csel-seSb"><div class="csel-display" onclick="toggleCSel(this)">🔢 Math</div><div class="csel-opts"></div><select id="seSb"><option value="math" data-icon="🔢">Math</option><option value="physics" data-icon="⚛️">Physics</option><option value="python" data-icon="🐍">Python</option></select></div></div>
+<div class="fg"><label>Student</label><div class="csel" id="csel-seSt"><div class="csel-display" onclick="toggleCSel(this)">-- Select --</div><div class="csel-opts"></div><select id="seSt"></select></div></div>
+<div class="fg"><label>Topic</label><input id="seTo" placeholder="e.g. Linear equations"></div>
+<div class="fg"><label>Notes</label><textarea id="seNo" rows="2" placeholder="Notes"></textarea></div>
+<div class="fg"><label>Payment</label><div class="csel" id="csel-sePd"><div class="csel-display" onclick="toggleCSel(this)">⏳ Unpaid</div><div class="csel-opts"></div><select id="sePd"><option value="unpaid" data-icon="⏳">Unpaid</option><option value="paid" data-icon="✅">Paid</option></select></div></div>
+<div class="fg"><label class="tw"><div class="tg" id="seGC" onclick="this.classList.toggle('on')"></div>Add to Google Calendar</label></div>
+<input type="hidden" id="seEI">
+<div style="display:flex;gap:8px;justify-content:flex-end;margin-top:20px"><button class="btn btn-o" onclick="clM('sesModal')">Cancel</button><button class="btn btn-g" onclick="saveSes()">Save</button></div></div></div>
+
+<!-- ATTEND MODAL -->
+<div class="mo" id="attModal"><div class="mo-box"><div class="mo-t">Attendance</div><div id="attB"></div>
+<div style="display:flex;gap:8px;justify-content:flex-end;margin-top:20px"><button class="btn btn-o" onclick="clM('attModal')">Close</button><button class="btn btn-g" onclick="saveAtt()">Save</button></div></div></div>
+
+<!-- TX MODAL -->
+<div class="mo" id="txModal"><div class="mo-box"><div class="mo-t" id="txMT">Add Transaction</div>
+<div class="fg"><label>Type</label><div class="csel" id="csel-txTy"><div class="csel-display" onclick="toggleCSel(this)">💰 Income</div><div class="csel-opts"></div><select id="txTy"><option value="income" data-icon="💰">Income</option><option value="expense" data-icon="🛒">Expense</option></select></div></div>
+<div class="fg"><label>Date</label><input type="date" id="txDt"></div>
+<div class="fg"><label>Amount (฿)</label><input type="number" id="txAm" placeholder="0"></div>
+<div class="fg"><label>Student (optional)</label><div class="csel" id="csel-txSt"><div class="csel-display" onclick="toggleCSel(this)">-- None --</div><div class="csel-opts"></div><select id="txSt"></select></div></div>
+<div class="fg"><label>Description</label><input id="txDs" placeholder="e.g. Bought textbook, treats"></div>
+<div class="fg"><label>Category</label><div class="csel" id="csel-txCat"><div class="csel-display" onclick="toggleCSel(this)">📚 Tuition</div><div class="csel-opts"></div><select id="txCat"><option value="tuition" data-icon="📚">Tuition</option><option value="books" data-icon="📖">Books / Supplies</option><option value="treats" data-icon="🍰">Treats / Snacks</option><option value="transport" data-icon="🚗">Transport</option><option value="material" data-icon="📐">Teaching Material</option><option value="other" data-icon="📦">Other</option></select></div></div>
+<input type="hidden" id="txEI">
+<div style="display:flex;gap:8px;justify-content:flex-end;margin-top:20px"><button class="btn btn-o" onclick="clM('txModal')">Cancel</button><button class="btn btn-g" onclick="saveTx()">Save</button></div></div></div>
+
 <script>
-const SUBJ = { math:{label:'คณิต',cls:'math'}, phy:{label:'ฟิสิกส์',cls:'phy'}, py:{label:'Python',cls:'py'} };
-const DAYS = ['จ','อ','พ','พฤ','ศ'];
-const TIMES = ['08:00','09:00','10:00','11:00','12:00','13:00','14:00','15:00','16:00','17:00','18:00','19:00','20:00'];
-const SCOPES = 'https://www.googleapis.com/auth/calendar.readonly';
+const K='tutorScheduleData',_=id=>document.getElementById(id);
+let D=loadD();
+function defD(){return{students:[],sessions:[],transactions:[],settings:{clientId:'',calendarId:'primary',rateMath:500,ratePhysics:500,ratePython:600}}}
+function loadD(){try{const d=JSON.parse(localStorage.getItem(K));return d?{...defD(),...d,transactions:d.transactions||[]}:defD()}catch{return defD()}}
+function saveD(){localStorage.setItem(K,JSON.stringify(D))}
+function uid(){return Date.now().toString(36)+Math.random().toString(36).substr(2,5)}
+const SB={math:{l:'Math',i:'🔢',c:'m',em:'📐'},physics:{l:'Physics',i:'⚛️',c:'ph',em:'🔭'},python:{l:'Python',i:'🐍',c:'py',em:'💻'}};
+function sbg(s){const x=SB[s]||{l:s,c:'m'};return`<span class="bg bg-${x.c}">${x.i} ${x.l}</span>`}
+function opM(id){_(id).classList.add('show')}
+function clM(id){_(id).classList.remove('show')}
 
-let data = JSON.parse(localStorage.getItem('tutor_v2')||'null') || {students:[],sessions:[]};
-let weekOffset = 0;
-let calendarEvents = [];
-let tokenClient = null;
-let gapiReady = false;
-let gsiReady = false;
-let isSignedIn = false;
+function go(p){document.querySelectorAll('.page').forEach(x=>x.classList.remove('active'));_('page-'+p).classList.add('active');document.querySelectorAll('.ni').forEach(n=>n.classList.remove('on'));const nav=document.querySelector(`.ni[data-p="${p}"]`);if(nav)nav.classList.add('on');_('sidebar').classList.remove('open');({dashboard:rDash,calendar:rCal,students:rStu,sessions:rSes,income:rInc,settings:loadSett})[p]?.()}
 
-function save(){ localStorage.setItem('tutor_v2', JSON.stringify(data)); }
+// === STUDENTS ===
+let stV='individual';
+function setSV(v){stV=v;document.querySelectorAll('#page-students .tab').forEach((t,i)=>t.classList.toggle('on',(i===0&&v==='individual')||(i===1&&v==='group')));rStu()}
+function openStM(eid){
+  if(eid){const s=D.students.find(x=>x.id===eid);if(!s)return;_('stMT').textContent='Edit Student';_('stN').value=s.name;_('stNK').value=s.nickname||'';_('stTy').value=s.type||'individual';_('stGN').value=s.groupName||'';_('stC').value=s.contact||'';_('stNo').value=s.note||'';_('stRM').value=s.rates?.math||'';_('stRP').value=s.rates?.physics||'';_('stRY').value=s.rates?.python||'';
+  _('stSM').classList.toggle('on',(s.subjects||[]).includes('math'));_('stSP').classList.toggle('on',(s.subjects||[]).includes('physics'));_('stSY').classList.toggle('on',(s.subjects||[]).includes('python'));_('stEI').value=eid}
+  else{_('stMT').textContent='Add Student';['stN','stNK','stGN','stC','stNo','stRM','stRP','stRY'].forEach(id=>_(id).value='');_('stTy').value=stV==='group'?'group':'individual';['stSM','stSP','stSY'].forEach(id=>_(id).classList.remove('on'));_('stEI').value=''}
+  _('stGW').style.display=_('stTy').value==='group'?'block':'none';syncCSel('stTy');opM('stModal')}
+function saveSt(){const name=_('stN').value.trim();if(!name)return alert('Enter a name');const subs=[];if(_('stSM').classList.contains('on'))subs.push('math');if(_('stSP').classList.contains('on'))subs.push('physics');if(_('stSY').classList.contains('on'))subs.push('python');
+  const d={name,nickname:_('stNK').value.trim(),type:_('stTy').value,groupName:_('stGN').value.trim(),subjects:subs,rates:{math:parseInt(_('stRM').value)||null,physics:parseInt(_('stRP').value)||null,python:parseInt(_('stRY').value)||null},contact:_('stC').value.trim(),note:_('stNo').value.trim()};
+  const eid=_('stEI').value;if(eid){const i=D.students.findIndex(s=>s.id===eid);if(i!==-1)D.students[i]={...D.students[i],...d}}else{d.id=uid();d.createdAt=new Date().toISOString();D.students.push(d)}saveD();clM('stModal');rStu()}
+function delSt(id){if(!confirm('Delete this student?'))return;D.students=D.students.filter(s=>s.id!==id);saveD();rStu()}
+function rStu(){const list=D.students.filter(s=>(s.type||'individual')===stV);const el=_('stList');
+  if(!list.length){el.innerHTML=`<div class="empty"><div class="empty-ic">👥</div>No ${stV==='group'?'group ':''}students yet<br>Click + to add</div>`;return}
+  let h='<table><thead><tr><th>Name</th><th>Nickname</th>';if(stV==='group')h+='<th>Group</th>';h+='<th>Subjects</th><th>Rate</th><th>Contact</th><th></th></tr></thead><tbody>';
+  list.forEach(s=>{h+=`<tr><td style="font-weight:800">${s.name}</td><td>${s.nickname||'-'}</td>`;if(stV==='group')h+=`<td>${s.groupName||'-'}</td>`;
+    h+=`<td>${(s.subjects||[]).map(x=>sbg(x)).join(' ')}</td><td class="mono" style="font-size:13px">${fR(s)}</td><td style="font-size:13px">${s.contact||'-'}</td><td style="white-space:nowrap"><button class="btn btn-o btn-sm" onclick="openStM('${s.id}')">✏️</button> <button class="btn btn-d btn-sm" onclick="delSt('${s.id}')">🗑️</button></td></tr>`});
+  h+='</tbody></table>';el.innerHTML=h}
+function fR(s){return(s.subjects||[]).map(sub=>{const r=s.rates?.[sub]||D.settings['rate'+sub.charAt(0).toUpperCase()+sub.slice(1)]||'-';return`${SB[sub]?.i||''} ฿${r}`}).join(' ')||'-'}
 
-// -------- INIT --------
-window.onload = function(){
-  const clientId = localStorage.getItem('gcal_client_id');
-  if(!clientId){
-    document.getElementById('setup-screen').style.display = 'block';
-    document.getElementById('cal-status-bar').textContent = 'ยังไม่ได้เชื่อมต่อ Google Calendar';
-    document.getElementById('main-nav').style.display = 'flex';
-    renderAll();
-    return;
-  }
-  initGapi(clientId);
-};
+// === SESSIONS ===
+function popSel(){const s=_('seSt');s.innerHTML='<option value="">-- Select --</option>';D.students.forEach(st=>{s.innerHTML+=`<option value="${st.id}">${st.nickname?st.name+' ('+st.nickname+')':st.name}</option>`})}
+function openSesM(eid,pd){popSel();if(eid){const s=D.sessions.find(x=>x.id===eid);if(!s)return;_('sesMT').textContent='Edit Session';_('seD').value=s.date;_('seS').value=s.start;_('seE').value=s.end;_('seSb').value=s.subject;_('seSt').value=s.studentId||'';_('seTo').value=s.topic||'';_('seNo').value=s.note||'';_('sePd').value=s.paid||'unpaid';_('seEI').value=eid}
+  else{_('sesMT').textContent='Add Session';_('seD').value=pd||new Date().toISOString().split('T')[0];_('seS').value='17:00';_('seE').value='18:00';_('seSb').value='math';_('seSt').value='';_('seTo').value='';_('seNo').value='';_('sePd').value='unpaid';_('seEI').value=''}
+  syncCSel('seSb');syncCSel('seSt');syncCSel('sePd');_('seGC').classList.remove('on');opM('sesModal')}
+function saveSes(){const date=_('seD').value;if(!date)return alert('Select a date');const d={date,start:_('seS').value,end:_('seE').value,subject:_('seSb').value,studentId:_('seSt').value,topic:_('seTo').value.trim(),note:_('seNo').value.trim(),paid:_('sePd').value};
+  const[sh,sm]=d.start.split(':').map(Number),[eh,em]=d.end.split(':').map(Number);d.hours=Math.max(0,((eh*60+em)-(sh*60+sm))/60);
+  const stu=D.students.find(s=>s.id===d.studentId);const rk='rate'+d.subject.charAt(0).toUpperCase()+d.subject.slice(1);d.fee=d.hours*(stu?.rates?.[d.subject]||D.settings[rk]||0);
+  const eid=_('seEI').value;if(eid){const i=D.sessions.findIndex(s=>s.id===eid);if(i!==-1)D.sessions[i]={...D.sessions[i],...d}}else{d.id=uid();d.createdAt=new Date().toISOString();d.attendance='present';D.sessions.push(d)}
+  if(_('seGC').classList.contains('on')&&typeof gapi!=='undefined'&&gapi?.client?.calendar)addGCal(d);
+  saveD();clM('sesModal');rSes();rCal()}
+function delSes(id){if(!confirm('Delete?'))return;D.sessions=D.sessions.filter(s=>s.id!==id);saveD();rSes()}
+function rSes(){popMF('sfm');syncCSel('sfs');const fm=_('sfm').value,fs=_('sfs').value;let list=[...D.sessions].sort((a,b)=>b.date.localeCompare(a.date)||(b.start||'').localeCompare(a.start||''));
+  if(fm)list=list.filter(s=>s.date.startsWith(fm));if(fs)list=list.filter(s=>s.subject===fs);
+  if(!list.length){_('sesList').innerHTML='<div class="empty"><div class="empty-ic">📝</div>No sessions</div>';return}
+  let h='<table><thead><tr><th>Date</th><th>Time</th><th>Subject</th><th>Student</th><th>Topic</th><th>Hrs</th><th>Fee</th><th>Status</th><th></th></tr></thead><tbody>';
+  list.forEach(s=>{const st=D.students.find(x=>x.id===s.studentId);
+    h+=`<tr><td style="white-space:nowrap">${fDT(s.date)}</td><td class="mono" style="font-size:13px">${s.start}-${s.end}</td><td>${sbg(s.subject)}</td><td style="font-weight:700">${st?(st.nickname||st.name):'-'}</td><td style="font-size:13px">${s.topic||'-'}</td><td class="mono">${s.hours?.toFixed(1)||'-'}</td><td class="mono" style="font-weight:800">฿${(s.fee||0).toLocaleString()}</td><td>${s.paid==='paid'?'<span class="bg bg-pd">Paid</span>':'<span class="bg bg-up">Unpaid</span>'}</td><td style="white-space:nowrap"><button class="btn btn-o btn-sm" onclick="openAtt('${s.id}')">📋</button> <button class="btn btn-o btn-sm" onclick="openSesM('${s.id}')">✏️</button> <button class="btn btn-d btn-sm" onclick="delSes('${s.id}')">🗑️</button></td></tr>`});
+  h+='</tbody></table>';_('sesList').innerHTML=h}
 
-function saveClientId(){
-  const val = document.getElementById('client-id-input').value.trim();
-  if(!val){ alert('กรุณาใส่ Client ID ค่ะ'); return; }
-  localStorage.setItem('gcal_client_id', val);
-  document.getElementById('setup-screen').style.display = 'none';
-  initGapi(val);
+// === ATTENDANCE ===
+function openAtt(sid){const s=D.sessions.find(x=>x.id===sid);if(!s)return;const st=D.students.find(x=>x.id===s.studentId);const att=s.attendance||'present';const nm=st?(st.nickname||st.name):'Unknown';
+  let h=`<div style="margin-bottom:14px;font-weight:800">${fDT(s.date)} · ${s.start}-${s.end} · ${sbg(s.subject)}</div>`;
+  h+=`<div class="at-r"><div class="at-c ${att==='present'?'ck':att==='absent'?'ab':''}" id="ac_${s.id}" onclick="cyc(this)">${att==='present'?'✓':att==='absent'?'✗':''}</div><div style="flex:1"><div style="font-weight:800">${nm}</div><div style="font-size:12px;color:var(--tx3)" id="al_${s.id}">${att==='present'?'✅ Present':att==='absent'?'❌ Absent':'⬜ Not checked'}</div></div></div>`;
+  h+=`<div class="fg" style="margin-top:16px"><label>Session Notes</label><textarea id="aNo" rows="3" placeholder="Notes...">${s.attendNote||''}</textarea></div>`;
+  _('attB').innerHTML=h;_('attB').dataset.sid=s.id;opM('attModal')}
+function cyc(el){const sid=_('attB').dataset.sid;const lb=_('al_'+sid);if(el.classList.contains('ck')){el.classList.remove('ck');el.classList.add('ab');el.textContent='✗';lb.textContent='❌ Absent'}else if(el.classList.contains('ab')){el.classList.remove('ab');el.textContent='';lb.textContent='⬜ Not checked'}else{el.classList.add('ck');el.textContent='✓';lb.textContent='✅ Present'}}
+function saveAtt(){const sid=_('attB').dataset.sid;const s=D.sessions.find(x=>x.id===sid);if(!s)return;const ck=_('ac_'+sid);s.attendance=ck.classList.contains('ck')?'present':ck.classList.contains('ab')?'absent':'none';s.attendNote=_('aNo').value.trim();saveD();clM('attModal');rSes()}
+
+// === TRANSACTIONS ===
+function popTxSt(){const s=_('txSt');s.innerHTML='<option value="">-- None --</option>';D.students.forEach(st=>{s.innerHTML+=`<option value="${st.id}">${st.nickname?st.name+' ('+st.nickname+')':st.name}</option>`})}
+function openTxM(eid){popTxSt();if(eid){const t=D.transactions.find(x=>x.id===eid);if(!t)return;_('txMT').textContent='Edit Transaction';_('txTy').value=t.type;_('txDt').value=t.date;_('txAm').value=t.amount;_('txSt').value=t.studentId||'';_('txDs').value=t.desc||'';_('txCat').value=t.category||'other';_('txEI').value=eid}
+  else{_('txMT').textContent='Add Transaction';_('txTy').value='expense';_('txDt').value=new Date().toISOString().split('T')[0];_('txAm').value='';_('txSt').value='';_('txDs').value='';_('txCat').value='other';_('txEI').value=''}
+  syncCSel('txTy');syncCSel('txSt');syncCSel('txCat');opM('txModal')}
+function saveTx(){const date=_('txDt').value;if(!date)return alert('Select a date');const amt=parseFloat(_('txAm').value);if(!amt||amt<=0)return alert('Enter amount');
+  const d={type:_('txTy').value,date,amount:amt,studentId:_('txSt').value,desc:_('txDs').value.trim(),category:_('txCat').value};
+  const eid=_('txEI').value;if(eid){const i=D.transactions.findIndex(t=>t.id===eid);if(i!==-1)D.transactions[i]={...D.transactions[i],...d}}else{d.id=uid();d.createdAt=new Date().toISOString();D.transactions.push(d)}saveD();clM('txModal');rInc()}
+function delTx(id){if(!confirm('Delete?'))return;D.transactions=D.transactions.filter(t=>t.id!==id);saveD();rInc()}
+
+const CATS={tuition:'Tuition',books:'Books / Supplies',treats:'Treats / Snacks',transport:'Transport',material:'Teaching Material',other:'Other'};
+let incV='overview';
+function setIV(v){incV=v;document.querySelectorAll('#page-income .tab').forEach((t,i)=>t.classList.toggle('on',['overview','student','transactions'][i]===v));rInc()}
+function rInc(){popMF('incMo');const fm=_('incMo').value;let ses=[...D.sessions];if(fm)ses=ses.filter(s=>s.date.startsWith(fm));let txs=[...D.transactions];if(fm)txs=txs.filter(t=>t.date.startsWith(fm));
+  const sI=ses.reduce((s,x)=>s+(x.fee||0),0),tI=txs.filter(t=>t.type==='income').reduce((s,x)=>s+x.amount,0),totI=sI+tI;
+  const totE=txs.filter(t=>t.type==='expense').reduce((s,x)=>s+x.amount,0),net=totI-totE;
+  const unpd=ses.filter(s=>s.paid!=='paid').reduce((s,x)=>s+(x.fee||0),0);
+  _('incSt').innerHTML=`<div class="st g an"><div class="st-ic">💰</div><div class="st-lb">Total Income</div><div class="st-v">฿${totI.toLocaleString()}</div><div class="st-s">Tuition ฿${sI.toLocaleString()} + Other ฿${tI.toLocaleString()}</div></div>
+    <div class="st p an a1"><div class="st-ic">🛒</div><div class="st-lb">Total Expense</div><div class="st-v">฿${totE.toLocaleString()}</div></div>
+    <div class="st b an a2"><div class="st-ic">📊</div><div class="st-lb">Net Profit</div><div class="st-v">฿${net.toLocaleString()}</div></div>
+    <div class="st o an a3"><div class="st-ic">⏳</div><div class="st-lb">Unpaid</div><div class="st-v">฿${unpd.toLocaleString()}</div></div>`;
+  _('incT').textContent={overview:'Overview',student:'By Student',transactions:'All Transactions'}[incV];
+  if(incV==='overview'){let h='<table><thead><tr><th>Subject</th><th>Sessions</th><th>Hours</th><th>Income</th><th>Unpaid</th></tr></thead><tbody>';
+    ['math','physics','python'].forEach(sub=>{const ss=ses.filter(s=>s.subject===sub);h+=`<tr><td>${sbg(sub)}</td><td class="mono">${ss.length}</td><td class="mono">${ss.reduce((s,x)=>s+(x.hours||0),0).toFixed(1)}</td><td class="mono" style="font-weight:800">฿${ss.reduce((s,x)=>s+(x.fee||0),0).toLocaleString()}</td><td class="mono" style="color:var(--orgF)">฿${ss.filter(s=>s.paid!=='paid').reduce((s,x)=>s+(x.fee||0),0).toLocaleString()}</td></tr>`});
+    h+='</tbody></table>';
+    h+='<div style="margin-top:24px"><div class="cd-t" style="margin-bottom:12px">Expenses by Category</div><table><thead><tr><th>Category</th><th>Count</th><th>Total</th></tr></thead><tbody>';
+    const ct={};txs.filter(t=>t.type==='expense').forEach(t=>{if(!ct[t.category])ct[t.category]={n:0,t:0};ct[t.category].n++;ct[t.category].t+=t.amount});
+    Object.entries(ct).forEach(([c,d])=>{h+=`<tr><td style="font-weight:700">${CATS[c]||c}</td><td class="mono">${d.n}</td><td class="mono" style="font-weight:800;color:var(--redF)">฿${d.t.toLocaleString()}</td></tr>`});
+    if(!Object.keys(ct).length)h+='<tr><td colspan="3" style="color:var(--tx3);text-align:center;padding:20px">No expenses</td></tr>';
+    h+='</tbody></table></div>';_('incB').innerHTML=h}
+  else if(incV==='student'){let h='<table><thead><tr><th>Student</th><th>Sessions</th><th>Income</th><th>Expenses</th><th>Net</th><th>Unpaid</th></tr></thead><tbody>';
+    const bs={};ses.forEach(s=>{const k=s.studentId||'_';if(!bs[k])bs[k]={n:0,i:0,e:0,u:0};bs[k].n++;bs[k].i+=s.fee||0;if(s.paid!=='paid')bs[k].u+=s.fee||0});
+    txs.forEach(t=>{if(!t.studentId)return;if(!bs[t.studentId])bs[t.studentId]={n:0,i:0,e:0,u:0};if(t.type==='income')bs[t.studentId].i+=t.amount;else bs[t.studentId].e+=t.amount});
+    Object.entries(bs).forEach(([id,d])=>{const st=D.students.find(s=>s.id===id);h+=`<tr><td style="font-weight:800">${st?(st.nickname||st.name):'Unknown'}</td><td class="mono">${d.n}</td><td class="mono" style="color:var(--grn3);font-weight:800">฿${d.i.toLocaleString()}</td><td class="mono" style="color:var(--redF)">฿${d.e.toLocaleString()}</td><td class="mono" style="font-weight:800">฿${(d.i-d.e).toLocaleString()}</td><td>${d.u>0?`<span class="bg bg-up">฿${d.u.toLocaleString()}</span>`:'<span class="bg bg-pd">✅</span>'}</td></tr>`});
+    if(!Object.keys(bs).length)h+='<tr><td colspan="6" class="empty">No data</td></tr>';h+='</tbody></table>';_('incB').innerHTML=h}
+  else{const all=[];ses.forEach(s=>{all.push({date:s.date,type:'income',amount:s.fee||0,desc:`Tuition — ${SB[s.subject]?.l||s.subject}`,studentId:s.studentId,category:'tuition',src:'ses',id:s.id})});txs.forEach(t=>{all.push({...t,src:'tx'})});all.sort((a,b)=>b.date.localeCompare(a.date));
+    let h='<table><thead><tr><th>Date</th><th>Type</th><th>Description</th><th>Student</th><th>Category</th><th>Amount</th><th></th></tr></thead><tbody>';
+    all.forEach(t=>{const st=D.students.find(s=>s.id===t.studentId);const isI=t.type==='income';h+=`<tr><td style="white-space:nowrap">${fDT(t.date)}</td><td>${isI?'<span class="bg bg-in">Income</span>':'<span class="bg bg-ex">Expense</span>'}</td><td style="font-size:13px">${t.desc||'-'}</td><td>${st?(st.nickname||st.name):'-'}</td><td style="font-size:13px">${CATS[t.category]||t.category||'-'}</td><td class="mono" style="font-weight:800;color:${isI?'var(--grn3)':'var(--redF)'}">฿${(t.amount||0).toLocaleString()}</td><td>${t.src==='tx'?`<button class="btn btn-o btn-sm" onclick="openTxM('${t.id}')">✏️</button> <button class="btn btn-d btn-sm" onclick="delTx('${t.id}')">🗑️</button>`:''}</td></tr>`});
+    if(!all.length)h+='<tr><td colspan="7" class="empty">No transactions</td></tr>';h+='</tbody></table>';_('incB').innerHTML=h}
 }
 
-function initGapi(clientId){
-  gapi.load('client', async ()=>{
-    await gapi.client.init({ discoveryDocs:['https://www.googleapis.com/discovery/v1/apis/calendar/v3/rest'] });
-    gapiReady = true;
-    tokenClient = google.accounts.oauth2.initTokenClient({
-      client_id: clientId,
-      scope: SCOPES,
-      callback: (resp)=>{
-        if(resp.error){ console.error(resp); return; }
-        isSignedIn = true;
-        updateAuthUI();
-        syncCalendar();
-      }
-    });
-    gsiReady = true;
-    document.getElementById('main-nav').style.display = 'flex';
-    document.getElementById('signin-btn').style.display = 'inline-block';
-    updateAuthUI();
-    renderAll();
+// === CALENDAR ===
+let cD=new Date(),cV='month';
+function setCV(v){cV=v;document.querySelectorAll('#page-calendar .tab').forEach((t,i)=>t.classList.toggle('on',(i===0&&v==='month')||(i===1&&v==='week')));rCal()}
+function calN(d){if(cV==='month')cD.setMonth(cD.getMonth()+d);else cD.setDate(cD.getDate()+d*7);rCal()}
+function calT(){cD=new Date();rCal()}
+function rCal(){cV==='month'?rMo():rWk()}
+function rMo(){const y=cD.getFullYear(),m=cD.getMonth();_('calLbl').textContent=`${eM(m)} ${y}`;const fd=new Date(y,m,1).getDay(),dim=new Date(y,m+1,0).getDate(),now=new Date();
+  const days=['Su','Mo','Tu','We','Th','Fr','Sa'];let h='<div class="cg">';days.forEach(d=>h+=`<div class="ch">${d}</div>`);const pd=new Date(y,m,0).getDate();
+  for(let i=0;i<fd;i++)h+=`<div class="ce ot"><div class="dn">${pd-fd+1+i}</div></div>`;
+  for(let d=1;d<=dim;d++){const ds=`${y}-${String(m+1).padStart(2,'0')}-${String(d).padStart(2,'0')}`;const isT=now.getFullYear()===y&&now.getMonth()===m&&now.getDate()===d;const evts=D.sessions.filter(s=>s.date===ds);
+    h+=`<div class="ce ${isT?'td':''}" onclick="openSesM(null,'${ds}')"><div class="dn">${d}</div>`;evts.slice(0,3).forEach(ev=>{const st=D.students.find(s=>s.id===ev.studentId);h+=`<div class="cv ${ev.subject}" onclick="event.stopPropagation();openSesM('${ev.id}')">${ev.start} ${st?(st.nickname||st.name):''}</div>`});if(evts.length>3)h+=`<div style="font-size:10px;color:var(--tx3)">+${evts.length-3}</div>`;h+='</div>'}
+  const rem=(fd+dim)%7===0?0:7-(fd+dim)%7;for(let i=1;i<=rem;i++)h+=`<div class="ce ot"><div class="dn">${i}</div></div>`;h+='</div>';_('calBox').innerHTML=h}
+function rWk(){const sow=new Date(cD);sow.setDate(sow.getDate()-sow.getDay());const eow=new Date(sow);eow.setDate(eow.getDate()+6);
+  _('calLbl').textContent=`${sow.getDate()} ${eM(sow.getMonth()).substr(0,3)} — ${eow.getDate()} ${eM(eow.getMonth()).substr(0,3)} ${eow.getFullYear()}`;
+  const now=new Date();const days=['Sun','Mon','Tue','Wed','Thu','Fri','Sat'];let h='<div class="wg"><div class="wh"></div>';
+  for(let i=0;i<7;i++){const d=new Date(sow);d.setDate(d.getDate()+i);h+=`<div class="wh ${d.toDateString()===now.toDateString()?'wtd':''}">${days[i]}<span class="wdn">${d.getDate()}</span></div>`}
+  for(let hr=8;hr<22;hr++){h+=`<div class="wt">${String(hr).padStart(2,'0')}:00</div>`;for(let i=0;i<7;i++){const d=new Date(sow);d.setDate(d.getDate()+i);const ds=d.toISOString().split('T')[0];h+=`<div class="ws" onclick="openSesM(null,'${ds}')">`;
+    D.sessions.filter(s=>s.date===ds).forEach(ev=>{const[sh]=ev.start.split(':').map(Number),[eh,em]=ev.end.split(':').map(Number);if(sh===hr){const dur=((eh*60+em)-sh*60)/60;const ht=Math.max(28,dur*50);const cols={math:'var(--mathF)',physics:'var(--phyF)',python:'var(--pyF)'};const bgs={math:'var(--mathBg)',physics:'var(--phyBg)',python:'var(--pyBg)'};const st=D.students.find(s=>s.id===ev.studentId);
+      h+=`<div class="we" style="top:0;height:${ht}px;background:${bgs[ev.subject]};color:${cols[ev.subject]};border-left-color:${cols[ev.subject]}" onclick="event.stopPropagation();openSesM('${ev.id}')">${ev.start} ${st?(st.nickname||st.name):''}</div>`}});h+='</div>'}}h+='</div>';_('calBox').innerHTML=h}
+
+// === DASHBOARD ===
+function rDash(){const now=new Date(),hr=now.getHours();_('greetH').textContent=`${hr<12?'Good Morning':hr<17?'Good Afternoon':'Good Evening'}! 👋`;
+  const tm=`${now.getFullYear()}-${String(now.getMonth()+1).padStart(2,'0')}`;const ms=D.sessions.filter(s=>s.date.startsWith(tm));const ts=now.toISOString().split('T')[0];const tds=D.sessions.filter(s=>s.date===ts);
+  const totF=ms.reduce((s,x)=>s+(x.fee||0),0),totH=ms.reduce((s,x)=>s+(x.hours||0),0);
+  const moExp=(D.transactions||[]).filter(t=>t.date.startsWith(tm)&&t.type==='expense').reduce((s,x)=>s+x.amount,0);
+  _('greetP').textContent=`You have ${tds.length} session${tds.length!==1?'s':''} today · ${ms.length} sessions this month (${totH.toFixed(1)} hrs)`;
+  _('dashSt').innerHTML=`<div class="st g an"><div class="st-ic">👥</div><div class="st-lb">Students</div><div class="st-v">${D.students.length}</div></div>
+    <div class="st o an a1"><div class="st-ic">📝</div><div class="st-lb">Sessions</div><div class="st-v">${ms.length}</div><div class="st-s">${totH.toFixed(1)} hours</div></div>
+    <div class="st b an a2"><div class="st-ic">💰</div><div class="st-lb">Income</div><div class="st-v">฿${totF.toLocaleString()}</div></div>
+    <div class="st p an a3"><div class="st-ic">🛒</div><div class="st-lb">Expenses</div><div class="st-v">฿${moExp.toLocaleString()}</div></div>`;
+  // Upcoming — Travigo schedule card style
+  const up=D.sessions.filter(s=>s.date>=ts).sort((a,b)=>a.date.localeCompare(b.date)||(a.start||'').localeCompare(b.start||'')).slice(0,5);
+  if(!up.length)_('upcoming').innerHTML='<div class="empty"><div class="empty-ic">📅</div>No upcoming sessions</div>';
+  else{let h='';up.forEach(s=>{const st=D.students.find(x=>x.id===s.studentId);h+=`<div class="sch-card" onclick="openSesM('${s.id}')"><div class="sch-thumb ${s.subject}">${SB[s.subject]?.em||'📚'}</div><div class="sch-info"><div class="sch-name">${st?(st.nickname||st.name):'-'} ${s.topic?'· '+s.topic:''}</div><div class="sch-meta">📅 ${fDT(s.date)} · ⏰ ${s.start}–${s.end}</div></div><div class="sch-price">฿${(s.fee||0).toLocaleString()}</div></div>`});_('upcoming').innerHTML=h}
+  // Finance summary
+  let fh='<div style="display:grid;grid-template-columns:repeat(3,1fr);gap:10px">';
+  ['math','physics','python'].forEach(sub=>{const ss=ms.filter(x=>x.subject===sub);const fee=ss.reduce((s,x)=>s+(x.fee||0),0);
+    fh+=`<div style="padding:16px;background:var(--${sub==='math'?'math':sub==='physics'?'phy':'py'}Bg);border-radius:var(--r2)">${sbg(sub)}<div class="mono" style="font-size:22px;font-weight:900;margin-top:8px;color:var(--${sub==='math'?'math':sub==='physics'?'phy':'py'}F)">฿${fee.toLocaleString()}</div><div style="font-size:12px;opacity:.6;font-weight:700">${ss.length} sessions</div></div>`});
+  fh+='</div>';
+  if(moExp>0)fh+=`<div style="margin-top:12px;padding:12px 16px;background:var(--redL);border-radius:var(--r3);display:flex;justify-content:space-between;align-items:center"><span style="font-weight:800;color:var(--redF)">🛒 Expenses this month</span><span class="mono" style="font-weight:800;color:var(--redF)">฿${moExp.toLocaleString()}</span></div>`;
+  _('dashFin').innerHTML=fh;
+  renderMC();
+  // My Schedule — Travigo style
+  if(!tds.length)_('todayTL').innerHTML='<div style="color:var(--tx3);font-size:14px;padding:12px 0;font-weight:600">No sessions today ☀️</div>';
+  else{let h='';tds.sort((a,b)=>(a.start||'').localeCompare(b.start||'')).forEach(s=>{const st=D.students.find(x=>x.id===s.studentId);h+=`<div class="ms-item" onclick="openSesM('${s.id}')"><div class="ms-thumb ${s.subject}">${SB[s.subject]?.em||'📚'}</div><div class="ms-info"><div class="ms-name">${st?(st.nickname||st.name):'-'}</div><div class="ms-meta">⏰ ${s.start}–${s.end} · ${s.topic||SB[s.subject]?.l||''}</div></div></div>`});_('todayTL').innerHTML=h}}
+function renderMC(){const now=new Date(),y=now.getFullYear(),m=now.getMonth();const fd=new Date(y,m,1).getDay();const fdM=fd===0?6:fd-1;const dim=new Date(y,m+1,0).getDate();
+  const days=['Mo','Tu','We','Th','Fr','Sa','Su'];let h=`<div class="mc-nav"><span class="mc-lbl">${eM(m)} ${y}</span><div><button class="btn btn-o btn-sm" style="padding:4px 8px" onclick="event.stopPropagation()">◀</button> <button class="btn btn-o btn-sm" style="padding:4px 8px" onclick="event.stopPropagation()">▶</button></div></div><div class="mc-g">`;
+  days.forEach(d=>h+=`<div class="mc-h">${d}</div>`);const pd=new Date(y,m,0).getDate();
+  for(let i=0;i<fdM;i++)h+=`<div class="mc-d ot">${pd-fdM+1+i}</div>`;
+  for(let d=1;d<=dim;d++){const ds=`${y}-${String(m+1).padStart(2,'0')}-${String(d).padStart(2,'0')}`;h+=`<div class="mc-d ${d===now.getDate()?'td':''} ${D.sessions.some(s=>s.date===ds)?'hev':''}">${d}</div>`}
+  const tot=fdM+dim;const rem=tot%7===0?0:7-tot%7;for(let i=1;i<=rem;i++)h+=`<div class="mc-d ot">${i}</div>`;h+='</div>';_('dashMC').innerHTML=h}
+
+// === SETTINGS ===
+function loadSett(){_('sCI').value=D.settings.clientId||'';_('sCL').value=D.settings.calendarId||'primary';_('sRM').value=D.settings.rateMath||'';_('sRP').value=D.settings.ratePhysics||'';_('sRY').value=D.settings.ratePython||''}
+function saveSett(){D.settings.clientId=_('sCI').value.trim();D.settings.calendarId=_('sCL').value.trim()||'primary';D.settings.rateMath=parseInt(_('sRM').value)||500;D.settings.ratePhysics=parseInt(_('sRP').value)||500;D.settings.ratePython=parseInt(_('sRY').value)||600;saveD()}
+function expD(){const b=new Blob([JSON.stringify(D,null,2)],{type:'application/json'});const a=document.createElement('a');a.href=URL.createObjectURL(b);a.download=`tutor-${new Date().toISOString().split('T')[0]}.json`;a.click()}
+function impD(e){const f=e.target.files[0];if(!f)return;const r=new FileReader();r.onload=ev=>{try{const d=JSON.parse(ev.target.result);if(confirm('Replace current data?')){D={...defD(),...d,transactions:d.transactions||[]};saveD();location.reload()}}catch{alert('Invalid file')}};r.readAsText(f)}
+function clrD(){if(confirm('Clear all data?')&&confirm('Are you sure?')){localStorage.removeItem(K);D=defD();location.reload()}}
+
+// === GOOGLE CALENDAR ===
+let tokC=null;
+function initG(){if(!D.settings.clientId)return;const s1=document.createElement('script');s1.src='https://apis.google.com/js/api.js';s1.onload=()=>{gapi.load('client',async()=>{await gapi.client.init({discoveryDocs:['https://www.googleapis.com/discovery/v1/apis/calendar/v3/rest']});chkGC()})};document.head.appendChild(s1);
+  const s2=document.createElement('script');s2.src='https://accounts.google.com/gsi/client';s2.onload=()=>{tokC=google.accounts.oauth2.initTokenClient({client_id:D.settings.clientId,scope:'https://www.googleapis.com/auth/calendar.events',callback:r=>{if(r.error)return;updGUI(true);fetchGE()}})};document.head.appendChild(s2)}
+function handleGCal(){if(!D.settings.clientId){go('settings');alert('Enter Client ID first');return}if(!tokC){initG();setTimeout(()=>{if(tokC)tokC.requestAccessToken({prompt:'consent'})},2000);return}tokC.requestAccessToken({prompt:'consent'})}
+function chkGC(){updGUI(!!gapi?.client?.getToken())}
+function updGUI(c){_('gcalDot').className='gcal-dot '+(c?'on':'off');_('gcalLbl').textContent=c?'Connected':'Not connected';const b=_('gcalBtn');b.textContent=c?'Refresh Events':'Connect Calendar';b.onclick=c?fetchGE:handleGCal}
+async function fetchGE(){try{const r=await gapi.client.calendar.events.list({calendarId:D.settings.calendarId||'primary',timeMin:new Date(new Date().getFullYear(),new Date().getMonth(),1).toISOString(),timeMax:new Date(new Date().getFullYear(),new Date().getMonth()+2,0).toISOString(),singleEvents:true,orderBy:'startTime'});window.gcE=(r.result.items||[]).map(e=>({summary:e.summary,start:e.start?.dateTime||e.start?.date,end:e.end?.dateTime||e.end?.date}));rCal()}catch(e){console.error(e)}}
+async function addGCal(d){try{const st=D.students.find(s=>s.id===d.studentId);await gapi.client.calendar.events.insert({calendarId:D.settings.calendarId||'primary',resource:{summary:`${SB[d.subject]?.l||d.subject} — ${st?(st.nickname||st.name):''}`,description:d.topic||'',start:{dateTime:`${d.date}T${d.start}:00`,timeZone:'Asia/Bangkok'},end:{dateTime:`${d.date}T${d.end}:00`,timeZone:'Asia/Bangkok'}}})}catch{alert('Failed to add to Calendar')}}
+
+// === HELPERS ===
+function eM(m){return['January','February','March','April','May','June','July','August','September','October','November','December'][m]}
+function fDT(ds){const[y,m,d]=ds.split('-').map(Number);return`${d} ${eM(m-1).substr(0,3)}`}
+function popMF(id){const sel=_(id);if(!sel)return;const mos=new Set();D.sessions.forEach(s=>{if(s.date)mos.add(s.date.substr(0,7))});D.transactions.forEach(t=>{if(t.date)mos.add(t.date.substr(0,7))});const now=new Date();const cm=`${now.getFullYear()}-${String(now.getMonth()+1).padStart(2,'0')}`;mos.add(cm);const sorted=[...mos].sort().reverse();const prev=sel.value;sel.innerHTML='<option value="">All Months</option>';sorted.forEach(m=>{const[y,mo]=m.split('-').map(Number);sel.innerHTML+=`<option value="${m}" ${m===prev?'selected':''}>${eM(mo-1)} ${y}</option>`});if(!prev)sel.value=cm;syncCSel(id)}
+
+// === CUSTOM SELECT ENGINE ===
+function toggleCSel(display){
+  const csel=display.parentElement;const opts=csel.querySelector('.csel-opts');const isOpen=opts.classList.contains('show');
+  closeAllCSel();
+  if(!isOpen){display.classList.add('open');opts.classList.add('show');buildCSelOpts(csel)}
+}
+function closeAllCSel(){document.querySelectorAll('.csel-display.open').forEach(d=>d.classList.remove('open'));document.querySelectorAll('.csel-opts.show').forEach(o=>o.classList.remove('show'))}
+document.addEventListener('click',e=>{if(!e.target.closest('.csel'))closeAllCSel()});
+
+function buildCSelOpts(csel){
+  const sel=csel.querySelector('select');const optsDiv=csel.querySelector('.csel-opts');if(!sel)return;
+  let h='';Array.from(sel.options).forEach((opt,i)=>{
+    const icon=opt.dataset.icon||'';const isActive=opt.value===sel.value;
+    h+=`<div class="csel-opt ${isActive?'active':''}" data-val="${opt.value}" onclick="pickCSel(this)">`;
+    if(icon)h+=`<span class="opt-icon">${icon}</span>`;
+    h+=`<span>${opt.textContent}</span></div>`;
   });
+  optsDiv.innerHTML=h;
 }
-
-function signIn(){ if(tokenClient) tokenClient.requestAccessToken({prompt:'consent'}); }
-function signOut(){
-  google.accounts.oauth2.revoke(gapi.client.getToken()?.access_token||'', ()=>{});
-  gapi.client.setToken('');
-  isSignedIn = false;
-  calendarEvents = [];
-  updateAuthUI();
-  renderAll();
+function pickCSel(optEl){
+  const csel=optEl.closest('.csel');const sel=csel.querySelector('select');const display=csel.querySelector('.csel-display');
+  const val=optEl.dataset.val;sel.value=val;
+  const opt=sel.options[sel.selectedIndex];const icon=opt?.dataset?.icon||'';
+  display.textContent=(icon?icon+' ':'')+opt.textContent;
+  closeAllCSel();
+  sel.dispatchEvent(new Event('change'));
 }
-
-function updateAuthUI(){
-  const sb = document.getElementById('signin-btn');
-  const ob = document.getElementById('signout-btn');
-  const st = document.getElementById('cal-status-bar');
-  if(isSignedIn){
-    sb.style.display = 'none';
-    ob.style.display = 'inline-block';
-    st.innerHTML = '<span class="connected-dot"></span> เชื่อมต่อ Google Calendar แล้ว';
-  } else {
-    sb.style.display = 'inline-block';
-    ob.style.display = 'none';
-    st.innerHTML = '<span class="disconnected-dot"></span> ยังไม่ได้เชื่อมต่อ กด "เชื่อมต่อ Calendar" เพื่อซิงค์';
-  }
+function syncCSel(selId){
+  const sel=_(selId);if(!sel)return;const csel=sel.closest('.csel');if(!csel)return;
+  const display=csel.querySelector('.csel-display');const opt=sel.options[sel.selectedIndex];
+  if(opt){const icon=opt.dataset?.icon||'';display.textContent=(icon?icon+' ':'')+opt.textContent}
 }
-
-// -------- CALENDAR SYNC --------
-async function syncCalendar(){
-  if(!isSignedIn){ signIn(); return; }
-  const syncEl = document.getElementById('sync-status');
-  syncEl.innerHTML = '<div class="sync-bar"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 12a9 9 0 1 1-6.219-8.56"/></svg> กำลังดึงข้อมูลจาก Google Calendar...</div>';
-  try {
-    const dates = getWeekDates(weekOffset);
-    const tMin = new Date(dates[0]); tMin.setHours(0,0,0,0);
-    const tMax = new Date(dates[4]); tMax.setHours(23,59,59,999);
-    const resp = await gapi.client.calendar.events.list({
-      calendarId: 'primary',
-      timeMin: tMin.toISOString(),
-      timeMax: tMax.toISOString(),
-      singleEvents: true,
-      orderBy: 'startTime',
-      maxResults: 100
-    });
-    const items = resp.result.items || [];
-    calendarEvents = items.map(e=>({
-      id: 'gcal_'+e.id,
-      title: e.summary||'(ไม่มีชื่อ)',
-      date: (e.start.dateTime||e.start.date||'').substring(0,10),
-      time: e.start.dateTime ? new Date(e.start.dateTime).toTimeString().substring(0,5) : '00:00',
-      endTime: e.end.dateTime ? new Date(e.end.dateTime).toTimeString().substring(0,5) : '',
-      source: 'gcal',
-      raw: e
-    }));
-    syncEl.innerHTML = `<div class="sync-bar">ซิงค์สำเร็จ พบ ${calendarEvents.length} event ค่ะ</div>`;
-    setTimeout(()=>{ syncEl.innerHTML=''; },3000);
-    renderWeek();
-  } catch(err){
-    syncEl.innerHTML = `<div class="sync-bar" style="background:#FCEBEB;color:#791F1F">ดึงข้อมูลไม่ได้: ${err.message||err}</div>`;
-  }
+function setCSel(selId,val){
+  const sel=_(selId);if(!sel)return;sel.value=val;syncCSel(selId);
 }
+// Override popSel for student dropdowns
+const _origPopSel=popSel;
+popSel=function(){_origPopSel();syncCSel('seSt')}
+const _origPopTxSt=popTxSt;
+popTxSt=function(){_origPopTxSt();syncCSel('txSt')}
 
-// -------- DATES --------
-function getWeekDates(offset){
-  const now = new Date();
-  const day = now.getDay();
-  const mon = new Date(now);
-  mon.setDate(now.getDate() - (day===0?6:day-1) + offset*7);
-  const dates = [];
-  for(let i=0;i<5;i++){ const d=new Date(mon); d.setDate(mon.getDate()+i); dates.push(d); }
-  return dates;
-}
-function fmtDate(d){ return `${d.getDate()}/${d.getMonth()+1}`; }
-function fmtDateKey(d){ return d.toISOString().split('T')[0]; }
-function thYear(d){ return d.getFullYear()+543; }
+// Init all custom selects on page load
+function initAllCSel(){document.querySelectorAll('.csel').forEach(csel=>{const sel=csel.querySelector('select');if(sel)syncCSel(sel.id)})}
 
-// -------- RENDER --------
-function renderAll(){ renderWeek(); renderStudents(); renderIncome(); renderStats(); }
-
-function renderWeek(){
-  const dates = getWeekDates(weekOffset);
-  document.getElementById('week-label').textContent =
-    `${fmtDate(dates[0])} — ${fmtDate(dates[4])} ${thYear(dates[0])}`;
-
-  const g = document.getElementById('week-grid');
-  let html = '<div class="wh"></div>';
-  DAYS.forEach((d,i)=>{
-    const isToday = fmtDateKey(dates[i])===fmtDateKey(new Date());
-    html+=`<div class="wh" style="${isToday?'color:var(--math-t);font-weight:700':''}">${d}<br><span style="font-size:10px;font-weight:400">${fmtDate(dates[i])}</span></div>`;
-  });
-
-  TIMES.forEach(t=>{
-    html+=`<div class="wt">${t}</div>`;
-    dates.forEach(date=>{
-      const dk = fmtDateKey(date);
-      const mySessions = data.sessions.filter(s=>s.date===dk && s.time===t);
-      const gcalEvts = calendarEvents.filter(e=>e.date===dk && e.time.substring(0,5)===t);
-      const hasAny = mySessions.length||gcalEvts.length;
-      html+=`<div class="wc${hasAny?' has-event':''}" onclick="openAddSession('${dk}','${t}')">`;
-      mySessions.forEach(s=>{
-        const stu = data.students.find(st=>st.id===s.studentId);
-        const name = stu ? stu.name.split(' ')[0] : '?';
-        const subjKey = s.subject||'math';
-        html+=`<div class="event-tag tag-${subjKey}" onclick="event.stopPropagation();openSessionDetail('${s.id}')">
-          <span>${name}</span><span style="font-size:9px">${SUBJ[subjKey]?.label||subjKey}</span>
-        </div>`;
-      });
-      gcalEvts.forEach(e=>{
-        html+=`<div class="event-tag gcal-tag" onclick="event.stopPropagation();showGcalDetail('${e.id}')">
-          <span style="overflow:hidden;text-overflow:ellipsis;white-space:nowrap;max-width:90px">${e.title}</span>
-        </div>`;
-      });
-      html+='</div>';
-    });
-  });
-  g.innerHTML = html;
-}
-
-function renderStudents(){
-  const el = document.getElementById('student-list');
-  if(!data.students.length){
-    el.innerHTML='<div class="empty-state">ยังไม่มีนักเรียน กด "+ เพิ่ม" ได้เลยค่ะ</div>';
-    return;
-  }
-  el.innerHTML = data.students.map(s=>{
-    const sessions = data.sessions.filter(x=>x.studentId===s.id);
-    const present = sessions.filter(x=>x.attended===true).length;
-    const absent = sessions.filter(x=>x.attended===false).length;
-    const initials = s.name.substring(0,2);
-    return `<div class="student-card">
-      <div class="stu-header">
-        <div class="avatar av-${s.subject||'gen'}">${initials}</div>
-        <div style="flex:1">
-          <div style="font-size:14px;font-weight:600">${s.name}</div>
-          <div style="font-size:12px;color:var(--text2)">${s.type==='group'?'กลุ่ม':'รายบุคคล'} · ${SUBJ[s.subject]?.label||'-'}</div>
-        </div>
-        <button class="del-btn" onclick="deleteStudent('${s.id}')">✕</button>
-      </div>
-      <div style="display:flex;gap:5px;flex-wrap:wrap;margin-bottom:6px">
-        <span class="pill pill-${s.subject||'blue'}">${SUBJ[s.subject]?.label||s.subject}</span>
-        <span class="pill ${s.type==='group'?'pill-phy':'pill-ok'}">${s.type==='group'?'กลุ่ม':'1:1'}</span>
-        <span class="pill pill-ok">เข้า ${present}</span>
-        ${absent?`<span class="pill pill-abs">ขาด ${absent}</span>`:''}
-        <span class="pill pill-blue">${s.rate?s.rate.toLocaleString()+' ฿/คาบ':'-'}</span>
-      </div>
-      ${s.note?`<div class="note-box">${s.note}</div>`:''}
-    </div>`;
-  }).join('');
-}
-
-function renderIncome(){
-  const now = new Date();
-  const thisMonth = `${now.getFullYear()}-${String(now.getMonth()+1).padStart(2,'0')}`;
-  const sessions = data.sessions.filter(s=>s.date&&s.date.startsWith(thisMonth)&&s.attended!==false);
-  let total = 0;
-  const rows = sessions.map(s=>{
-    const stu = data.students.find(st=>st.id===s.studentId);
-    const rate = stu?.rate||0; total+=rate;
-    return `<div class="income-row">
-      <div>
-        <div style="font-size:13px;font-weight:500">${stu?.name||'?'}</div>
-        <div style="font-size:11px;color:var(--text2)">${s.date} ${s.time} · ${SUBJ[s.subject]?.label||s.subject}</div>
-      </div>
-      <span style="font-size:14px;font-weight:600">${rate.toLocaleString()} ฿</span>
-    </div>`;
-  }).join('');
-  document.getElementById('inc-total').textContent = total.toLocaleString()+' ฿';
-  document.getElementById('inc-sessions').textContent = sessions.length;
-  document.getElementById('inc-students').textContent = new Set(sessions.map(s=>s.studentId)).size;
-  document.getElementById('income-list').innerHTML = rows||'<div class="empty-state">ยังไม่มีรายการเดือนนี้</div>';
-}
-
-function renderStats(){
-  document.getElementById('s-total').textContent = data.students.length;
-  document.getElementById('s-sessions').textContent = data.sessions.length;
-  const inc = data.sessions.filter(s=>s.attended!==false).reduce((acc,s)=>{
-    return acc+(data.students.find(st=>st.id===s.studentId)?.rate||0);
-  },0);
-  document.getElementById('s-income').textContent = inc.toLocaleString()+' ฿';
-  const rows = Object.entries(SUBJ).map(([k,v])=>{
-    const cnt = data.sessions.filter(s=>s.subject===k).length;
-    const stus = new Set(data.sessions.filter(s=>s.subject===k).map(s=>s.studentId)).size;
-    return `<div class="income-row">
-      <span class="pill pill-${k}">${v.label}</span>
-      <span style="font-size:13px;color:var(--text2)">${stus} คน · ${cnt} คาบ</span>
-    </div>`;
-  }).join('');
-  document.getElementById('subject-stats').innerHTML = rows;
-}
-
-// -------- NAV --------
-function showPg(id){
-  document.querySelectorAll('.pg').forEach(p=>p.classList.remove('on'));
-  document.querySelectorAll('.nav button:not(#signin-btn):not(#signout-btn)').forEach(b=>b.classList.remove('on'));
-  document.getElementById('pg-'+id).classList.add('on');
-  const idx = ['week','students','income','stats'].indexOf(id);
-  document.querySelectorAll('.nav button:not(#signin-btn):not(#signout-btn)')[idx]?.classList.add('on');
-  if(id==='week') renderWeek();
-  if(id==='students') renderStudents();
-  if(id==='income') renderIncome();
-  if(id==='stats') renderStats();
-}
-function changeWeek(d){ weekOffset+=d; renderWeek(); }
-
-// -------- MODALS --------
-function showModal(html){ document.getElementById('modal-area').innerHTML=`<div class="overlay" onclick="if(event.target.classList.contains('overlay'))closeModal()"><div class="modal">${html}</div></div>`; }
-function closeModal(){ document.getElementById('modal-area').innerHTML=''; }
-
-function openAddSession(date,time){
-  const dv = date||fmtDateKey(new Date());
-  const tv = time||'';
-  showModal(`<h3>เพิ่มคาบสอน</h3>
-    <div class="form-group"><label>วันที่</label><input type="date" id="m-date" value="${dv}"></div>
-    <div class="form-group"><label>เวลา</label><select id="m-time">${TIMES.map(t=>`<option${t===tv?' selected':''}>${t}</option>`).join('')}</select></div>
-    <div class="form-group"><label>นักเรียน</label><select id="m-stu"><option value="">-- เลือก --</option>${data.students.map(s=>`<option value="${s.id}">${s.name}</option>`).join('')}</select></div>
-    <div class="form-group"><label>วิชา</label><select id="m-subj">${Object.entries(SUBJ).map(([k,v])=>`<option value="${k}">${v.label}</option>`).join('')}</select></div>
-    <div class="form-group"><label>โน้ต</label><textarea id="m-note" placeholder="หัวข้อที่สอน..."></textarea></div>
-    <div class="btn-row"><button class="btn primary" onclick="saveSession()">บันทึก</button><button class="btn" onclick="closeModal()">ยกเลิก</button></div>`);
-}
-
-function openSessionDetail(id){
-  const s = data.sessions.find(x=>x.id===id); if(!s) return;
-  const stu = data.students.find(st=>st.id===s.studentId);
-  showModal(`<h3>${stu?.name||'?'} — ${SUBJ[s.subject]?.label||s.subject}</h3>
-    <p style="font-size:13px;color:var(--text2);margin-bottom:12px">${s.date} เวลา ${s.time}</p>
-    <div class="form-group"><label>การเข้าเรียน</label><select id="m-att">
-      <option value="null"${!s.attended&&s.attended!==false?' selected':''}>ยังไม่เช็ค</option>
-      <option value="true"${s.attended===true?' selected':''}>เข้าเรียน ✓</option>
-      <option value="false"${s.attended===false?' selected':''}>ขาดเรียน ✗</option>
-    </select></div>
-    <div class="form-group"><label>โน้ต</label><textarea id="m-snote">${s.note||''}</textarea></div>
-    <div class="btn-row">
-      <button class="btn primary" onclick="updateSession('${id}')">บันทึก</button>
-      <button class="btn danger" onclick="deleteSession('${id}')">ลบ</button>
-      <button class="btn" onclick="closeModal()">ปิด</button>
-    </div>`);
-}
-
-function showGcalDetail(id){
-  const e = calendarEvents.find(x=>x.id===id); if(!e) return;
-  const stuOptions = data.students.map(s=>`<option value="${s.id}">${s.name}</option>`).join('');
-  showModal(`<h3>${e.title}</h3>
-    <p style="font-size:13px;color:var(--text2);margin-bottom:12px">${e.date} เวลา ${e.time}${e.endTime?' — '+e.endTime:''} <span class="pill pill-gcal">Google Calendar</span></p>
-    <p style="font-size:13px;margin-bottom:12px">อยากบันทึกคาบนี้เข้าระบบไหมคะ?</p>
-    <div class="form-group"><label>นักเรียน</label><select id="gm-stu"><option value="">-- เลือก --</option>${stuOptions}</select></div>
-    <div class="form-group"><label>วิชา</label><select id="gm-subj">${Object.entries(SUBJ).map(([k,v])=>`<option value="${k}">${v.label}</option>`).join('')}</select></div>
-    <div class="btn-row">
-      <button class="btn primary" onclick="importGcalSession('${id}')">นำเข้า</button>
-      <button class="btn" onclick="closeModal()">ปิด</button>
-    </div>`);
-}
-
-function importGcalSession(gcalId){
-  const e = calendarEvents.find(x=>x.id===gcalId); if(!e) return;
-  const stuId = document.getElementById('gm-stu').value;
-  const subj = document.getElementById('gm-subj').value;
-  if(!stuId){ alert('เลือกนักเรียนด้วยนะคะ'); return; }
-  data.sessions.push({ id: gcalId, date:e.date, time:e.time, studentId:stuId, subject:subj, note:'นำเข้าจาก Google Calendar', attended:null, fromGcal:true });
-  save(); closeModal(); renderAll();
-}
-
-function saveSession(){
-  const date=document.getElementById('m-date').value;
-  const time=document.getElementById('m-time').value;
-  const studentId=document.getElementById('m-stu').value;
-  const subject=document.getElementById('m-subj').value;
-  const note=document.getElementById('m-note').value;
-  if(!date||!studentId){ alert('เลือกนักเรียนด้วยนะคะ'); return; }
-  data.sessions.push({id:Date.now().toString(),date,time,studentId,subject,note,attended:null});
-  save(); closeModal(); renderAll();
-}
-
-function updateSession(id){
-  const s=data.sessions.find(x=>x.id===id); if(!s) return;
-  const v=document.getElementById('m-att').value;
-  s.attended=v==='true'?true:v==='false'?false:null;
-  s.note=document.getElementById('m-snote').value;
-  save(); closeModal(); renderAll();
-}
-function deleteSession(id){ data.sessions=data.sessions.filter(x=>x.id!==id); save(); closeModal(); renderAll(); }
-function deleteStudent(id){
-  if(!confirm('ลบนักเรียนคนนี้?')) return;
-  data.students=data.students.filter(s=>s.id!==id);
-  data.sessions=data.sessions.filter(s=>s.studentId!==id);
-  save(); renderStudents(); renderStats();
-}
-function openAddStudent(){
-  showModal(`<h3>เพิ่มนักเรียน</h3>
-    <div class="form-group"><label>ชื่อ</label><input type="text" id="mn-name" placeholder="เช่น น้องมิ้น"></div>
-    <div class="form-group"><label>ประเภท</label><select id="mn-type"><option value="individual">รายบุคคล (1:1)</option><option value="group">กลุ่ม</option></select></div>
-    <div class="form-group"><label>วิชา</label><select id="mn-subj">${Object.entries(SUBJ).map(([k,v])=>`<option value="${k}">${v.label}</option>`).join('')}</select></div>
-    <div class="form-group"><label>ค่าสอน (฿/คาบ)</label><input type="number" id="mn-rate" placeholder="เช่น 400"></div>
-    <div class="form-group"><label>โน้ต</label><textarea id="mn-note" placeholder="ระดับชั้น จุดอ่อน เป้าหมาย..."></textarea></div>
-    <div class="btn-row"><button class="btn primary" onclick="saveStudent()">บันทึก</button><button class="btn" onclick="closeModal()">ยกเลิก</button></div>`);
-}
-function saveStudent(){
-  const name=document.getElementById('mn-name').value.trim();
-  if(!name){ alert('ใส่ชื่อนักเรียนด้วยนะคะ'); return; }
-  data.students.push({id:Date.now().toString(),name,type:document.getElementById('mn-type').value,subject:document.getElementById('mn-subj').value,rate:parseInt(document.getElementById('mn-rate').value)||0,note:document.getElementById('mn-note').value});
-  save(); closeModal(); renderStudents(); renderStats();
-}
-
-renderAll();
+document.addEventListener('DOMContentLoaded',()=>{initAllCSel();rDash();if(D.settings.clientId)initG()});
 </script>
 </body>
 </html>
