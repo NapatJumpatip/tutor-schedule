@@ -299,15 +299,15 @@ tr:hover td{background:var(--bg2)}
 
 <!-- GOOGLE EVENTS (imported) -->
 <div class="page" id="page-gcalimport">
-  <div class="greet an"><h1>📥 Google Calendar Events</h1><p>Manage imported events — toggle visibility without affecting your Google Calendar</p></div>
-  <div class="cd an a1">
-    <div class="cd-h"><div class="cd-t" id="gcalImpTitle">Imported Events</div>
-      <div style="display:flex;gap:8px">
-        <button class="btn btn-blue btn-sm" onclick="fetchGE()">🔄 Refresh from Google</button>
-        <button class="btn btn-o btn-sm" onclick="showAllGE()">👁 Show All</button>
-        <button class="btn btn-o btn-sm" onclick="hideAllGE()">🙈 Hide All</button>
-      </div>
-    </div>
+  <div class="greet an"><h1>📥 Google Calendar Events</h1><p>Import teaching events as sessions — link with students and track income</p></div>
+  <div style="display:flex;gap:8px;margin-bottom:16px;flex-wrap:wrap" class="an a1">
+    <button class="btn btn-blue btn-sm" onclick="fetchGE()">🔄 Refresh from Google</button>
+    <button class="btn btn-o btn-sm" onclick="showAllGE()">👁 Show All</button>
+    <button class="btn btn-o btn-sm" onclick="hideAllGE()">🙈 Hide All</button>
+  </div>
+  <div class="tabs an a1" id="gcalFilterTabs" style="margin-bottom:16px"></div>
+  <div class="cd an a2">
+    <div class="cd-h"><div class="cd-t" id="gcalImpTitle">Imported Events</div></div>
     <div id="gcalImpList"></div>
   </div>
 </div>
@@ -370,6 +370,19 @@ tr:hover td{background:var(--bg2)}
 <div class="fg"><label>Category</label><div class="csel"><div class="csel-display" onclick="toggleCSel(this)">📚 Tuition</div><div class="csel-opts"></div><select id="txCat"><option value="tuition" data-icon="📚">Tuition</option><option value="books" data-icon="📖">Books / Supplies</option><option value="treats" data-icon="🍰">Treats / Snacks</option><option value="transport" data-icon="🚗">Transport</option><option value="material" data-icon="📐">Teaching Material</option><option value="other" data-icon="📦">Other</option></select></div></div>
 <input type="hidden" id="txEI">
 <div style="display:flex;gap:8px;justify-content:flex-end;margin-top:20px"><button class="btn btn-o" onclick="clM('txModal')">Cancel</button><button class="btn btn-g" onclick="saveTx()">Save</button></div></div></div>
+
+<!-- CONVERT GCAL TO SESSION MODAL -->
+<div class="mo" id="cvModal"><div class="mo-box"><div class="mo-t">📥 Convert to Session</div>
+<div id="cvInfo" style="padding:14px;background:var(--gcalBg);border-radius:var(--r3);margin-bottom:16px;font-size:14px;color:var(--gcalF);font-weight:600"></div>
+<div class="fg"><label>Date</label><input type="date" id="cvDate" readonly style="opacity:.7"></div>
+<div class="fr"><div class="fg"><label>Start</label><input type="time" id="cvStart"></div><div class="fg"><label>End</label><input type="time" id="cvEnd"></div></div>
+<div class="fg"><label>Subject</label><div class="csel"><div class="csel-display" onclick="toggleCSel(this)">🔢 Math</div><div class="csel-opts"></div><select id="cvSubj"><option value="math" data-icon="🔢">Math</option><option value="physics" data-icon="⚛️">Physics</option><option value="python" data-icon="🐍">Python</option></select></div></div>
+<div class="fg"><label>Student</label><div class="csel"><div class="csel-display" onclick="toggleCSel(this)">-- Select --</div><div class="csel-opts"></div><select id="cvStudent"></select></div></div>
+<div class="fg"><label>Topic (from Google event title)</label><input id="cvTopic"></div>
+<div class="fg"><label>Payment</label><div class="csel"><div class="csel-display" onclick="toggleCSel(this)">⏳ Unpaid</div><div class="csel-opts"></div><select id="cvPaid"><option value="unpaid" data-icon="⏳">Unpaid</option><option value="paid" data-icon="✅">Paid</option></select></div></div>
+<div id="cvFeePreview" style="padding:12px 16px;background:var(--grnL2);border-radius:var(--r3);font-weight:800;color:var(--grn3);margin-bottom:8px"></div>
+<input type="hidden" id="cvGcalId">
+<div style="display:flex;gap:8px;justify-content:flex-end;margin-top:20px"><button class="btn btn-o" onclick="clM('cvModal')">Cancel</button><button class="btn btn-g" onclick="saveConvert()">✅ Convert & Save</button></div></div></div>
 
 <script>
 const K='tutorScheduleData',_=id=>document.getElementById(id);
@@ -488,24 +501,131 @@ function getVisibleGCalForDate(dateStr){
     return ev.date===dateStr;
   });
 }
+let gcalFilter='all';
+function setGCalFilter(f){gcalFilter=f;rGCalImp()}
+
 function rGCalImp(){
   const evts=D.gcalImported||[];
-  _('gcalImpTitle').textContent=`Imported Events (${evts.length})`;
-  if(!evts.length){_('gcalImpList').innerHTML='<div class="empty"><div class="empty-ic">📥</div>No imported events<br>Connect Google Calendar, select calendars in Settings, then Refresh</div>';return}
+  // Build filter tabs
+  const calNames=new Set();evts.forEach(ev=>{if(ev.calendarName)calNames.add(ev.calendarName)});
+  let tabH=`<div class="tab ${gcalFilter==='all'?'on':''}" onclick="setGCalFilter('all')">All (${evts.length})</div>`;
+  calNames.forEach(cn=>{
+    const cnt=evts.filter(e=>e.calendarName===cn).length;
+    const isTeach=cn.toLowerCase().includes('teach');
+    tabH+=`<div class="tab ${gcalFilter===cn?'on':''}" onclick="setGCalFilter('${cn.replace(/'/g,"\\'")}')">${isTeach?'🎓 ':''}${cn} (${cnt})</div>`;
+  });
+  const tabEl=_('gcalFilterTabs');if(tabEl)tabEl.innerHTML=tabH;
+
+  // Filter events
+  let filtered=evts;
+  if(gcalFilter!=='all')filtered=evts.filter(e=>e.calendarName===gcalFilter);
+  
+  _('gcalImpTitle').textContent=`${gcalFilter==='all'?'All Events':'📋 '+gcalFilter} (${filtered.length})`;
+  if(!filtered.length){_('gcalImpList').innerHTML='<div class="empty"><div class="empty-ic">📥</div>No events in this calendar<br>Try Refresh or select different calendars in Settings</div>';return}
+  
+  // Check which gcal events are already converted to sessions
+  const convertedIds=new Set();D.sessions.forEach(s=>{if(s.gcalId)convertedIds.add(s.gcalId)});
+  
   let h='';
-  evts.sort((a,b)=>(a.date||'').localeCompare(b.date||'')||(a.startTime||'').localeCompare(b.startTime||'')).forEach(ev=>{
+  filtered.sort((a,b)=>(a.date||'').localeCompare(b.date||'')||(a.startTime||'').localeCompare(b.startTime||'')).forEach(ev=>{
     const hidden=!!D.gcalHidden[ev.gcalId];
-    h+=`<div class="imp-item ${hidden?'hidden-ev':''}">
+    const converted=convertedIds.has(ev.gcalId);
+    const isTeach=(ev.calendarName||'').toLowerCase().includes('teach');
+    const linkedSession=converted?D.sessions.find(s=>s.gcalId===ev.gcalId):null;
+    const linkedStudent=linkedSession?D.students.find(s=>s.id===linkedSession.studentId):null;
+    
+    h+=`<div class="imp-item ${hidden?'hidden-ev':''}" style="${isTeach?'border-left:3px solid var(--grn);':''}">
       <div class="imp-toggle ${hidden?'':'on'}" onclick="toggleGCalVis('${ev.gcalId}',this)"></div>
       <div style="flex:1;min-width:0">
         <div style="font-weight:700;font-size:14px">${ev.summary||'(No title)'}</div>
         <div style="font-size:12px;color:var(--tx3);font-weight:600">📅 ${fDT(ev.date)} · ⏰ ${ev.startTime||'All day'}${ev.endTime?' – '+ev.endTime:''}</div>
         ${ev.calendarName?`<div style="font-size:11px;color:var(--gcalF);font-weight:700;margin-top:2px">📋 ${ev.calendarName}</div>`:''}
+        ${converted&&linkedStudent?`<div style="font-size:12px;color:var(--grn3);font-weight:700;margin-top:3px">✅ Linked: ${linkedStudent.nickname||linkedStudent.name} · ${sbg(linkedSession.subject)} · ฿${(linkedSession.fee||0).toLocaleString()}</div>`:''}
       </div>
-      <span class="bg bg-gcal" style="flex-shrink:0">Google</span>
+      <div style="display:flex;gap:6px;flex-shrink:0;align-items:center">
+        ${converted
+          ?'<span class="bg bg-pd">Linked ✅</span>'
+          :`<button class="btn btn-g btn-sm" onclick="openConvert('${ev.gcalId}')">📥 Convert</button>`}
+        <span class="bg bg-gcal">Google</span>
+      </div>
     </div>`;
   });
   _('gcalImpList').innerHTML=h;
+}
+
+// === CONVERT GOOGLE EVENT TO LOCAL SESSION ===
+function popCvSt(){const s=_('cvStudent');s.innerHTML='<option value="">-- Select Student --</option>';D.students.forEach(st=>{s.innerHTML+=`<option value="${st.id}">${st.nickname?st.name+' ('+st.nickname+')':st.name}</option>`});syncCSel('cvStudent')}
+
+function openConvert(gcalId){
+  const ev=(D.gcalImported||[]).find(e=>e.gcalId===gcalId);if(!ev)return;
+  popCvSt();
+  _('cvGcalId').value=gcalId;
+  _('cvDate').value=ev.date||'';
+  _('cvStart').value=ev.startTime||'';
+  _('cvEnd').value=ev.endTime||'';
+  _('cvTopic').value=ev.summary||'';
+  _('cvSubj').value='math';
+  _('cvStudent').value='';
+  _('cvPaid').value='unpaid';
+  _('cvInfo').innerHTML=`📅 <strong>${ev.summary||'(No title)'}</strong><br>🕐 ${ev.startTime||''}–${ev.endTime||''} · ${fDT(ev.date)}${ev.calendarName?' · 📋 '+ev.calendarName:''}`;
+  
+  // Try to auto-detect subject from calendar name
+  const cn=(ev.calendarName||'').toLowerCase();
+  if(cn.includes('online'))_('cvSubj').value='python'; // guess
+  
+  syncCSel('cvSubj');syncCSel('cvStudent');syncCSel('cvPaid');
+  updateCvFee();
+  opM('cvModal');
+}
+
+// Live fee preview
+function updateCvFee(){
+  const start=_('cvStart').value;const end=_('cvEnd').value;const subj=_('cvSubj').value;const stId=_('cvStudent').value;
+  if(!start||!end){_('cvFeePreview').textContent='';return}
+  const[sh,sm]=start.split(':').map(Number),[eh,em]=end.split(':').map(Number);
+  const hours=Math.max(0,((eh*60+em)-(sh*60+sm))/60);
+  const stu=D.students.find(s=>s.id===stId);
+  const rk='rate'+subj.charAt(0).toUpperCase()+subj.slice(1);
+  const rate=stu?.rates?.[subj]||D.settings[rk]||0;
+  const fee=hours*rate;
+  _('cvFeePreview').innerHTML=`💰 ${hours.toFixed(1)} hrs × ฿${rate}/hr = <strong>฿${fee.toLocaleString()}</strong>`;
+}
+// Fee preview listeners attached in DOMContentLoaded
+
+function saveConvert(){
+  const gcalId=_('cvGcalId').value;
+  const date=_('cvDate').value;const start=_('cvStart').value;const end=_('cvEnd').value;
+  const subj=_('cvSubj').value;const stId=_('cvStudent').value;
+  if(!date||!start||!end)return alert('Date and time required');
+  if(!stId)return alert('Please select a student');
+  
+  const[sh,sm]=start.split(':').map(Number),[eh,em]=end.split(':').map(Number);
+  const hours=Math.max(0,((eh*60+em)-(sh*60+sm))/60);
+  const stu=D.students.find(s=>s.id===stId);
+  const rk='rate'+subj.charAt(0).toUpperCase()+subj.slice(1);
+  const rate=stu?.rates?.[subj]||D.settings[rk]||0;
+  const fee=hours*rate;
+  
+  const session={
+    id:uid(),
+    date,start,end,
+    subject:subj,
+    studentId:stId,
+    topic:_('cvTopic').value.trim(),
+    note:'',
+    paid:_('cvPaid').value,
+    hours,fee,
+    attendance:'present',
+    gcalId:gcalId, // Link to Google Calendar event
+    convertedFromGoogle:true,
+    createdAt:new Date().toISOString()
+  };
+  
+  D.sessions.push(session);
+  saveD();
+  clM('cvModal');
+  toast(`✅ Converted! ${stu?.nickname||stu?.name} · ฿${fee.toLocaleString()}`,'ok');
+  rGCalImp();rSes();rCal();rDash();
 }
 function toggleGCalVis(gcalId,el){
   if(D.gcalHidden[gcalId]){delete D.gcalHidden[gcalId];el.classList.add('on');el.closest('.imp-item').classList.remove('hidden-ev')}
@@ -829,7 +949,11 @@ function pickCSel(optEl){const csel=optEl.closest('.csel');const sel=csel.queryS
 function syncCSel(selId){const sel=_(selId);if(!sel)return;const csel=sel.closest('.csel');if(!csel)return;const display=csel.querySelector('.csel-display');const opt=sel.options[sel.selectedIndex];if(opt){const icon=opt.dataset?.icon||'';display.textContent=(icon?icon+' ':'')+opt.textContent}}
 function initAllCSel(){document.querySelectorAll('.csel').forEach(csel=>{const sel=csel.querySelector('select');if(sel&&sel.id)syncCSel(sel.id)})}
 
-document.addEventListener('DOMContentLoaded',()=>{initAllCSel();rDash();if(D.settings.clientId)initG()});
+document.addEventListener('DOMContentLoaded',()=>{
+  initAllCSel();rDash();if(D.settings.clientId)initG();
+  // Live fee preview listeners for convert modal
+  ['cvStart','cvEnd'].forEach(id=>{const el=_(id);if(el)el.addEventListener('input',updateCvFee)});
+});
 </script>
 </body>
 </html>
