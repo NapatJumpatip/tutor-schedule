@@ -1,0 +1,584 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>ตารางสอนพิเศษ</title>
+<style>
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  :root {
+    --bg: #ffffff; --bg2: #f7f7f5; --bg3: #f0efe9;
+    --text: #1a1a1a; --text2: #6b6b6b; --text3: #9a9a9a;
+    --border: rgba(0,0,0,0.1); --border2: rgba(0,0,0,0.18);
+    --math: #EEEDFE; --math-t: #3C3489;
+    --phy: #E1F5EE; --phy-t: #085041;
+    --py: #FAEEDA; --py-t: #633806;
+    --radius: 10px; --radius-sm: 6px;
+  }
+  @media (prefers-color-scheme: dark) {
+    :root {
+      --bg: #1c1c1e; --bg2: #2c2c2e; --bg3: #3a3a3c;
+      --text: #f2f2f7; --text2: #aeaeb2; --text3: #636366;
+      --border: rgba(255,255,255,0.1); --border2: rgba(255,255,255,0.18);
+    }
+  }
+  body { font-family: -apple-system, 'Sarabun', sans-serif; background: var(--bg3); color: var(--text); min-height: 100vh; }
+  .app { max-width: 900px; margin: 0 auto; padding: 16px; }
+  h1 { font-size: 20px; font-weight: 600; margin-bottom: 4px; }
+  .subtitle { font-size: 13px; color: var(--text2); margin-bottom: 16px; }
+
+  /* Setup screen */
+  #setup-screen { background: var(--bg); border-radius: var(--radius); border: 1px solid var(--border); padding: 24px; margin-bottom: 16px; }
+  #setup-screen h2 { font-size: 16px; font-weight: 600; margin-bottom: 8px; }
+  #setup-screen p { font-size: 13px; color: var(--text2); margin-bottom: 16px; line-height: 1.6; }
+  .steps { display: flex; flex-direction: column; gap: 12px; margin-bottom: 20px; }
+  .step { display: flex; gap: 12px; align-items: flex-start; }
+  .step-num { width: 24px; height: 24px; border-radius: 50%; background: var(--math); color: var(--math-t); font-size: 12px; font-weight: 600; display: flex; align-items: center; justify-content: center; flex-shrink: 0; margin-top: 1px; }
+  .step-text { font-size: 13px; line-height: 1.6; color: var(--text); }
+  .step-text a { color: var(--math-t); }
+  .step-text code { background: var(--bg3); padding: 1px 5px; border-radius: 4px; font-size: 12px; font-family: monospace; }
+  .input-row { display: flex; gap: 8px; }
+  .input-row input { flex: 1; padding: 9px 12px; border-radius: var(--radius-sm); border: 1px solid var(--border2); background: var(--bg2); font-size: 13px; color: var(--text); font-family: inherit; }
+  .input-row input:focus { outline: none; border-color: var(--math-t); }
+  .btn { padding: 9px 18px; border-radius: var(--radius-sm); border: 1px solid var(--border2); background: var(--bg2); color: var(--text); font-size: 13px; cursor: pointer; font-family: inherit; font-weight: 500; }
+  .btn:hover { background: var(--bg3); }
+  .btn.primary { background: var(--math); color: var(--math-t); border-color: transparent; }
+  .btn.primary:hover { opacity: 0.85; }
+  .btn.danger { color: #A32D2D; border-color: #F09595; }
+  .btn.small { padding: 5px 12px; font-size: 12px; }
+
+  /* Nav */
+  .nav { display: flex; gap: 6px; margin-bottom: 16px; flex-wrap: wrap; }
+  .nav button { padding: 6px 14px; border-radius: 20px; font-size: 13px; cursor: pointer; border: 1px solid var(--border2); background: var(--bg2); color: var(--text2); font-family: inherit; }
+  .nav button.on { background: var(--bg); color: var(--text); border-color: var(--border2); font-weight: 600; }
+
+  /* Cards */
+  .card { background: var(--bg); border-radius: var(--radius); border: 1px solid var(--border); padding: 14px 16px; margin-bottom: 10px; }
+  .card-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 12px; }
+  .card-header h3 { font-size: 14px; font-weight: 600; }
+
+  /* Stats */
+  .stat-grid { display: grid; grid-template-columns: repeat(3, minmax(0,1fr)); gap: 8px; margin-bottom: 14px; }
+  .stat { background: var(--bg2); border-radius: var(--radius-sm); padding: 10px 12px; }
+  .stat .label { font-size: 11px; color: var(--text2); margin-bottom: 3px; }
+  .stat .value { font-size: 22px; font-weight: 600; }
+
+  /* Week grid */
+  .week-nav { display: flex; align-items: center; gap: 10px; margin-bottom: 12px; }
+  .week-nav h3 { font-size: 14px; font-weight: 600; flex: 1; }
+  .week-grid { display: grid; grid-template-columns: 56px repeat(5, minmax(0,1fr)); gap: 3px; }
+  .wh { font-size: 11px; font-weight: 600; color: var(--text2); text-align: center; padding: 4px 2px; }
+  .wt { font-size: 10px; color: var(--text3); padding: 3px 2px; display: flex; align-items: center; }
+  .wc { min-height: 46px; background: var(--bg2); border-radius: 6px; border: 1px solid var(--border); padding: 3px; cursor: pointer; transition: border-color 0.15s; }
+  .wc:hover { border-color: var(--border2); }
+  .wc.has-event { background: var(--bg); }
+  .event-tag { border-radius: 4px; padding: 2px 5px; font-size: 10px; font-weight: 600; margin-bottom: 2px; display: flex; justify-content: space-between; gap: 3px; cursor: pointer; }
+  .tag-math { background: var(--math); color: var(--math-t); }
+  .tag-phy { background: var(--phy); color: var(--phy-t); }
+  .tag-py { background: var(--py); color: var(--py-t); }
+  .tag-other { background: var(--bg3); color: var(--text2); }
+  .gcal-tag { background: #E6F1FB; color: #0C447C; border-left: 2px solid #378ADD; }
+
+  /* Pill */
+  .pill { font-size: 11px; padding: 2px 8px; border-radius: 20px; font-weight: 500; display: inline-block; }
+  .pill-math { background: var(--math); color: var(--math-t); }
+  .pill-phy { background: var(--phy); color: var(--phy-t); }
+  .pill-py { background: var(--py); color: var(--py-t); }
+  .pill-ok { background: #EAF3DE; color: #27500A; }
+  .pill-abs { background: #FCEBEB; color: #791F1F; }
+  .pill-blue { background: #E6F1FB; color: #0C447C; }
+  .pill-gcal { background: #E6F1FB; color: #0C447C; }
+
+  /* Student cards */
+  .student-card { background: var(--bg); border: 1px solid var(--border); border-radius: var(--radius); padding: 12px 14px; margin-bottom: 8px; }
+  .stu-header { display: flex; align-items: center; gap: 10px; margin-bottom: 8px; }
+  .avatar { width: 36px; height: 36px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 13px; font-weight: 600; flex-shrink: 0; }
+  .av-math { background: var(--math); color: var(--math-t); }
+  .av-phy { background: var(--phy); color: var(--phy-t); }
+  .av-py { background: var(--py); color: var(--py-t); }
+  .av-gen { background: var(--bg3); color: var(--text2); }
+
+  /* Income */
+  .income-row { display: flex; justify-content: space-between; align-items: center; padding: 8px 0; border-bottom: 1px solid var(--border); }
+  .income-row:last-child { border-bottom: none; }
+  .gcal-badge { font-size: 10px; background: #E6F1FB; color: #0C447C; padding: 1px 6px; border-radius: 10px; margin-left: 4px; }
+
+  /* Modal */
+  .overlay { position: fixed; inset: 0; background: rgba(0,0,0,0.4); display: flex; align-items: center; justify-content: center; z-index: 999; padding: 16px; }
+  .modal { background: var(--bg); border-radius: var(--radius); border: 1px solid var(--border2); padding: 20px; width: 320px; max-width: 100%; max-height: 90vh; overflow-y: auto; }
+  .modal h3 { font-size: 15px; font-weight: 600; margin-bottom: 14px; }
+  .form-group { margin-bottom: 10px; }
+  .form-group label { font-size: 12px; color: var(--text2); display: block; margin-bottom: 4px; }
+  .form-group input, .form-group select, .form-group textarea { width: 100%; padding: 8px 10px; border-radius: var(--radius-sm); border: 1px solid var(--border2); background: var(--bg2); font-size: 13px; color: var(--text); font-family: inherit; }
+  .form-group textarea { resize: vertical; min-height: 60px; }
+  .form-group input:focus, .form-group select:focus, .form-group textarea:focus { outline: none; border-color: var(--math-t); }
+  .btn-row { display: flex; gap: 8px; margin-top: 14px; }
+  .pg { display: none; } .pg.on { display: block; }
+
+  .sync-bar { display: flex; align-items: center; gap: 8px; background: #E6F1FB; border-radius: var(--radius-sm); padding: 8px 12px; margin-bottom: 12px; font-size: 12px; color: #0C447C; }
+  .sync-bar svg { flex-shrink: 0; }
+  .empty-state { text-align: center; padding: 2rem; font-size: 13px; color: var(--text3); }
+  .note-box { background: var(--bg2); border-radius: var(--radius-sm); padding: 7px 10px; font-size: 12px; color: var(--text2); margin-top: 6px; }
+  .del-btn { background: none; border: none; cursor: pointer; font-size: 13px; color: var(--text3); padding: 2px 5px; }
+  .del-btn:hover { color: #A32D2D; }
+  .connected-dot { width: 8px; height: 8px; border-radius: 50%; background: #639922; display: inline-block; margin-right: 4px; }
+  .disconnected-dot { width: 8px; height: 8px; border-radius: 50%; background: #E24B4A; display: inline-block; margin-right: 4px; }
+</style>
+</head>
+<body>
+<div class="app">
+  <h1>ตารางสอนพิเศษ</h1>
+  <p class="subtitle" id="cal-status-bar">กำลังตรวจสอบ Google Calendar...</p>
+
+  <!-- Setup -->
+  <div id="setup-screen" style="display:none">
+    <h2>เชื่อมต่อ Google Calendar</h2>
+    <p>ทำครั้งเดียวแล้วใช้ได้ตลอดค่ะ ตาม 3 ขั้นตอนนี้:</p>
+    <div class="steps">
+      <div class="step">
+        <div class="step-num">1</div>
+        <div class="step-text">ไปที่ <a href="https://console.cloud.google.com/" target="_blank">Google Cloud Console</a> → สร้าง Project ใหม่ → เปิดใช้งาน <strong>Google Calendar API</strong></div>
+      </div>
+      <div class="step">
+        <div class="step-num">2</div>
+        <div class="step-text">ไปที่ <strong>APIs &amp; Services → Credentials</strong> → สร้าง <strong>OAuth 2.0 Client ID</strong> เลือก "Web application" → ใส่ <code>http://localhost</code> และ <code>file://</code> ใน Authorized origins</div>
+      </div>
+      <div class="step">
+        <div class="step-num">3</div>
+        <div class="step-text">คัดลอก <strong>Client ID</strong> แล้วใส่ด้านล่างค่ะ</div>
+      </div>
+    </div>
+    <div class="input-row">
+      <input type="text" id="client-id-input" placeholder="xxxx.apps.googleusercontent.com" />
+      <button class="btn primary" onclick="saveClientId()">บันทึก</button>
+    </div>
+    <p style="margin-top:10px;font-size:12px;color:var(--text3)">Client ID เก็บไว้ในเบราว์เซอร์ของหยกเท่านั้น ไม่ได้ส่งไปที่ไหนค่ะ</p>
+  </div>
+
+  <!-- Main nav -->
+  <div class="nav" id="main-nav" style="display:none">
+    <button class="on" onclick="showPg('week')">ตารางสัปดาห์</button>
+    <button onclick="showPg('students')">นักเรียน</button>
+    <button onclick="showPg('income')">รายได้</button>
+    <button onclick="showPg('stats')">สถิติ</button>
+    <button onclick="signIn()" id="signin-btn" style="display:none">เชื่อมต่อ Calendar</button>
+    <button onclick="signOut()" id="signout-btn" style="display:none" class="small">ออกจากระบบ</button>
+  </div>
+
+  <!-- Pages -->
+  <div id="pg-week" class="pg on">
+    <div class="card">
+      <div class="week-nav">
+        <button class="btn small" onclick="changeWeek(-1)">&#8592;</button>
+        <h3 id="week-label">สัปดาห์นี้</h3>
+        <button class="btn small" onclick="changeWeek(1)">&#8594;</button>
+        <button class="btn small primary" onclick="syncCalendar()" id="sync-btn">ซิงค์</button>
+        <button class="btn small" onclick="openAddSession()">+ เพิ่ม</button>
+      </div>
+      <div id="sync-status"></div>
+      <div class="week-grid" id="week-grid"></div>
+    </div>
+  </div>
+
+  <div id="pg-students" class="pg">
+    <div class="card-header" style="margin-bottom:8px">
+      <h3 style="font-size:15px;font-weight:600">นักเรียนทั้งหมด</h3>
+      <button class="btn small primary" onclick="openAddStudent()">+ เพิ่ม</button>
+    </div>
+    <div id="student-list"></div>
+  </div>
+
+  <div id="pg-income" class="pg">
+    <div class="card">
+      <div class="card-header"><h3>รายได้เดือนนี้</h3></div>
+      <div class="stat-grid">
+        <div class="stat"><div class="label">รายได้รวม</div><div class="value" id="inc-total">0 ฿</div></div>
+        <div class="stat"><div class="label">คาบที่สอน</div><div class="value" id="inc-sessions">0</div></div>
+        <div class="stat"><div class="label">นักเรียน</div><div class="value" id="inc-students">0</div></div>
+      </div>
+      <div id="income-list"></div>
+    </div>
+  </div>
+
+  <div id="pg-stats" class="pg">
+    <div class="card">
+      <div class="card-header"><h3>สถิติรวม</h3></div>
+      <div class="stat-grid">
+        <div class="stat"><div class="label">นักเรียนทั้งหมด</div><div class="value" id="s-total">0</div></div>
+        <div class="stat"><div class="label">คาบทั้งหมด</div><div class="value" id="s-sessions">0</div></div>
+        <div class="stat"><div class="label">รายได้รวม</div><div class="value" id="s-income">0 ฿</div></div>
+      </div>
+      <div id="subject-stats"></div>
+    </div>
+  </div>
+
+  <!-- Modal container -->
+  <div id="modal-area"></div>
+</div>
+
+<!-- Google API -->
+<script src="https://apis.google.com/js/api.js"></script>
+<script src="https://accounts.google.com/gsi/client"></script>
+<script>
+const SUBJ = { math:{label:'คณิต',cls:'math'}, phy:{label:'ฟิสิกส์',cls:'phy'}, py:{label:'Python',cls:'py'} };
+const DAYS = ['จ','อ','พ','พฤ','ศ'];
+const TIMES = ['08:00','09:00','10:00','11:00','12:00','13:00','14:00','15:00','16:00','17:00','18:00','19:00','20:00'];
+const SCOPES = 'https://www.googleapis.com/auth/calendar.readonly';
+
+let data = JSON.parse(localStorage.getItem('tutor_v2')||'null') || {students:[],sessions:[]};
+let weekOffset = 0;
+let calendarEvents = [];
+let tokenClient = null;
+let gapiReady = false;
+let gsiReady = false;
+let isSignedIn = false;
+
+function save(){ localStorage.setItem('tutor_v2', JSON.stringify(data)); }
+
+// -------- INIT --------
+window.onload = function(){
+  const clientId = localStorage.getItem('gcal_client_id');
+  if(!clientId){
+    document.getElementById('setup-screen').style.display = 'block';
+    document.getElementById('cal-status-bar').textContent = 'ยังไม่ได้เชื่อมต่อ Google Calendar';
+    document.getElementById('main-nav').style.display = 'flex';
+    renderAll();
+    return;
+  }
+  initGapi(clientId);
+};
+
+function saveClientId(){
+  const val = document.getElementById('client-id-input').value.trim();
+  if(!val){ alert('กรุณาใส่ Client ID ค่ะ'); return; }
+  localStorage.setItem('gcal_client_id', val);
+  document.getElementById('setup-screen').style.display = 'none';
+  initGapi(val);
+}
+
+function initGapi(clientId){
+  gapi.load('client', async ()=>{
+    await gapi.client.init({ discoveryDocs:['https://www.googleapis.com/discovery/v1/apis/calendar/v3/rest'] });
+    gapiReady = true;
+    tokenClient = google.accounts.oauth2.initTokenClient({
+      client_id: clientId,
+      scope: SCOPES,
+      callback: (resp)=>{
+        if(resp.error){ console.error(resp); return; }
+        isSignedIn = true;
+        updateAuthUI();
+        syncCalendar();
+      }
+    });
+    gsiReady = true;
+    document.getElementById('main-nav').style.display = 'flex';
+    document.getElementById('signin-btn').style.display = 'inline-block';
+    updateAuthUI();
+    renderAll();
+  });
+}
+
+function signIn(){ if(tokenClient) tokenClient.requestAccessToken({prompt:'consent'}); }
+function signOut(){
+  google.accounts.oauth2.revoke(gapi.client.getToken()?.access_token||'', ()=>{});
+  gapi.client.setToken('');
+  isSignedIn = false;
+  calendarEvents = [];
+  updateAuthUI();
+  renderAll();
+}
+
+function updateAuthUI(){
+  const sb = document.getElementById('signin-btn');
+  const ob = document.getElementById('signout-btn');
+  const st = document.getElementById('cal-status-bar');
+  if(isSignedIn){
+    sb.style.display = 'none';
+    ob.style.display = 'inline-block';
+    st.innerHTML = '<span class="connected-dot"></span> เชื่อมต่อ Google Calendar แล้ว';
+  } else {
+    sb.style.display = 'inline-block';
+    ob.style.display = 'none';
+    st.innerHTML = '<span class="disconnected-dot"></span> ยังไม่ได้เชื่อมต่อ กด "เชื่อมต่อ Calendar" เพื่อซิงค์';
+  }
+}
+
+// -------- CALENDAR SYNC --------
+async function syncCalendar(){
+  if(!isSignedIn){ signIn(); return; }
+  const syncEl = document.getElementById('sync-status');
+  syncEl.innerHTML = '<div class="sync-bar"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 12a9 9 0 1 1-6.219-8.56"/></svg> กำลังดึงข้อมูลจาก Google Calendar...</div>';
+  try {
+    const dates = getWeekDates(weekOffset);
+    const tMin = new Date(dates[0]); tMin.setHours(0,0,0,0);
+    const tMax = new Date(dates[4]); tMax.setHours(23,59,59,999);
+    const resp = await gapi.client.calendar.events.list({
+      calendarId: 'primary',
+      timeMin: tMin.toISOString(),
+      timeMax: tMax.toISOString(),
+      singleEvents: true,
+      orderBy: 'startTime',
+      maxResults: 100
+    });
+    const items = resp.result.items || [];
+    calendarEvents = items.map(e=>({
+      id: 'gcal_'+e.id,
+      title: e.summary||'(ไม่มีชื่อ)',
+      date: (e.start.dateTime||e.start.date||'').substring(0,10),
+      time: e.start.dateTime ? new Date(e.start.dateTime).toTimeString().substring(0,5) : '00:00',
+      endTime: e.end.dateTime ? new Date(e.end.dateTime).toTimeString().substring(0,5) : '',
+      source: 'gcal',
+      raw: e
+    }));
+    syncEl.innerHTML = `<div class="sync-bar">ซิงค์สำเร็จ พบ ${calendarEvents.length} event ค่ะ</div>`;
+    setTimeout(()=>{ syncEl.innerHTML=''; },3000);
+    renderWeek();
+  } catch(err){
+    syncEl.innerHTML = `<div class="sync-bar" style="background:#FCEBEB;color:#791F1F">ดึงข้อมูลไม่ได้: ${err.message||err}</div>`;
+  }
+}
+
+// -------- DATES --------
+function getWeekDates(offset){
+  const now = new Date();
+  const day = now.getDay();
+  const mon = new Date(now);
+  mon.setDate(now.getDate() - (day===0?6:day-1) + offset*7);
+  const dates = [];
+  for(let i=0;i<5;i++){ const d=new Date(mon); d.setDate(mon.getDate()+i); dates.push(d); }
+  return dates;
+}
+function fmtDate(d){ return `${d.getDate()}/${d.getMonth()+1}`; }
+function fmtDateKey(d){ return d.toISOString().split('T')[0]; }
+function thYear(d){ return d.getFullYear()+543; }
+
+// -------- RENDER --------
+function renderAll(){ renderWeek(); renderStudents(); renderIncome(); renderStats(); }
+
+function renderWeek(){
+  const dates = getWeekDates(weekOffset);
+  document.getElementById('week-label').textContent =
+    `${fmtDate(dates[0])} — ${fmtDate(dates[4])} ${thYear(dates[0])}`;
+
+  const g = document.getElementById('week-grid');
+  let html = '<div class="wh"></div>';
+  DAYS.forEach((d,i)=>{
+    const isToday = fmtDateKey(dates[i])===fmtDateKey(new Date());
+    html+=`<div class="wh" style="${isToday?'color:var(--math-t);font-weight:700':''}">${d}<br><span style="font-size:10px;font-weight:400">${fmtDate(dates[i])}</span></div>`;
+  });
+
+  TIMES.forEach(t=>{
+    html+=`<div class="wt">${t}</div>`;
+    dates.forEach(date=>{
+      const dk = fmtDateKey(date);
+      const mySessions = data.sessions.filter(s=>s.date===dk && s.time===t);
+      const gcalEvts = calendarEvents.filter(e=>e.date===dk && e.time.substring(0,5)===t);
+      const hasAny = mySessions.length||gcalEvts.length;
+      html+=`<div class="wc${hasAny?' has-event':''}" onclick="openAddSession('${dk}','${t}')">`;
+      mySessions.forEach(s=>{
+        const stu = data.students.find(st=>st.id===s.studentId);
+        const name = stu ? stu.name.split(' ')[0] : '?';
+        const subjKey = s.subject||'math';
+        html+=`<div class="event-tag tag-${subjKey}" onclick="event.stopPropagation();openSessionDetail('${s.id}')">
+          <span>${name}</span><span style="font-size:9px">${SUBJ[subjKey]?.label||subjKey}</span>
+        </div>`;
+      });
+      gcalEvts.forEach(e=>{
+        html+=`<div class="event-tag gcal-tag" onclick="event.stopPropagation();showGcalDetail('${e.id}')">
+          <span style="overflow:hidden;text-overflow:ellipsis;white-space:nowrap;max-width:90px">${e.title}</span>
+        </div>`;
+      });
+      html+='</div>';
+    });
+  });
+  g.innerHTML = html;
+}
+
+function renderStudents(){
+  const el = document.getElementById('student-list');
+  if(!data.students.length){
+    el.innerHTML='<div class="empty-state">ยังไม่มีนักเรียน กด "+ เพิ่ม" ได้เลยค่ะ</div>';
+    return;
+  }
+  el.innerHTML = data.students.map(s=>{
+    const sessions = data.sessions.filter(x=>x.studentId===s.id);
+    const present = sessions.filter(x=>x.attended===true).length;
+    const absent = sessions.filter(x=>x.attended===false).length;
+    const initials = s.name.substring(0,2);
+    return `<div class="student-card">
+      <div class="stu-header">
+        <div class="avatar av-${s.subject||'gen'}">${initials}</div>
+        <div style="flex:1">
+          <div style="font-size:14px;font-weight:600">${s.name}</div>
+          <div style="font-size:12px;color:var(--text2)">${s.type==='group'?'กลุ่ม':'รายบุคคล'} · ${SUBJ[s.subject]?.label||'-'}</div>
+        </div>
+        <button class="del-btn" onclick="deleteStudent('${s.id}')">✕</button>
+      </div>
+      <div style="display:flex;gap:5px;flex-wrap:wrap;margin-bottom:6px">
+        <span class="pill pill-${s.subject||'blue'}">${SUBJ[s.subject]?.label||s.subject}</span>
+        <span class="pill ${s.type==='group'?'pill-phy':'pill-ok'}">${s.type==='group'?'กลุ่ม':'1:1'}</span>
+        <span class="pill pill-ok">เข้า ${present}</span>
+        ${absent?`<span class="pill pill-abs">ขาด ${absent}</span>`:''}
+        <span class="pill pill-blue">${s.rate?s.rate.toLocaleString()+' ฿/คาบ':'-'}</span>
+      </div>
+      ${s.note?`<div class="note-box">${s.note}</div>`:''}
+    </div>`;
+  }).join('');
+}
+
+function renderIncome(){
+  const now = new Date();
+  const thisMonth = `${now.getFullYear()}-${String(now.getMonth()+1).padStart(2,'0')}`;
+  const sessions = data.sessions.filter(s=>s.date&&s.date.startsWith(thisMonth)&&s.attended!==false);
+  let total = 0;
+  const rows = sessions.map(s=>{
+    const stu = data.students.find(st=>st.id===s.studentId);
+    const rate = stu?.rate||0; total+=rate;
+    return `<div class="income-row">
+      <div>
+        <div style="font-size:13px;font-weight:500">${stu?.name||'?'}</div>
+        <div style="font-size:11px;color:var(--text2)">${s.date} ${s.time} · ${SUBJ[s.subject]?.label||s.subject}</div>
+      </div>
+      <span style="font-size:14px;font-weight:600">${rate.toLocaleString()} ฿</span>
+    </div>`;
+  }).join('');
+  document.getElementById('inc-total').textContent = total.toLocaleString()+' ฿';
+  document.getElementById('inc-sessions').textContent = sessions.length;
+  document.getElementById('inc-students').textContent = new Set(sessions.map(s=>s.studentId)).size;
+  document.getElementById('income-list').innerHTML = rows||'<div class="empty-state">ยังไม่มีรายการเดือนนี้</div>';
+}
+
+function renderStats(){
+  document.getElementById('s-total').textContent = data.students.length;
+  document.getElementById('s-sessions').textContent = data.sessions.length;
+  const inc = data.sessions.filter(s=>s.attended!==false).reduce((acc,s)=>{
+    return acc+(data.students.find(st=>st.id===s.studentId)?.rate||0);
+  },0);
+  document.getElementById('s-income').textContent = inc.toLocaleString()+' ฿';
+  const rows = Object.entries(SUBJ).map(([k,v])=>{
+    const cnt = data.sessions.filter(s=>s.subject===k).length;
+    const stus = new Set(data.sessions.filter(s=>s.subject===k).map(s=>s.studentId)).size;
+    return `<div class="income-row">
+      <span class="pill pill-${k}">${v.label}</span>
+      <span style="font-size:13px;color:var(--text2)">${stus} คน · ${cnt} คาบ</span>
+    </div>`;
+  }).join('');
+  document.getElementById('subject-stats').innerHTML = rows;
+}
+
+// -------- NAV --------
+function showPg(id){
+  document.querySelectorAll('.pg').forEach(p=>p.classList.remove('on'));
+  document.querySelectorAll('.nav button:not(#signin-btn):not(#signout-btn)').forEach(b=>b.classList.remove('on'));
+  document.getElementById('pg-'+id).classList.add('on');
+  const idx = ['week','students','income','stats'].indexOf(id);
+  document.querySelectorAll('.nav button:not(#signin-btn):not(#signout-btn)')[idx]?.classList.add('on');
+  if(id==='week') renderWeek();
+  if(id==='students') renderStudents();
+  if(id==='income') renderIncome();
+  if(id==='stats') renderStats();
+}
+function changeWeek(d){ weekOffset+=d; renderWeek(); }
+
+// -------- MODALS --------
+function showModal(html){ document.getElementById('modal-area').innerHTML=`<div class="overlay" onclick="if(event.target.classList.contains('overlay'))closeModal()"><div class="modal">${html}</div></div>`; }
+function closeModal(){ document.getElementById('modal-area').innerHTML=''; }
+
+function openAddSession(date,time){
+  const dv = date||fmtDateKey(new Date());
+  const tv = time||'';
+  showModal(`<h3>เพิ่มคาบสอน</h3>
+    <div class="form-group"><label>วันที่</label><input type="date" id="m-date" value="${dv}"></div>
+    <div class="form-group"><label>เวลา</label><select id="m-time">${TIMES.map(t=>`<option${t===tv?' selected':''}>${t}</option>`).join('')}</select></div>
+    <div class="form-group"><label>นักเรียน</label><select id="m-stu"><option value="">-- เลือก --</option>${data.students.map(s=>`<option value="${s.id}">${s.name}</option>`).join('')}</select></div>
+    <div class="form-group"><label>วิชา</label><select id="m-subj">${Object.entries(SUBJ).map(([k,v])=>`<option value="${k}">${v.label}</option>`).join('')}</select></div>
+    <div class="form-group"><label>โน้ต</label><textarea id="m-note" placeholder="หัวข้อที่สอน..."></textarea></div>
+    <div class="btn-row"><button class="btn primary" onclick="saveSession()">บันทึก</button><button class="btn" onclick="closeModal()">ยกเลิก</button></div>`);
+}
+
+function openSessionDetail(id){
+  const s = data.sessions.find(x=>x.id===id); if(!s) return;
+  const stu = data.students.find(st=>st.id===s.studentId);
+  showModal(`<h3>${stu?.name||'?'} — ${SUBJ[s.subject]?.label||s.subject}</h3>
+    <p style="font-size:13px;color:var(--text2);margin-bottom:12px">${s.date} เวลา ${s.time}</p>
+    <div class="form-group"><label>การเข้าเรียน</label><select id="m-att">
+      <option value="null"${!s.attended&&s.attended!==false?' selected':''}>ยังไม่เช็ค</option>
+      <option value="true"${s.attended===true?' selected':''}>เข้าเรียน ✓</option>
+      <option value="false"${s.attended===false?' selected':''}>ขาดเรียน ✗</option>
+    </select></div>
+    <div class="form-group"><label>โน้ต</label><textarea id="m-snote">${s.note||''}</textarea></div>
+    <div class="btn-row">
+      <button class="btn primary" onclick="updateSession('${id}')">บันทึก</button>
+      <button class="btn danger" onclick="deleteSession('${id}')">ลบ</button>
+      <button class="btn" onclick="closeModal()">ปิด</button>
+    </div>`);
+}
+
+function showGcalDetail(id){
+  const e = calendarEvents.find(x=>x.id===id); if(!e) return;
+  const stuOptions = data.students.map(s=>`<option value="${s.id}">${s.name}</option>`).join('');
+  showModal(`<h3>${e.title}</h3>
+    <p style="font-size:13px;color:var(--text2);margin-bottom:12px">${e.date} เวลา ${e.time}${e.endTime?' — '+e.endTime:''} <span class="pill pill-gcal">Google Calendar</span></p>
+    <p style="font-size:13px;margin-bottom:12px">อยากบันทึกคาบนี้เข้าระบบไหมคะ?</p>
+    <div class="form-group"><label>นักเรียน</label><select id="gm-stu"><option value="">-- เลือก --</option>${stuOptions}</select></div>
+    <div class="form-group"><label>วิชา</label><select id="gm-subj">${Object.entries(SUBJ).map(([k,v])=>`<option value="${k}">${v.label}</option>`).join('')}</select></div>
+    <div class="btn-row">
+      <button class="btn primary" onclick="importGcalSession('${id}')">นำเข้า</button>
+      <button class="btn" onclick="closeModal()">ปิด</button>
+    </div>`);
+}
+
+function importGcalSession(gcalId){
+  const e = calendarEvents.find(x=>x.id===gcalId); if(!e) return;
+  const stuId = document.getElementById('gm-stu').value;
+  const subj = document.getElementById('gm-subj').value;
+  if(!stuId){ alert('เลือกนักเรียนด้วยนะคะ'); return; }
+  data.sessions.push({ id: gcalId, date:e.date, time:e.time, studentId:stuId, subject:subj, note:'นำเข้าจาก Google Calendar', attended:null, fromGcal:true });
+  save(); closeModal(); renderAll();
+}
+
+function saveSession(){
+  const date=document.getElementById('m-date').value;
+  const time=document.getElementById('m-time').value;
+  const studentId=document.getElementById('m-stu').value;
+  const subject=document.getElementById('m-subj').value;
+  const note=document.getElementById('m-note').value;
+  if(!date||!studentId){ alert('เลือกนักเรียนด้วยนะคะ'); return; }
+  data.sessions.push({id:Date.now().toString(),date,time,studentId,subject,note,attended:null});
+  save(); closeModal(); renderAll();
+}
+
+function updateSession(id){
+  const s=data.sessions.find(x=>x.id===id); if(!s) return;
+  const v=document.getElementById('m-att').value;
+  s.attended=v==='true'?true:v==='false'?false:null;
+  s.note=document.getElementById('m-snote').value;
+  save(); closeModal(); renderAll();
+}
+function deleteSession(id){ data.sessions=data.sessions.filter(x=>x.id!==id); save(); closeModal(); renderAll(); }
+function deleteStudent(id){
+  if(!confirm('ลบนักเรียนคนนี้?')) return;
+  data.students=data.students.filter(s=>s.id!==id);
+  data.sessions=data.sessions.filter(s=>s.studentId!==id);
+  save(); renderStudents(); renderStats();
+}
+function openAddStudent(){
+  showModal(`<h3>เพิ่มนักเรียน</h3>
+    <div class="form-group"><label>ชื่อ</label><input type="text" id="mn-name" placeholder="เช่น น้องมิ้น"></div>
+    <div class="form-group"><label>ประเภท</label><select id="mn-type"><option value="individual">รายบุคคล (1:1)</option><option value="group">กลุ่ม</option></select></div>
+    <div class="form-group"><label>วิชา</label><select id="mn-subj">${Object.entries(SUBJ).map(([k,v])=>`<option value="${k}">${v.label}</option>`).join('')}</select></div>
+    <div class="form-group"><label>ค่าสอน (฿/คาบ)</label><input type="number" id="mn-rate" placeholder="เช่น 400"></div>
+    <div class="form-group"><label>โน้ต</label><textarea id="mn-note" placeholder="ระดับชั้น จุดอ่อน เป้าหมาย..."></textarea></div>
+    <div class="btn-row"><button class="btn primary" onclick="saveStudent()">บันทึก</button><button class="btn" onclick="closeModal()">ยกเลิก</button></div>`);
+}
+function saveStudent(){
+  const name=document.getElementById('mn-name').value.trim();
+  if(!name){ alert('ใส่ชื่อนักเรียนด้วยนะคะ'); return; }
+  data.students.push({id:Date.now().toString(),name,type:document.getElementById('mn-type').value,subject:document.getElementById('mn-subj').value,rate:parseInt(document.getElementById('mn-rate').value)||0,note:document.getElementById('mn-note').value});
+  save(); closeModal(); renderStudents(); renderStats();
+}
+
+renderAll();
+</script>
+</body>
+</html>
