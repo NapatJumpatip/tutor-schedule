@@ -317,8 +317,11 @@ tr:hover td{background:var(--bg2)}
   <div class="greet an"><h1>⚙️ Settings</h1></div>
   <div class="cd an a1"><div class="cd-t" style="margin-bottom:16px">Google Calendar</div>
     <div class="fg"><label>Client ID</label><input id="sCI" placeholder="xxxx.apps.googleusercontent.com" onchange="saveSett()"></div>
-    <div class="fg"><label>Calendar ID</label><input id="sCL" placeholder="primary" onchange="saveSett()"></div>
-    <div style="padding:12px 16px;background:var(--orgL);border-radius:var(--r3);font-size:13px;color:var(--orgF);font-weight:600;margin-top:8px">⚠️ Add <code style="font-weight:800">https://napatjumpatip.github.io</code> to Authorized JavaScript Origins in Google Cloud Console</div></div>
+    <div class="fg"><label>Calendar for new events (insert target)</label><input id="sCL" placeholder="primary" onchange="saveSett()"></div>
+    <div class="cd-t" style="margin:20px 0 12px;font-size:15px">📋 Calendars to import from</div>
+    <div id="calListPicker"><div style="color:var(--tx3);font-size:13px;padding:8px 0">Connect Google Calendar first, then click "Load My Calendars"</div></div>
+    <button class="btn btn-blue btn-sm" style="margin-top:10px" onclick="fetchCalList()">📋 Load My Calendars</button>
+    <div style="padding:12px 16px;background:var(--orgL);border-radius:var(--r3);font-size:13px;color:var(--orgF);font-weight:600;margin-top:12px">⚠️ Add <code style="font-weight:800">https://napatjumpatip.github.io</code> to Authorized JavaScript Origins in Google Cloud Console</div></div>
   <div class="cd an a2"><div class="cd-t" style="margin-bottom:16px">Default Rates (฿/hr)</div>
     <div class="fr"><div class="fg"><label>🔢 Math</label><input type="number" id="sRM" placeholder="500" onchange="saveSett()"></div><div class="fg"><label>⚛️ Physics</label><input type="number" id="sRP" placeholder="500" onchange="saveSett()"></div></div>
     <div class="fg" style="max-width:calc(50% - 6px)"><label>🐍 Python</label><input type="number" id="sRY" placeholder="600" onchange="saveSett()"></div></div>
@@ -372,8 +375,8 @@ tr:hover td{background:var(--bg2)}
 const K='tutorScheduleData',_=id=>document.getElementById(id);
 let D=loadD();
 
-function defD(){return{students:[],sessions:[],transactions:[],gcalImported:[],gcalHidden:{},settings:{clientId:'',calendarId:'primary',rateMath:500,ratePhysics:500,ratePython:600}}}
-function loadD(){try{const d=JSON.parse(localStorage.getItem(K));return d?{...defD(),...d,transactions:d.transactions||[],gcalImported:d.gcalImported||[],gcalHidden:d.gcalHidden||{}}:defD()}catch{return defD()}}
+function defD(){return{students:[],sessions:[],transactions:[],gcalImported:[],gcalHidden:{},gcalCalendars:[],settings:{clientId:'',calendarId:'primary',selectedCalendars:[],rateMath:500,ratePhysics:500,ratePython:600}}}
+function loadD(){try{const d=JSON.parse(localStorage.getItem(K));return d?{...defD(),...d,transactions:d.transactions||[],gcalImported:d.gcalImported||[],gcalHidden:d.gcalHidden||{},gcalCalendars:d.gcalCalendars||[],settings:{...defD().settings,...(d.settings||{}),selectedCalendars:d.settings?.selectedCalendars||[]}}:defD()}catch{return defD()}}
 function saveD(){localStorage.setItem(K,JSON.stringify(D))}
 function uid(){return Date.now().toString(36)+Math.random().toString(36).substr(2,5)}
 
@@ -488,7 +491,7 @@ function getVisibleGCalForDate(dateStr){
 function rGCalImp(){
   const evts=D.gcalImported||[];
   _('gcalImpTitle').textContent=`Imported Events (${evts.length})`;
-  if(!evts.length){_('gcalImpList').innerHTML='<div class="empty"><div class="empty-ic">📥</div>No imported events<br>Connect Google Calendar and click Refresh</div>';return}
+  if(!evts.length){_('gcalImpList').innerHTML='<div class="empty"><div class="empty-ic">📥</div>No imported events<br>Connect Google Calendar, select calendars in Settings, then Refresh</div>';return}
   let h='';
   evts.sort((a,b)=>(a.date||'').localeCompare(b.date||'')||(a.startTime||'').localeCompare(b.startTime||'')).forEach(ev=>{
     const hidden=!!D.gcalHidden[ev.gcalId];
@@ -497,6 +500,7 @@ function rGCalImp(){
       <div style="flex:1;min-width:0">
         <div style="font-weight:700;font-size:14px">${ev.summary||'(No title)'}</div>
         <div style="font-size:12px;color:var(--tx3);font-weight:600">📅 ${fDT(ev.date)} · ⏰ ${ev.startTime||'All day'}${ev.endTime?' – '+ev.endTime:''}</div>
+        ${ev.calendarName?`<div style="font-size:11px;color:var(--gcalF);font-weight:700;margin-top:2px">📋 ${ev.calendarName}</div>`:''}
       </div>
       <span class="bg bg-gcal" style="flex-shrink:0">Google</span>
     </div>`;
@@ -580,7 +584,7 @@ function renderMC(){const now=new Date(),y=now.getFullYear(),m=now.getMonth();co
   const tot=fdM+dim;const rem=tot%7===0?0:7-tot%7;for(let i=1;i<=rem;i++)h+=`<div class="mc-d ot">${i}</div>`;h+='</div>';_('dashMC').innerHTML=h}
 
 // === SETTINGS ===
-function loadSett(){_('sCI').value=D.settings.clientId||'';_('sCL').value=D.settings.calendarId||'primary';_('sRM').value=D.settings.rateMath||'';_('sRP').value=D.settings.ratePhysics||'';_('sRY').value=D.settings.ratePython||''}
+function loadSett(){_('sCI').value=D.settings.clientId||'';_('sCL').value=D.settings.calendarId||'primary';_('sRM').value=D.settings.rateMath||'';_('sRP').value=D.settings.ratePhysics||'';_('sRY').value=D.settings.ratePython||'';renderCalList()}
 function saveSett(){D.settings.clientId=_('sCI').value.trim();D.settings.calendarId=_('sCL').value.trim()||'primary';D.settings.rateMath=parseInt(_('sRM').value)||500;D.settings.ratePhysics=parseInt(_('sRP').value)||500;D.settings.ratePython=parseInt(_('sRY').value)||600;saveD()}
 function expD(){const b=new Blob([JSON.stringify(D,null,2)],{type:'application/json'});const a=document.createElement('a');a.href=URL.createObjectURL(b);a.download=`tutor-${new Date().toISOString().split('T')[0]}.json`;a.click()}
 function impD(e){const f=e.target.files[0];if(!f)return;const r=new FileReader();r.onload=ev=>{try{const d=JSON.parse(ev.target.result);if(confirm('Replace current data?')){D={...defD(),...d,transactions:d.transactions||[],gcalImported:d.gcalImported||[],gcalHidden:d.gcalHidden||{}};saveD();location.reload()}}catch{alert('Invalid file')}};r.readAsText(f)}
@@ -616,7 +620,7 @@ function initG(){
     try{
       tokC=google.accounts.oauth2.initTokenClient({
         client_id:D.settings.clientId,
-        scope:'https://www.googleapis.com/auth/calendar.events https://www.googleapis.com/auth/calendar.readonly',
+        scope:'https://www.googleapis.com/auth/calendar.events https://www.googleapis.com/auth/calendar.readonly https://www.googleapis.com/auth/calendar',
         callback:(resp)=>{
           if(resp.error){
             console.error('[GCal] Auth error:',resp);
@@ -626,7 +630,9 @@ function initG(){
           console.log('[GCal] Auth success, token received');
           gisReady=true;
           updGUI(true);
-          fetchGE();
+          // Auto-fetch calendar list if not loaded yet
+          if(!(D.gcalCalendars||[]).length){fetchCalList().then(()=>{if((D.settings.selectedCalendars||[]).length)fetchGE()})}
+          else{fetchGE()}
         },
       });
       console.log('[GCal] GIS token client created');
@@ -659,27 +665,86 @@ function updGUI(c){
   _('gcalCount').textContent=cnt?`${cnt} events imported`:'';
 }
 
-// FETCH Google Calendar events and store as separate imported layer
+// FETCH calendar list so user can pick which ones to import
+async function fetchCalList(){
+  if(!gapiReady||!gapi?.client?.getToken()){toast('Connect Google Calendar first','err');return}
+  try{
+    console.log('[GCal] Fetching calendar list...');
+    const resp=await gapi.client.calendar.calendarList.list();
+    const cals=(resp.result.items||[]).map(c=>({id:c.id,summary:c.summary||c.id,bg:c.backgroundColor||'#4285f4',primary:c.primary||false}));
+    D.gcalCalendars=cals;
+    saveD();
+    renderCalList();
+    toast(`✅ Found ${cals.length} calendars`,'ok');
+  }catch(e){
+    const errMsg=e?.result?.error?.message||e?.message||JSON.stringify(e);
+    console.error('[GCal] Calendar list error:',e);
+    toast(`Failed to load calendars: ${errMsg}`,'err',6000);
+  }
+}
+
+function renderCalList(){
+  const el=_('calListPicker');if(!el)return;
+  const cals=D.gcalCalendars||[];
+  if(!cals.length){el.innerHTML='<div style="color:var(--tx3);font-size:13px;padding:8px 0">No calendars loaded yet</div>';return}
+  const sel=D.settings.selectedCalendars||[];
+  let h='';
+  cals.forEach(c=>{
+    const checked=sel.includes(c.id);
+    h+=`<div class="imp-item" style="margin-bottom:6px">
+      <div class="imp-toggle ${checked?'on':''}" onclick="toggleCalSel('${c.id.replace(/'/g,"\\'")}',this)"></div>
+      <div style="width:14px;height:14px;border-radius:4px;background:${c.bg};flex-shrink:0"></div>
+      <div style="flex:1;font-weight:700;font-size:14px">${c.summary}${c.primary?' <span style="font-size:11px;color:var(--tx3)">(primary)</span>':''}</div>
+    </div>`;
+  });
+  el.innerHTML=h;
+}
+
+function toggleCalSel(calId,el){
+  let sel=D.settings.selectedCalendars||[];
+  if(sel.includes(calId)){sel=sel.filter(x=>x!==calId);el.classList.remove('on')}
+  else{sel.push(calId);el.classList.add('on')}
+  D.settings.selectedCalendars=sel;
+  saveD();
+}
+
+// FETCH events from all selected calendars
 async function fetchGE(){
   if(!gapiReady||!gapi?.client?.getToken()){toast('Not connected to Google Calendar','err');return}
+  const selectedCals=D.settings.selectedCalendars||[];
+  if(!selectedCals.length){
+    toast('No calendars selected — go to Settings → Load My Calendars and pick which ones to import','info',5000);
+    return;
+  }
   try{
-    const calId=D.settings.calendarId||'primary';
     const now=new Date();
     const timeMin=new Date(now.getFullYear(),now.getMonth()-1,1).toISOString();
     const timeMax=new Date(now.getFullYear(),now.getMonth()+3,0).toISOString();
-    console.log(`[GCal] Fetching events from ${calId}, range: ${timeMin} to ${timeMax}`);
-    const resp=await gapi.client.calendar.events.list({
-      calendarId:calId,
-      timeMin:timeMin,
-      timeMax:timeMax,
-      singleEvents:true,
-      orderBy:'startTime',
-      maxResults:250
-    });
-    const items=resp.result.items||[];
-    console.log(`[GCal] Fetched ${items.length} events`);
-    // Parse and store imported events with separate structure
-    D.gcalImported=items.map(ev=>{
+    let allItems=[];
+    // Build a map of calendar names
+    const calNames={};
+    (D.gcalCalendars||[]).forEach(c=>{calNames[c.id]=c.summary});
+    // Fetch from each selected calendar
+    for(const calId of selectedCals){
+      try{
+        console.log(`[GCal] Fetching from: ${calNames[calId]||calId}`);
+        const resp=await gapi.client.calendar.events.list({
+          calendarId:calId,
+          timeMin:timeMin,
+          timeMax:timeMax,
+          singleEvents:true,
+          orderBy:'startTime',
+          maxResults:250
+        });
+        const items=(resp.result.items||[]).map(ev=>({...ev,_calId:calId,_calName:calNames[calId]||calId}));
+        allItems=allItems.concat(items);
+      }catch(e){
+        console.warn(`[GCal] Error fetching ${calId}:`,e?.result?.error?.message||e);
+      }
+    }
+    console.log(`[GCal] Total fetched: ${allItems.length} events from ${selectedCals.length} calendars`);
+    // Parse and store
+    D.gcalImported=allItems.map(ev=>{
       const startDT=ev.start?.dateTime;
       const startD=ev.start?.date;
       const endDT=ev.end?.dateTime;
@@ -695,15 +760,15 @@ async function fetchGE(){
         summary:ev.summary||'',
         description:ev.description||'',
         date,startTime,endTime,
-        importedFromGoogle:true,
-        rawStart:ev.start,
-        rawEnd:ev.end
+        calendarId:ev._calId,
+        calendarName:ev._calName,
+        importedFromGoogle:true
       };
     });
     saveD();
     updGUI(true);
     rCal();rDash();rGCalImp();
-    toast(`✅ Imported ${items.length} events from Google Calendar`,'ok');
+    toast(`✅ Imported ${allItems.length} events from ${selectedCals.length} calendar${selectedCals.length>1?'s':''}`,'ok');
   }catch(e){
     const errMsg=e?.result?.error?.message||e?.message||JSON.stringify(e);
     console.error('[GCal] Fetch error:',e);
