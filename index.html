@@ -18,14 +18,13 @@
 --mathBg:#fff8e1;--mathF:#7c6210;--mathB:#ffd54f;
 --phyBg:#fce4ec;--phyF:#880e4f;--phyB:#f06292;
 --pyBg:#e0f2f1;--pyF:#004d40;--pyB:#26a69a;
+--gcalBg:#e3f2fd;--gcalF:#1565c0;--gcalB:#42a5f5;
 --r:20px;--r2:14px;--r3:10px;
 --sh:0 2px 16px rgba(0,0,0,.05);--sh2:0 8px 32px rgba(0,0,0,.07);
 }
 *{margin:0;padding:0;box-sizing:border-box}
 body{font-family:'Nunito',sans-serif;background:var(--bg);color:var(--tx);min-height:100vh;line-height:1.55}
 .mono{font-family:'JetBrains Mono',monospace}
-
-/* LAYOUT */
 .app{display:flex;min-height:100vh}
 
 /* SIDEBAR */
@@ -38,14 +37,11 @@ body{font-family:'Nunito',sans-serif;background:var(--bg);color:var(--tx);min-he
 .ni.on{background:var(--grn);color:#fff;box-shadow:0 4px 16px rgba(46,204,113,.35)}
 .ni-i{width:22px;text-align:center;font-size:17px}
 .ni-sep{height:1px;background:var(--border2);margin:10px 4px}
-
-/* PROMO CARD in sidebar */
 .sb-promo{margin-top:auto;padding:20px 16px;background:linear-gradient(135deg,var(--grnL2),var(--grnL));border-radius:var(--r);position:relative;overflow:hidden}
 .sb-promo::before{content:'';position:absolute;top:-20px;right:-20px;width:80px;height:80px;background:var(--grn);opacity:.15;border-radius:50%}
 .sb-promo::after{content:'';position:absolute;bottom:-15px;left:-15px;width:60px;height:60px;background:var(--grn);opacity:.1;border-radius:50%}
 .sb-promo-title{font-size:14px;font-weight:800;color:var(--grn3);position:relative;z-index:1}
 .sb-promo-sub{font-size:12px;color:var(--tx2);margin-top:4px;position:relative;z-index:1}
-
 .gcal-box{padding:14px;background:var(--bg2);border-radius:var(--r2);border:1.5px solid var(--border);margin-top:12px}
 .gcal-dot{display:inline-block;width:9px;height:9px;border-radius:50%;margin-right:6px}
 .gcal-dot.on{background:var(--grn);box-shadow:0 0 8px rgba(46,204,113,.5)}
@@ -53,11 +49,9 @@ body{font-family:'Nunito',sans-serif;background:var(--bg);color:var(--tx);min-he
 .gcal-lbl{font-size:13px;color:var(--tx2);font-weight:600}
 .gcal-btn{margin-top:10px;width:100%;padding:9px;border-radius:var(--r3);border:1.5px solid var(--border);background:var(--white);color:var(--tx2);cursor:pointer;font-family:'Nunito',sans-serif;font-size:13px;font-weight:700;transition:all .2s}
 .gcal-btn:hover{border-color:var(--grn);color:var(--grn)}
+.gcal-count{font-size:11px;color:var(--tx3);margin-top:6px;font-weight:600}
 
-/* MAIN */
 .mn{flex:1;margin-left:230px;padding:28px 32px}
-
-/* GREETING */
 .greet{margin-bottom:24px}
 .greet h1{font-size:28px;font-weight:900;letter-spacing:-.5px}
 .greet p{font-size:15px;color:var(--tx2);margin-top:2px;font-weight:500}
@@ -77,7 +71,7 @@ body{font-family:'Nunito',sans-serif;background:var(--bg);color:var(--tx);min-he
 
 /* CARD */
 .cd{background:var(--white);border:1.5px solid var(--border);border-radius:var(--r);padding:22px;margin-bottom:16px;box-shadow:var(--sh)}
-.cd-h{display:flex;justify-content:space-between;align-items:center;margin-bottom:16px}
+.cd-h{display:flex;justify-content:space-between;align-items:center;margin-bottom:16px;flex-wrap:wrap;gap:8px}
 .cd-t{font-size:17px;font-weight:800;letter-spacing:-.2px}
 .sa{font-size:13px;color:var(--grn2);cursor:pointer;font-weight:700}.sa:hover{text-decoration:underline}
 
@@ -87,6 +81,7 @@ body{font-family:'Nunito',sans-serif;background:var(--bg);color:var(--tx);min-he
 .btn-o{background:transparent;border:1.5px solid var(--border);color:var(--tx2)}.btn-o:hover{border-color:var(--grn);color:var(--grn)}
 .btn-d{background:var(--redL);color:var(--redF)}.btn-d:hover{background:var(--red);color:#fff}
 .btn-sm{padding:7px 14px;font-size:13px;border-radius:8px}
+.btn-blue{background:var(--gcalBg);color:var(--gcalF);border:1.5px solid rgba(21,101,192,.2)}.btn-blue:hover{background:#bbdefb}
 
 /* FORMS */
 input,textarea{background:var(--bg2);border:1.5px solid var(--border);border-radius:var(--r3);padding:11px 14px;color:var(--tx);font-family:'Nunito',sans-serif;font-size:14px;width:100%;outline:none;transition:all .2s;font-weight:600}
@@ -107,8 +102,6 @@ label{font-size:13px;color:var(--tx2);margin-bottom:5px;display:block;font-weigh
 .csel-opt.active{background:var(--grnL2);color:var(--grn3)}
 .csel-opt:last-child{border-radius:0 0 8px 8px}
 .csel-opt .opt-icon{font-size:16px;width:22px;text-align:center}
-.csel-opt .opt-badge{display:inline-block;padding:2px 8px;border-radius:12px;font-size:11px;font-weight:800;margin-left:auto}
-/* hidden native select for form data */
 .csel select{position:absolute;opacity:0;pointer-events:none;width:0;height:0}
 
 /* BADGES */
@@ -120,6 +113,7 @@ label{font-size:13px;color:var(--tx2);margin-bottom:5px;display:block;font-weigh
 .bg-up{background:var(--orgL);color:var(--orgF)}
 .bg-in{background:var(--grnL2);color:var(--grn3)}
 .bg-ex{background:var(--redL);color:var(--redF)}
+.bg-gcal{background:var(--gcalBg);color:var(--gcalF)}
 
 /* TABLE */
 table{width:100%;border-collapse:collapse}
@@ -129,7 +123,7 @@ tr:last-child td{border-bottom:none}
 tr:hover td{background:var(--bg2)}
 
 /* CALENDAR */
-.cc{display:flex;align-items:center;gap:10px;margin-bottom:16px}
+.cc{display:flex;align-items:center;gap:10px;margin-bottom:16px;flex-wrap:wrap}
 .cl{font-size:18px;font-weight:900;min-width:200px;text-align:center;letter-spacing:-.3px}
 .cg{display:grid;grid-template-columns:repeat(7,1fr);gap:4px}
 .ch{padding:8px;text-align:center;font-size:12px;font-weight:800;color:var(--tx3);text-transform:uppercase}
@@ -141,6 +135,8 @@ tr:hover td{background:var(--bg2)}
 .dn{font-size:14px;font-weight:800;margin-bottom:3px}
 .cv{font-size:10px;padding:2px 6px;margin-bottom:2px;border-radius:6px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;font-weight:700;cursor:pointer}
 .cv.math{background:var(--mathBg);color:var(--mathF)}.cv.physics{background:var(--phyBg);color:var(--phyF)}.cv.python{background:var(--pyBg);color:var(--pyF)}
+.cv.gcal{background:var(--gcalBg);color:var(--gcalF);font-style:italic}
+.cv.gcal-hidden{opacity:.3;text-decoration:line-through}
 
 /* WEEK */
 .wg{display:grid;grid-template-columns:56px repeat(7,1fr);border:1.5px solid var(--border);border-radius:var(--r);overflow:hidden;background:var(--white)}
@@ -152,20 +148,17 @@ tr:hover td{background:var(--bg2)}
 .ws:hover{background:var(--bg2)}
 .we{position:absolute;left:2px;right:2px;padding:3px 6px;border-radius:8px;font-size:11px;font-weight:700;overflow:hidden;z-index:2;cursor:pointer;border-left:3px solid}
 
-/* SCHEDULE CARDS (Travigo style) */
+/* SCHEDULE CARDS */
 .sch-card{display:flex;gap:14px;padding:14px;background:var(--bg2);border-radius:var(--r2);margin-bottom:10px;border:1.5px solid var(--border2);transition:all .2s;cursor:pointer}
 .sch-card:hover{border-color:var(--grn);box-shadow:var(--sh)}
 .sch-thumb{width:56px;height:56px;border-radius:var(--r2);display:flex;align-items:center;justify-content:center;font-size:26px;flex-shrink:0}
-.sch-thumb.math{background:var(--mathBg)}.sch-thumb.physics{background:var(--phyBg)}.sch-thumb.python{background:var(--pyBg)}
+.sch-thumb.math{background:var(--mathBg)}.sch-thumb.physics{background:var(--phyBg)}.sch-thumb.python{background:var(--pyBg)}.sch-thumb.gcal{background:var(--gcalBg)}
 .sch-info{flex:1;min-width:0}
 .sch-name{font-weight:800;font-size:14px;margin-bottom:2px}
 .sch-meta{font-size:12px;color:var(--tx3);font-weight:600}
 .sch-price{font-weight:900;font-size:16px;color:var(--grn3);white-space:nowrap;align-self:center}
 
-/* DASH COLS */
 .dc{display:grid;grid-template-columns:1fr 330px;gap:16px}
-
-/* MINI CAL */
 .mc-nav{display:flex;align-items:center;justify-content:space-between;margin-bottom:8px}
 .mc-lbl{font-size:16px;font-weight:900}
 .mc-g{display:grid;grid-template-columns:repeat(7,1fr);gap:2px;text-align:center}
@@ -176,14 +169,29 @@ tr:hover td{background:var(--bg2)}
 .mc-d.hev{color:var(--grn2);font-weight:900}
 .mc-d.ot{opacity:.2}
 
-/* MY SCHEDULE (right sidebar style) */
 .ms-item{display:flex;gap:12px;padding:14px;background:var(--bg2);border-radius:var(--r2);margin-bottom:8px;border:1.5px solid var(--border2);transition:all .15s}
 .ms-item:hover{border-color:var(--grn);transform:translateX(2px)}
 .ms-thumb{width:48px;height:48px;border-radius:var(--r2);display:flex;align-items:center;justify-content:center;font-size:22px;flex-shrink:0}
-.ms-thumb.math{background:var(--mathBg)}.ms-thumb.physics{background:var(--phyBg)}.ms-thumb.python{background:var(--pyBg)}
+.ms-thumb.math{background:var(--mathBg)}.ms-thumb.physics{background:var(--phyBg)}.ms-thumb.python{background:var(--pyBg)}.ms-thumb.gcal{background:var(--gcalBg)}
 .ms-info{flex:1}
 .ms-name{font-weight:800;font-size:14px}
 .ms-meta{font-size:12px;color:var(--tx3);font-weight:600;margin-top:1px}
+
+/* IMPORTED EVENTS */
+.imp-item{display:flex;align-items:center;gap:10px;padding:10px 12px;border-radius:var(--r3);margin-bottom:4px;background:var(--bg2);border:1px solid var(--border2);transition:all .15s}
+.imp-item:hover{border-color:var(--gcalB)}
+.imp-item.hidden-ev{opacity:.45}
+.imp-toggle{width:36px;height:20px;background:var(--border);border-radius:10px;position:relative;cursor:pointer;flex-shrink:0;transition:background .2s}
+.imp-toggle::after{content:'';position:absolute;top:2px;left:2px;width:16px;height:16px;background:#fff;border-radius:50%;transition:transform .2s;box-shadow:0 1px 2px rgba(0,0,0,.15)}
+.imp-toggle.on{background:var(--gcalB)}
+.imp-toggle.on::after{transform:translateX(16px)}
+
+/* TOAST */
+.toast{position:fixed;bottom:24px;right:24px;padding:14px 20px;border-radius:var(--r2);font-size:14px;font-weight:700;z-index:2000;transform:translateY(100px);opacity:0;transition:all .3s cubic-bezier(.4,0,.2,1);max-width:420px;box-shadow:var(--sh2)}
+.toast.show{transform:translateY(0);opacity:1}
+.toast.ok{background:#c8e6c9;color:#2e7d32;border:1.5px solid #81c784}
+.toast.err{background:#ffcdd2;color:#c62828;border:1.5px solid #ef9a9a}
+.toast.info{background:var(--gcalBg);color:var(--gcalF);border:1.5px solid var(--gcalB)}
 
 /* MODAL */
 .mo{position:fixed;inset:0;background:rgba(0,0,0,.3);backdrop-filter:blur(4px);display:flex;align-items:center;justify-content:center;z-index:1000;opacity:0;pointer-events:none;transition:opacity .25s}
@@ -214,16 +222,15 @@ tr:hover td{background:var(--bg2)}
 .page{display:none}.page.active{display:block}
 .empty{text-align:center;padding:48px 20px;color:var(--tx3);font-weight:600}
 .empty-ic{font-size:48px;margin-bottom:12px;opacity:.35}
-
 .mob{display:none;position:fixed;top:14px;left:14px;z-index:200;background:var(--white);border:1.5px solid var(--border);border-radius:var(--r3);padding:8px 12px;color:var(--tx);cursor:pointer;font-size:18px;box-shadow:var(--sh)}
 @media(max-width:900px){.mob{display:block}.sb{transform:translateX(-100%);z-index:300}.sb.open{transform:translateX(0);box-shadow:var(--sh2)}.mn{margin-left:0;padding:20px 16px;padding-top:56px}.stats{grid-template-columns:1fr 1fr}.dc{grid-template-columns:1fr}.ce{min-height:60px}.fr{grid-template-columns:1fr}}
-
 ::-webkit-scrollbar{width:5px}::-webkit-scrollbar-thumb{background:var(--border);border-radius:3px}
 @keyframes up{from{opacity:0;transform:translateY(14px)}to{opacity:1;transform:translateY(0)}}.an{animation:up .45s ease-out both}.a1{animation-delay:.06s}.a2{animation-delay:.12s}.a3{animation-delay:.18s}.a4{animation-delay:.24s}
 </style>
 </head>
 <body>
-<button class="mob" onclick="$('sidebar').classList.toggle('open')">☰</button>
+<div class="toast" id="toast"></div>
+<button class="mob" onclick="_('sidebar').classList.toggle('open')">☰</button>
 <div class="app">
 <aside class="sb" id="sidebar">
   <div class="sb-logo"><div class="sb-ico">T</div><span class="sb-txt">Tutor Schedule</span></div>
@@ -232,19 +239,20 @@ tr:hover td{background:var(--bg2)}
   <div class="ni" data-p="students" onclick="go('students')"><span class="ni-i">👥</span>Students</div>
   <div class="ni" data-p="sessions" onclick="go('sessions')"><span class="ni-i">📝</span>Sessions</div>
   <div class="ni" data-p="income" onclick="go('income')"><span class="ni-i">💰</span>Finance</div>
+  <div class="ni" data-p="gcalimport" onclick="go('gcalimport')"><span class="ni-i">📥</span>Google Events</div>
   <div class="ni-sep"></div>
   <div class="ni" data-p="settings" onclick="go('settings')"><span class="ni-i">⚙️</span>Settings</div>
   <div class="sb-promo">
     <div class="sb-promo-title">📚 Teaching Tip</div>
     <div class="sb-promo-sub">Use spaced repetition to help your students retain concepts longer!</div>
   </div>
-  <div class="gcal-box"><div><span class="gcal-dot off" id="gcalDot"></span><span class="gcal-lbl" id="gcalLbl">Not connected</span></div><button class="gcal-btn" id="gcalBtn" onclick="handleGCal()">Connect Calendar</button></div>
+  <div class="gcal-box"><div><span class="gcal-dot off" id="gcalDot"></span><span class="gcal-lbl" id="gcalLbl">Not connected</span></div><button class="gcal-btn" id="gcalBtn" onclick="handleGCal()">Connect Calendar</button><div class="gcal-count" id="gcalCount"></div></div>
 </aside>
-
 <main class="mn">
+
 <!-- DASHBOARD -->
 <div class="page active" id="page-dashboard">
-  <div class="greet an"><h1 id="greetH">Hello, Tutor! 👋</h1><p id="greetP"></p></div>
+  <div class="greet an"><h1 id="greetH">Hello! 👋</h1><p id="greetP"></p></div>
   <div class="stats" id="dashSt"></div>
   <div class="dc">
     <div>
@@ -261,7 +269,10 @@ tr:hover td{background:var(--bg2)}
 <!-- CALENDAR -->
 <div class="page" id="page-calendar">
   <div class="greet an"><h1>📅 Schedule</h1></div>
-  <div class="tabs an a1"><div class="tab on" onclick="setCV('month')">Month</div><div class="tab" onclick="setCV('week')">Week</div></div>
+  <div style="display:flex;gap:12px;align-items:center;flex-wrap:wrap;margin-bottom:16px" class="an a1">
+    <div class="tabs"><div class="tab on" onclick="setCV('month')">Month</div><div class="tab" onclick="setCV('week')">Week</div></div>
+    <label class="tw" style="font-size:13px"><div class="tg on" id="calShowGcal" onclick="this.classList.toggle('on');rCal()"></div>Show Google Events</label>
+  </div>
   <div class="cd an a2"><div class="cc"><button class="btn btn-o btn-sm" onclick="calN(-1)">◀</button><div class="cl" id="calLbl"></div><button class="btn btn-o btn-sm" onclick="calN(1)">▶</button><button class="btn btn-o btn-sm" onclick="calT()">Today</button><div style="flex:1"></div><button class="btn btn-g btn-sm" onclick="openSesM()">+ Add Session</button></div><div id="calBox"></div></div>
 </div>
 
@@ -286,17 +297,32 @@ tr:hover td{background:var(--bg2)}
   <div class="cd an a2"><div class="cd-h"><div class="cd-t" id="incT">Overview</div><div class="csel" id="csel-incMo" style="width:180px"><div class="csel-display" onclick="toggleCSel(this)">All Months</div><div class="csel-opts"></div><select id="incMo" onchange="rInc()"></select></div></div><div id="incB"></div></div>
 </div>
 
+<!-- GOOGLE EVENTS (imported) -->
+<div class="page" id="page-gcalimport">
+  <div class="greet an"><h1>📥 Google Calendar Events</h1><p>Manage imported events — toggle visibility without affecting your Google Calendar</p></div>
+  <div class="cd an a1">
+    <div class="cd-h"><div class="cd-t" id="gcalImpTitle">Imported Events</div>
+      <div style="display:flex;gap:8px">
+        <button class="btn btn-blue btn-sm" onclick="fetchGE()">🔄 Refresh from Google</button>
+        <button class="btn btn-o btn-sm" onclick="showAllGE()">👁 Show All</button>
+        <button class="btn btn-o btn-sm" onclick="hideAllGE()">🙈 Hide All</button>
+      </div>
+    </div>
+    <div id="gcalImpList"></div>
+  </div>
+</div>
+
 <!-- SETTINGS -->
 <div class="page" id="page-settings">
   <div class="greet an"><h1>⚙️ Settings</h1></div>
   <div class="cd an a1"><div class="cd-t" style="margin-bottom:16px">Google Calendar</div>
     <div class="fg"><label>Client ID</label><input id="sCI" placeholder="xxxx.apps.googleusercontent.com" onchange="saveSett()"></div>
     <div class="fg"><label>Calendar ID</label><input id="sCL" placeholder="primary" onchange="saveSett()"></div>
-    <div style="padding:12px 16px;background:var(--orgL);border-radius:var(--r3);font-size:13px;color:var(--orgF);font-weight:600;margin-top:8px">⚠️ Add <code style="font-weight:800">https://napatjumpatip.github.io</code> to Authorized JavaScript Origins</div></div>
+    <div style="padding:12px 16px;background:var(--orgL);border-radius:var(--r3);font-size:13px;color:var(--orgF);font-weight:600;margin-top:8px">⚠️ Add <code style="font-weight:800">https://napatjumpatip.github.io</code> to Authorized JavaScript Origins in Google Cloud Console</div></div>
   <div class="cd an a2"><div class="cd-t" style="margin-bottom:16px">Default Rates (฿/hr)</div>
     <div class="fr"><div class="fg"><label>🔢 Math</label><input type="number" id="sRM" placeholder="500" onchange="saveSett()"></div><div class="fg"><label>⚛️ Physics</label><input type="number" id="sRP" placeholder="500" onchange="saveSett()"></div></div>
     <div class="fg" style="max-width:calc(50% - 6px)"><label>🐍 Python</label><input type="number" id="sRY" placeholder="600" onchange="saveSett()"></div></div>
-  <div class="cd an a3"><div class="cd-t" style="margin-bottom:16px">Data</div><div style="display:flex;gap:8px;flex-wrap:wrap"><button class="btn btn-o" onclick="expD()">📤 Export</button><button class="btn btn-o" onclick="$('impF').click()">📥 Import</button><input type="file" id="impF" accept=".json" style="display:none" onchange="impD(event)"><button class="btn btn-d" onclick="clrD()">🗑️ Clear All</button></div></div>
+  <div class="cd an a3"><div class="cd-t" style="margin-bottom:16px">Data</div><div style="display:flex;gap:8px;flex-wrap:wrap"><button class="btn btn-o" onclick="expD()">📤 Export</button><button class="btn btn-o" onclick="_('impF').click()">📥 Import</button><input type="file" id="impF" accept=".json" style="display:none" onchange="impD(event)"><button class="btn btn-d" onclick="clrD()">🗑️ Clear All</button></div></div>
 </div>
 </main>
 </div>
@@ -305,10 +331,10 @@ tr:hover td{background:var(--bg2)}
 <div class="mo" id="stModal"><div class="mo-box"><div class="mo-t" id="stMT">Add Student</div>
 <div class="fg"><label>Full Name</label><input id="stN" placeholder="Student name"></div>
 <div class="fg"><label>Nickname</label><input id="stNK" placeholder="Nickname"></div>
-<div class="fg"><label>Type</label><div class="csel" id="csel-stTy"><div class="csel-display" onclick="toggleCSel(this)">👤 Individual</div><div class="csel-opts"></div><select id="stTy" onchange="_('stGW').style.display=this.value==='group'?'block':'none'"><option value="individual" data-icon="👤">Individual</option><option value="group" data-icon="👥">Group</option></select></div></div>
+<div class="fg"><label>Type</label><div class="csel"><div class="csel-display" onclick="toggleCSel(this)">👤 Individual</div><div class="csel-opts"></div><select id="stTy" onchange="_('stGW').style.display=this.value==='group'?'block':'none'"><option value="individual" data-icon="👤">Individual</option><option value="group" data-icon="👥">Group</option></select></div></div>
 <div class="fg" id="stGW" style="display:none"><label>Group Name</label><input id="stGN" placeholder="Group A"></div>
 <div class="fg"><label>Subjects</label><div style="display:flex;gap:14px;flex-wrap:wrap"><label class="tw"><div class="tg" id="stSM" onclick="this.classList.toggle('on')"></div>Math</label><label class="tw"><div class="tg" id="stSP" onclick="this.classList.toggle('on')"></div>Physics</label><label class="tw"><div class="tg" id="stSY" onclick="this.classList.toggle('on')"></div>Python</label></div></div>
-<div class="fg"><label>Custom Rate (฿/hr) — leave blank for default</label><div class="fr"><input type="number" id="stRM" placeholder="Math"><input type="number" id="stRP" placeholder="Physics"></div><div style="margin-top:8px;max-width:calc(50% - 6px)"><input type="number" id="stRY" placeholder="Python"></div></div>
+<div class="fg"><label>Custom Rate (฿/hr)</label><div class="fr"><input type="number" id="stRM" placeholder="Math"><input type="number" id="stRP" placeholder="Physics"></div><div style="margin-top:8px;max-width:calc(50% - 6px)"><input type="number" id="stRY" placeholder="Python"></div></div>
 <div class="fg"><label>Contact</label><input id="stC" placeholder="Phone / Line"></div>
 <div class="fg"><label>Notes</label><textarea id="stNo" rows="2" placeholder="Notes"></textarea></div>
 <input type="hidden" id="stEI">
@@ -318,11 +344,11 @@ tr:hover td{background:var(--bg2)}
 <div class="mo" id="sesModal"><div class="mo-box"><div class="mo-t" id="sesMT">Add Session</div>
 <div class="fg"><label>Date</label><input type="date" id="seD"></div>
 <div class="fr"><div class="fg"><label>Start</label><input type="time" id="seS" value="17:00"></div><div class="fg"><label>End</label><input type="time" id="seE" value="18:00"></div></div>
-<div class="fg"><label>Subject</label><div class="csel" id="csel-seSb"><div class="csel-display" onclick="toggleCSel(this)">🔢 Math</div><div class="csel-opts"></div><select id="seSb"><option value="math" data-icon="🔢">Math</option><option value="physics" data-icon="⚛️">Physics</option><option value="python" data-icon="🐍">Python</option></select></div></div>
-<div class="fg"><label>Student</label><div class="csel" id="csel-seSt"><div class="csel-display" onclick="toggleCSel(this)">-- Select --</div><div class="csel-opts"></div><select id="seSt"></select></div></div>
+<div class="fg"><label>Subject</label><div class="csel"><div class="csel-display" onclick="toggleCSel(this)">🔢 Math</div><div class="csel-opts"></div><select id="seSb"><option value="math" data-icon="🔢">Math</option><option value="physics" data-icon="⚛️">Physics</option><option value="python" data-icon="🐍">Python</option></select></div></div>
+<div class="fg"><label>Student</label><div class="csel"><div class="csel-display" onclick="toggleCSel(this)">-- Select --</div><div class="csel-opts"></div><select id="seSt"></select></div></div>
 <div class="fg"><label>Topic</label><input id="seTo" placeholder="e.g. Linear equations"></div>
 <div class="fg"><label>Notes</label><textarea id="seNo" rows="2" placeholder="Notes"></textarea></div>
-<div class="fg"><label>Payment</label><div class="csel" id="csel-sePd"><div class="csel-display" onclick="toggleCSel(this)">⏳ Unpaid</div><div class="csel-opts"></div><select id="sePd"><option value="unpaid" data-icon="⏳">Unpaid</option><option value="paid" data-icon="✅">Paid</option></select></div></div>
+<div class="fg"><label>Payment</label><div class="csel"><div class="csel-display" onclick="toggleCSel(this)">⏳ Unpaid</div><div class="csel-opts"></div><select id="sePd"><option value="unpaid" data-icon="⏳">Unpaid</option><option value="paid" data-icon="✅">Paid</option></select></div></div>
 <div class="fg"><label class="tw"><div class="tg" id="seGC" onclick="this.classList.toggle('on')"></div>Add to Google Calendar</label></div>
 <input type="hidden" id="seEI">
 <div style="display:flex;gap:8px;justify-content:flex-end;margin-top:20px"><button class="btn btn-o" onclick="clM('sesModal')">Cancel</button><button class="btn btn-g" onclick="saveSes()">Save</button></div></div></div>
@@ -333,28 +359,33 @@ tr:hover td{background:var(--bg2)}
 
 <!-- TX MODAL -->
 <div class="mo" id="txModal"><div class="mo-box"><div class="mo-t" id="txMT">Add Transaction</div>
-<div class="fg"><label>Type</label><div class="csel" id="csel-txTy"><div class="csel-display" onclick="toggleCSel(this)">💰 Income</div><div class="csel-opts"></div><select id="txTy"><option value="income" data-icon="💰">Income</option><option value="expense" data-icon="🛒">Expense</option></select></div></div>
+<div class="fg"><label>Type</label><div class="csel"><div class="csel-display" onclick="toggleCSel(this)">💰 Income</div><div class="csel-opts"></div><select id="txTy"><option value="income" data-icon="💰">Income</option><option value="expense" data-icon="🛒">Expense</option></select></div></div>
 <div class="fg"><label>Date</label><input type="date" id="txDt"></div>
 <div class="fg"><label>Amount (฿)</label><input type="number" id="txAm" placeholder="0"></div>
-<div class="fg"><label>Student (optional)</label><div class="csel" id="csel-txSt"><div class="csel-display" onclick="toggleCSel(this)">-- None --</div><div class="csel-opts"></div><select id="txSt"></select></div></div>
+<div class="fg"><label>Student (optional)</label><div class="csel"><div class="csel-display" onclick="toggleCSel(this)">-- None --</div><div class="csel-opts"></div><select id="txSt"></select></div></div>
 <div class="fg"><label>Description</label><input id="txDs" placeholder="e.g. Bought textbook, treats"></div>
-<div class="fg"><label>Category</label><div class="csel" id="csel-txCat"><div class="csel-display" onclick="toggleCSel(this)">📚 Tuition</div><div class="csel-opts"></div><select id="txCat"><option value="tuition" data-icon="📚">Tuition</option><option value="books" data-icon="📖">Books / Supplies</option><option value="treats" data-icon="🍰">Treats / Snacks</option><option value="transport" data-icon="🚗">Transport</option><option value="material" data-icon="📐">Teaching Material</option><option value="other" data-icon="📦">Other</option></select></div></div>
+<div class="fg"><label>Category</label><div class="csel"><div class="csel-display" onclick="toggleCSel(this)">📚 Tuition</div><div class="csel-opts"></div><select id="txCat"><option value="tuition" data-icon="📚">Tuition</option><option value="books" data-icon="📖">Books / Supplies</option><option value="treats" data-icon="🍰">Treats / Snacks</option><option value="transport" data-icon="🚗">Transport</option><option value="material" data-icon="📐">Teaching Material</option><option value="other" data-icon="📦">Other</option></select></div></div>
 <input type="hidden" id="txEI">
 <div style="display:flex;gap:8px;justify-content:flex-end;margin-top:20px"><button class="btn btn-o" onclick="clM('txModal')">Cancel</button><button class="btn btn-g" onclick="saveTx()">Save</button></div></div></div>
 
 <script>
 const K='tutorScheduleData',_=id=>document.getElementById(id);
 let D=loadD();
-function defD(){return{students:[],sessions:[],transactions:[],settings:{clientId:'',calendarId:'primary',rateMath:500,ratePhysics:500,ratePython:600}}}
-function loadD(){try{const d=JSON.parse(localStorage.getItem(K));return d?{...defD(),...d,transactions:d.transactions||[]}:defD()}catch{return defD()}}
+
+function defD(){return{students:[],sessions:[],transactions:[],gcalImported:[],gcalHidden:{},settings:{clientId:'',calendarId:'primary',rateMath:500,ratePhysics:500,ratePython:600}}}
+function loadD(){try{const d=JSON.parse(localStorage.getItem(K));return d?{...defD(),...d,transactions:d.transactions||[],gcalImported:d.gcalImported||[],gcalHidden:d.gcalHidden||{}}:defD()}catch{return defD()}}
 function saveD(){localStorage.setItem(K,JSON.stringify(D))}
 function uid(){return Date.now().toString(36)+Math.random().toString(36).substr(2,5)}
+
+// Toast notifications
+function toast(msg,type='info',dur=4000){const t=_('toast');t.textContent=msg;t.className='toast '+type+' show';clearTimeout(t._tid);t._tid=setTimeout(()=>t.classList.remove('show'),dur)}
+
 const SB={math:{l:'Math',i:'🔢',c:'m',em:'📐'},physics:{l:'Physics',i:'⚛️',c:'ph',em:'🔭'},python:{l:'Python',i:'🐍',c:'py',em:'💻'}};
 function sbg(s){const x=SB[s]||{l:s,c:'m'};return`<span class="bg bg-${x.c}">${x.i} ${x.l}</span>`}
 function opM(id){_(id).classList.add('show')}
 function clM(id){_(id).classList.remove('show')}
 
-function go(p){document.querySelectorAll('.page').forEach(x=>x.classList.remove('active'));_('page-'+p).classList.add('active');document.querySelectorAll('.ni').forEach(n=>n.classList.remove('on'));const nav=document.querySelector(`.ni[data-p="${p}"]`);if(nav)nav.classList.add('on');_('sidebar').classList.remove('open');({dashboard:rDash,calendar:rCal,students:rStu,sessions:rSes,income:rInc,settings:loadSett})[p]?.()}
+function go(p){document.querySelectorAll('.page').forEach(x=>x.classList.remove('active'));_('page-'+p).classList.add('active');document.querySelectorAll('.ni').forEach(n=>n.classList.remove('on'));const nav=document.querySelector(`.ni[data-p="${p}"]`);if(nav)nav.classList.add('on');_('sidebar').classList.remove('open');({dashboard:rDash,calendar:rCal,students:rStu,sessions:rSes,income:rInc,settings:loadSett,gcalimport:rGCalImp})[p]?.()}
 
 // === STUDENTS ===
 let stV='individual';
@@ -377,7 +408,7 @@ function rStu(){const list=D.students.filter(s=>(s.type||'individual')===stV);co
 function fR(s){return(s.subjects||[]).map(sub=>{const r=s.rates?.[sub]||D.settings['rate'+sub.charAt(0).toUpperCase()+sub.slice(1)]||'-';return`${SB[sub]?.i||''} ฿${r}`}).join(' ')||'-'}
 
 // === SESSIONS ===
-function popSel(){const s=_('seSt');s.innerHTML='<option value="">-- Select --</option>';D.students.forEach(st=>{s.innerHTML+=`<option value="${st.id}">${st.nickname?st.name+' ('+st.nickname+')':st.name}</option>`})}
+function popSel(){const s=_('seSt');s.innerHTML='<option value="">-- Select --</option>';D.students.forEach(st=>{s.innerHTML+=`<option value="${st.id}">${st.nickname?st.name+' ('+st.nickname+')':st.name}</option>`});syncCSel('seSt')}
 function openSesM(eid,pd){popSel();if(eid){const s=D.sessions.find(x=>x.id===eid);if(!s)return;_('sesMT').textContent='Edit Session';_('seD').value=s.date;_('seS').value=s.start;_('seE').value=s.end;_('seSb').value=s.subject;_('seSt').value=s.studentId||'';_('seTo').value=s.topic||'';_('seNo').value=s.note||'';_('sePd').value=s.paid||'unpaid';_('seEI').value=eid}
   else{_('sesMT').textContent='Add Session';_('seD').value=pd||new Date().toISOString().split('T')[0];_('seS').value='17:00';_('seE').value='18:00';_('seSb').value='math';_('seSt').value='';_('seTo').value='';_('seNo').value='';_('sePd').value='unpaid';_('seEI').value=''}
   syncCSel('seSb');syncCSel('seSt');syncCSel('sePd');_('seGC').classList.remove('on');opM('sesModal')}
@@ -385,8 +416,10 @@ function saveSes(){const date=_('seD').value;if(!date)return alert('Select a dat
   const[sh,sm]=d.start.split(':').map(Number),[eh,em]=d.end.split(':').map(Number);d.hours=Math.max(0,((eh*60+em)-(sh*60+sm))/60);
   const stu=D.students.find(s=>s.id===d.studentId);const rk='rate'+d.subject.charAt(0).toUpperCase()+d.subject.slice(1);d.fee=d.hours*(stu?.rates?.[d.subject]||D.settings[rk]||0);
   const eid=_('seEI').value;if(eid){const i=D.sessions.findIndex(s=>s.id===eid);if(i!==-1)D.sessions[i]={...D.sessions[i],...d}}else{d.id=uid();d.createdAt=new Date().toISOString();d.attendance='present';D.sessions.push(d)}
-  if(_('seGC').classList.contains('on')&&typeof gapi!=='undefined'&&gapi?.client?.calendar)addGCal(d);
-  saveD();clM('sesModal');rSes();rCal()}
+  const wantGCal=_('seGC').classList.contains('on');
+  saveD();clM('sesModal');rSes();rCal();
+  if(wantGCal)addGCal(d);
+}
 function delSes(id){if(!confirm('Delete?'))return;D.sessions=D.sessions.filter(s=>s.id!==id);saveD();rSes()}
 function rSes(){popMF('sfm');syncCSel('sfs');const fm=_('sfm').value,fs=_('sfs').value;let list=[...D.sessions].sort((a,b)=>b.date.localeCompare(a.date)||(b.start||'').localeCompare(a.start||''));
   if(fm)list=list.filter(s=>s.date.startsWith(fm));if(fs)list=list.filter(s=>s.subject===fs);
@@ -406,7 +439,7 @@ function cyc(el){const sid=_('attB').dataset.sid;const lb=_('al_'+sid);if(el.cla
 function saveAtt(){const sid=_('attB').dataset.sid;const s=D.sessions.find(x=>x.id===sid);if(!s)return;const ck=_('ac_'+sid);s.attendance=ck.classList.contains('ck')?'present':ck.classList.contains('ab')?'absent':'none';s.attendNote=_('aNo').value.trim();saveD();clM('attModal');rSes()}
 
 // === TRANSACTIONS ===
-function popTxSt(){const s=_('txSt');s.innerHTML='<option value="">-- None --</option>';D.students.forEach(st=>{s.innerHTML+=`<option value="${st.id}">${st.nickname?st.name+' ('+st.nickname+')':st.name}</option>`})}
+function popTxSt(){const s=_('txSt');s.innerHTML='<option value="">-- None --</option>';D.students.forEach(st=>{s.innerHTML+=`<option value="${st.id}">${st.nickname?st.name+' ('+st.nickname+')':st.name}</option>`});syncCSel('txSt')}
 function openTxM(eid){popTxSt();if(eid){const t=D.transactions.find(x=>x.id===eid);if(!t)return;_('txMT').textContent='Edit Transaction';_('txTy').value=t.type;_('txDt').value=t.date;_('txAm').value=t.amount;_('txSt').value=t.studentId||'';_('txDs').value=t.desc||'';_('txCat').value=t.category||'other';_('txEI').value=eid}
   else{_('txMT').textContent='Add Transaction';_('txTy').value='expense';_('txDt').value=new Date().toISOString().split('T')[0];_('txAm').value='';_('txSt').value='';_('txDs').value='';_('txCat').value='other';_('txEI').value=''}
   syncCSel('txTy');syncCSel('txSt');syncCSel('txCat');opM('txModal')}
@@ -429,8 +462,7 @@ function rInc(){popMF('incMo');const fm=_('incMo').value;let ses=[...D.sessions]
   _('incT').textContent={overview:'Overview',student:'By Student',transactions:'All Transactions'}[incV];
   if(incV==='overview'){let h='<table><thead><tr><th>Subject</th><th>Sessions</th><th>Hours</th><th>Income</th><th>Unpaid</th></tr></thead><tbody>';
     ['math','physics','python'].forEach(sub=>{const ss=ses.filter(s=>s.subject===sub);h+=`<tr><td>${sbg(sub)}</td><td class="mono">${ss.length}</td><td class="mono">${ss.reduce((s,x)=>s+(x.hours||0),0).toFixed(1)}</td><td class="mono" style="font-weight:800">฿${ss.reduce((s,x)=>s+(x.fee||0),0).toLocaleString()}</td><td class="mono" style="color:var(--orgF)">฿${ss.filter(s=>s.paid!=='paid').reduce((s,x)=>s+(x.fee||0),0).toLocaleString()}</td></tr>`});
-    h+='</tbody></table>';
-    h+='<div style="margin-top:24px"><div class="cd-t" style="margin-bottom:12px">Expenses by Category</div><table><thead><tr><th>Category</th><th>Count</th><th>Total</th></tr></thead><tbody>';
+    h+='</tbody></table>';h+='<div style="margin-top:24px"><div class="cd-t" style="margin-bottom:12px">Expenses by Category</div><table><thead><tr><th>Category</th><th>Count</th><th>Total</th></tr></thead><tbody>';
     const ct={};txs.filter(t=>t.type==='expense').forEach(t=>{if(!ct[t.category])ct[t.category]={n:0,t:0};ct[t.category].n++;ct[t.category].t+=t.amount});
     Object.entries(ct).forEach(([c,d])=>{h+=`<tr><td style="font-weight:700">${CATS[c]||c}</td><td class="mono">${d.n}</td><td class="mono" style="font-weight:800;color:var(--redF)">฿${d.t.toLocaleString()}</td></tr>`});
     if(!Object.keys(ct).length)h+='<tr><td colspan="3" style="color:var(--tx3);text-align:center;padding:20px">No expenses</td></tr>';
@@ -446,25 +478,73 @@ function rInc(){popMF('incMo');const fm=_('incMo').value;let ses=[...D.sessions]
     if(!all.length)h+='<tr><td colspan="7" class="empty">No transactions</td></tr>';h+='</tbody></table>';_('incB').innerHTML=h}
 }
 
+// === GOOGLE CALENDAR IMPORTED EVENTS ===
+function getVisibleGCalForDate(dateStr){
+  return(D.gcalImported||[]).filter(ev=>{
+    if(D.gcalHidden[ev.gcalId])return false;
+    return ev.date===dateStr;
+  });
+}
+function rGCalImp(){
+  const evts=D.gcalImported||[];
+  _('gcalImpTitle').textContent=`Imported Events (${evts.length})`;
+  if(!evts.length){_('gcalImpList').innerHTML='<div class="empty"><div class="empty-ic">📥</div>No imported events<br>Connect Google Calendar and click Refresh</div>';return}
+  let h='';
+  evts.sort((a,b)=>(a.date||'').localeCompare(b.date||'')||(a.startTime||'').localeCompare(b.startTime||'')).forEach(ev=>{
+    const hidden=!!D.gcalHidden[ev.gcalId];
+    h+=`<div class="imp-item ${hidden?'hidden-ev':''}">
+      <div class="imp-toggle ${hidden?'':'on'}" onclick="toggleGCalVis('${ev.gcalId}',this)"></div>
+      <div style="flex:1;min-width:0">
+        <div style="font-weight:700;font-size:14px">${ev.summary||'(No title)'}</div>
+        <div style="font-size:12px;color:var(--tx3);font-weight:600">📅 ${fDT(ev.date)} · ⏰ ${ev.startTime||'All day'}${ev.endTime?' – '+ev.endTime:''}</div>
+      </div>
+      <span class="bg bg-gcal" style="flex-shrink:0">Google</span>
+    </div>`;
+  });
+  _('gcalImpList').innerHTML=h;
+}
+function toggleGCalVis(gcalId,el){
+  if(D.gcalHidden[gcalId]){delete D.gcalHidden[gcalId];el.classList.add('on');el.closest('.imp-item').classList.remove('hidden-ev')}
+  else{D.gcalHidden[gcalId]=true;el.classList.remove('on');el.closest('.imp-item').classList.add('hidden-ev')}
+  saveD();rCal();
+}
+function showAllGE(){D.gcalHidden={};saveD();rGCalImp();rCal();toast('All Google events visible','ok')}
+function hideAllGE(){(D.gcalImported||[]).forEach(ev=>{D.gcalHidden[ev.gcalId]=true});saveD();rGCalImp();rCal();toast('All Google events hidden','info')}
+
 // === CALENDAR ===
 let cD=new Date(),cV='month';
 function setCV(v){cV=v;document.querySelectorAll('#page-calendar .tab').forEach((t,i)=>t.classList.toggle('on',(i===0&&v==='month')||(i===1&&v==='week')));rCal()}
 function calN(d){if(cV==='month')cD.setMonth(cD.getMonth()+d);else cD.setDate(cD.getDate()+d*7);rCal()}
 function calT(){cD=new Date();rCal()}
 function rCal(){cV==='month'?rMo():rWk()}
+function showGCal(){return _('calShowGcal')?.classList.contains('on')}
+
 function rMo(){const y=cD.getFullYear(),m=cD.getMonth();_('calLbl').textContent=`${eM(m)} ${y}`;const fd=new Date(y,m,1).getDay(),dim=new Date(y,m+1,0).getDate(),now=new Date();
   const days=['Su','Mo','Tu','We','Th','Fr','Sa'];let h='<div class="cg">';days.forEach(d=>h+=`<div class="ch">${d}</div>`);const pd=new Date(y,m,0).getDate();
   for(let i=0;i<fd;i++)h+=`<div class="ce ot"><div class="dn">${pd-fd+1+i}</div></div>`;
-  for(let d=1;d<=dim;d++){const ds=`${y}-${String(m+1).padStart(2,'0')}-${String(d).padStart(2,'0')}`;const isT=now.getFullYear()===y&&now.getMonth()===m&&now.getDate()===d;const evts=D.sessions.filter(s=>s.date===ds);
-    h+=`<div class="ce ${isT?'td':''}" onclick="openSesM(null,'${ds}')"><div class="dn">${d}</div>`;evts.slice(0,3).forEach(ev=>{const st=D.students.find(s=>s.id===ev.studentId);h+=`<div class="cv ${ev.subject}" onclick="event.stopPropagation();openSesM('${ev.id}')">${ev.start} ${st?(st.nickname||st.name):''}</div>`});if(evts.length>3)h+=`<div style="font-size:10px;color:var(--tx3)">+${evts.length-3}</div>`;h+='</div>'}
+  for(let d=1;d<=dim;d++){const ds=`${y}-${String(m+1).padStart(2,'0')}-${String(d).padStart(2,'0')}`;const isT=now.getFullYear()===y&&now.getMonth()===m&&now.getDate()===d;
+    const evts=D.sessions.filter(s=>s.date===ds);
+    const gEvts=showGCal()?getVisibleGCalForDate(ds):[];
+    h+=`<div class="ce ${isT?'td':''}" onclick="openSesM(null,'${ds}')"><div class="dn">${d}</div>`;
+    evts.slice(0,2).forEach(ev=>{const st=D.students.find(s=>s.id===ev.studentId);h+=`<div class="cv ${ev.subject}" onclick="event.stopPropagation();openSesM('${ev.id}')">${ev.start} ${st?(st.nickname||st.name):''}</div>`});
+    gEvts.slice(0,2).forEach(gev=>{h+=`<div class="cv gcal" onclick="event.stopPropagation()">${gev.startTime||''} ${gev.summary||''}</div>`});
+    const total=evts.length+gEvts.length;if(total>4)h+=`<div style="font-size:10px;color:var(--tx3)">+${total-4}</div>`;
+    h+='</div>'}
   const rem=(fd+dim)%7===0?0:7-(fd+dim)%7;for(let i=1;i<=rem;i++)h+=`<div class="ce ot"><div class="dn">${i}</div></div>`;h+='</div>';_('calBox').innerHTML=h}
+
 function rWk(){const sow=new Date(cD);sow.setDate(sow.getDate()-sow.getDay());const eow=new Date(sow);eow.setDate(eow.getDate()+6);
   _('calLbl').textContent=`${sow.getDate()} ${eM(sow.getMonth()).substr(0,3)} — ${eow.getDate()} ${eM(eow.getMonth()).substr(0,3)} ${eow.getFullYear()}`;
   const now=new Date();const days=['Sun','Mon','Tue','Wed','Thu','Fri','Sat'];let h='<div class="wg"><div class="wh"></div>';
   for(let i=0;i<7;i++){const d=new Date(sow);d.setDate(d.getDate()+i);h+=`<div class="wh ${d.toDateString()===now.toDateString()?'wtd':''}">${days[i]}<span class="wdn">${d.getDate()}</span></div>`}
   for(let hr=8;hr<22;hr++){h+=`<div class="wt">${String(hr).padStart(2,'0')}:00</div>`;for(let i=0;i<7;i++){const d=new Date(sow);d.setDate(d.getDate()+i);const ds=d.toISOString().split('T')[0];h+=`<div class="ws" onclick="openSesM(null,'${ds}')">`;
+    // Local sessions
     D.sessions.filter(s=>s.date===ds).forEach(ev=>{const[sh]=ev.start.split(':').map(Number),[eh,em]=ev.end.split(':').map(Number);if(sh===hr){const dur=((eh*60+em)-sh*60)/60;const ht=Math.max(28,dur*50);const cols={math:'var(--mathF)',physics:'var(--phyF)',python:'var(--pyF)'};const bgs={math:'var(--mathBg)',physics:'var(--phyBg)',python:'var(--pyBg)'};const st=D.students.find(s=>s.id===ev.studentId);
-      h+=`<div class="we" style="top:0;height:${ht}px;background:${bgs[ev.subject]};color:${cols[ev.subject]};border-left-color:${cols[ev.subject]}" onclick="event.stopPropagation();openSesM('${ev.id}')">${ev.start} ${st?(st.nickname||st.name):''}</div>`}});h+='</div>'}}h+='</div>';_('calBox').innerHTML=h}
+      h+=`<div class="we" style="top:0;height:${ht}px;background:${bgs[ev.subject]};color:${cols[ev.subject]};border-left-color:${cols[ev.subject]}" onclick="event.stopPropagation();openSesM('${ev.id}')">${ev.start} ${st?(st.nickname||st.name):''}</div>`}});
+    // Google events
+    if(showGCal()){getVisibleGCalForDate(ds).forEach(gev=>{if(!gev.startTime)return;const[gh]=gev.startTime.split(':').map(Number);if(gh===hr){
+      let ght=50;if(gev.endTime){const[geh,gem]=gev.endTime.split(':').map(Number);ght=Math.max(28,((geh*60+gem)-gh*60)/60*50)}
+      h+=`<div class="we" style="top:0;height:${ght}px;background:var(--gcalBg);color:var(--gcalF);border-left-color:var(--gcalB)" onclick="event.stopPropagation()">${gev.startTime} ${gev.summary||''}</div>`}})}
+    h+='</div>'}}h+='</div>';_('calBox').innerHTML=h}
 
 // === DASHBOARD ===
 function rDash(){const now=new Date(),hr=now.getHours();_('greetH').textContent=`${hr<12?'Good Morning':hr<17?'Good Afternoon':'Good Evening'}! 👋`;
@@ -476,11 +556,9 @@ function rDash(){const now=new Date(),hr=now.getHours();_('greetH').textContent=
     <div class="st o an a1"><div class="st-ic">📝</div><div class="st-lb">Sessions</div><div class="st-v">${ms.length}</div><div class="st-s">${totH.toFixed(1)} hours</div></div>
     <div class="st b an a2"><div class="st-ic">💰</div><div class="st-lb">Income</div><div class="st-v">฿${totF.toLocaleString()}</div></div>
     <div class="st p an a3"><div class="st-ic">🛒</div><div class="st-lb">Expenses</div><div class="st-v">฿${moExp.toLocaleString()}</div></div>`;
-  // Upcoming — Travigo schedule card style
   const up=D.sessions.filter(s=>s.date>=ts).sort((a,b)=>a.date.localeCompare(b.date)||(a.start||'').localeCompare(b.start||'')).slice(0,5);
   if(!up.length)_('upcoming').innerHTML='<div class="empty"><div class="empty-ic">📅</div>No upcoming sessions</div>';
   else{let h='';up.forEach(s=>{const st=D.students.find(x=>x.id===s.studentId);h+=`<div class="sch-card" onclick="openSesM('${s.id}')"><div class="sch-thumb ${s.subject}">${SB[s.subject]?.em||'📚'}</div><div class="sch-info"><div class="sch-name">${st?(st.nickname||st.name):'-'} ${s.topic?'· '+s.topic:''}</div><div class="sch-meta">📅 ${fDT(s.date)} · ⏰ ${s.start}–${s.end}</div></div><div class="sch-price">฿${(s.fee||0).toLocaleString()}</div></div>`});_('upcoming').innerHTML=h}
-  // Finance summary
   let fh='<div style="display:grid;grid-template-columns:repeat(3,1fr);gap:10px">';
   ['math','physics','python'].forEach(sub=>{const ss=ms.filter(x=>x.subject===sub);const fee=ss.reduce((s,x)=>s+(x.fee||0),0);
     fh+=`<div style="padding:16px;background:var(--${sub==='math'?'math':sub==='physics'?'phy':'py'}Bg);border-radius:var(--r2)">${sbg(sub)}<div class="mono" style="font-size:22px;font-weight:900;margin-top:8px;color:var(--${sub==='math'?'math':sub==='physics'?'phy':'py'}F)">฿${fee.toLocaleString()}</div><div style="font-size:12px;opacity:.6;font-weight:700">${ss.length} sessions</div></div>`});
@@ -488,11 +566,14 @@ function rDash(){const now=new Date(),hr=now.getHours();_('greetH').textContent=
   if(moExp>0)fh+=`<div style="margin-top:12px;padding:12px 16px;background:var(--redL);border-radius:var(--r3);display:flex;justify-content:space-between;align-items:center"><span style="font-weight:800;color:var(--redF)">🛒 Expenses this month</span><span class="mono" style="font-weight:800;color:var(--redF)">฿${moExp.toLocaleString()}</span></div>`;
   _('dashFin').innerHTML=fh;
   renderMC();
-  // My Schedule — Travigo style
-  if(!tds.length)_('todayTL').innerHTML='<div style="color:var(--tx3);font-size:14px;padding:12px 0;font-weight:600">No sessions today ☀️</div>';
-  else{let h='';tds.sort((a,b)=>(a.start||'').localeCompare(b.start||'')).forEach(s=>{const st=D.students.find(x=>x.id===s.studentId);h+=`<div class="ms-item" onclick="openSesM('${s.id}')"><div class="ms-thumb ${s.subject}">${SB[s.subject]?.em||'📚'}</div><div class="ms-info"><div class="ms-name">${st?(st.nickname||st.name):'-'}</div><div class="ms-meta">⏰ ${s.start}–${s.end} · ${s.topic||SB[s.subject]?.l||''}</div></div></div>`});_('todayTL').innerHTML=h}}
+  // Today TL with google events
+  const todayGCal=getVisibleGCalForDate(ts);
+  if(!tds.length&&!todayGCal.length)_('todayTL').innerHTML='<div style="color:var(--tx3);font-size:14px;padding:12px 0;font-weight:600">No sessions today ☀️</div>';
+  else{let h='';tds.sort((a,b)=>(a.start||'').localeCompare(b.start||'')).forEach(s=>{const st=D.students.find(x=>x.id===s.studentId);h+=`<div class="ms-item" onclick="openSesM('${s.id}')"><div class="ms-thumb ${s.subject}">${SB[s.subject]?.em||'📚'}</div><div class="ms-info"><div class="ms-name">${st?(st.nickname||st.name):'-'}</div><div class="ms-meta">⏰ ${s.start}–${s.end} · ${s.topic||SB[s.subject]?.l||''}</div></div></div>`});
+    todayGCal.forEach(gev=>{h+=`<div class="ms-item"><div class="ms-thumb gcal">📅</div><div class="ms-info"><div class="ms-name">${gev.summary||'(No title)'}</div><div class="ms-meta">⏰ ${gev.startTime||'All day'}${gev.endTime?' – '+gev.endTime:''} · <span class="bg bg-gcal" style="font-size:10px;padding:2px 6px">Google</span></div></div></div>`});
+    _('todayTL').innerHTML=h}}
 function renderMC(){const now=new Date(),y=now.getFullYear(),m=now.getMonth();const fd=new Date(y,m,1).getDay();const fdM=fd===0?6:fd-1;const dim=new Date(y,m+1,0).getDate();
-  const days=['Mo','Tu','We','Th','Fr','Sa','Su'];let h=`<div class="mc-nav"><span class="mc-lbl">${eM(m)} ${y}</span><div><button class="btn btn-o btn-sm" style="padding:4px 8px" onclick="event.stopPropagation()">◀</button> <button class="btn btn-o btn-sm" style="padding:4px 8px" onclick="event.stopPropagation()">▶</button></div></div><div class="mc-g">`;
+  const days=['Mo','Tu','We','Th','Fr','Sa','Su'];let h=`<div class="mc-nav"><span class="mc-lbl">${eM(m)} ${y}</span></div><div class="mc-g">`;
   days.forEach(d=>h+=`<div class="mc-h">${d}</div>`);const pd=new Date(y,m,0).getDate();
   for(let i=0;i<fdM;i++)h+=`<div class="mc-d ot">${pd-fdM+1+i}</div>`;
   for(let d=1;d<=dim;d++){const ds=`${y}-${String(m+1).padStart(2,'0')}-${String(d).padStart(2,'0')}`;h+=`<div class="mc-d ${d===now.getDate()?'td':''} ${D.sessions.some(s=>s.date===ds)?'hev':''}">${d}</div>`}
@@ -502,67 +583,186 @@ function renderMC(){const now=new Date(),y=now.getFullYear(),m=now.getMonth();co
 function loadSett(){_('sCI').value=D.settings.clientId||'';_('sCL').value=D.settings.calendarId||'primary';_('sRM').value=D.settings.rateMath||'';_('sRP').value=D.settings.ratePhysics||'';_('sRY').value=D.settings.ratePython||''}
 function saveSett(){D.settings.clientId=_('sCI').value.trim();D.settings.calendarId=_('sCL').value.trim()||'primary';D.settings.rateMath=parseInt(_('sRM').value)||500;D.settings.ratePhysics=parseInt(_('sRP').value)||500;D.settings.ratePython=parseInt(_('sRY').value)||600;saveD()}
 function expD(){const b=new Blob([JSON.stringify(D,null,2)],{type:'application/json'});const a=document.createElement('a');a.href=URL.createObjectURL(b);a.download=`tutor-${new Date().toISOString().split('T')[0]}.json`;a.click()}
-function impD(e){const f=e.target.files[0];if(!f)return;const r=new FileReader();r.onload=ev=>{try{const d=JSON.parse(ev.target.result);if(confirm('Replace current data?')){D={...defD(),...d,transactions:d.transactions||[]};saveD();location.reload()}}catch{alert('Invalid file')}};r.readAsText(f)}
+function impD(e){const f=e.target.files[0];if(!f)return;const r=new FileReader();r.onload=ev=>{try{const d=JSON.parse(ev.target.result);if(confirm('Replace current data?')){D={...defD(),...d,transactions:d.transactions||[],gcalImported:d.gcalImported||[],gcalHidden:d.gcalHidden||{}};saveD();location.reload()}}catch{alert('Invalid file')}};r.readAsText(f)}
 function clrD(){if(confirm('Clear all data?')&&confirm('Are you sure?')){localStorage.removeItem(K);D=defD();location.reload()}}
 
-// === GOOGLE CALENDAR ===
+// ============================================
+// === GOOGLE CALENDAR — FIXED & IMPROVED ===
+// ============================================
 let tokC=null;
-function initG(){if(!D.settings.clientId)return;const s1=document.createElement('script');s1.src='https://apis.google.com/js/api.js';s1.onload=()=>{gapi.load('client',async()=>{await gapi.client.init({discoveryDocs:['https://www.googleapis.com/discovery/v1/apis/calendar/v3/rest']});chkGC()})};document.head.appendChild(s1);
-  const s2=document.createElement('script');s2.src='https://accounts.google.com/gsi/client';s2.onload=()=>{tokC=google.accounts.oauth2.initTokenClient({client_id:D.settings.clientId,scope:'https://www.googleapis.com/auth/calendar.events',callback:r=>{if(r.error)return;updGUI(true);fetchGE()}})};document.head.appendChild(s2)}
-function handleGCal(){if(!D.settings.clientId){go('settings');alert('Enter Client ID first');return}if(!tokC){initG();setTimeout(()=>{if(tokC)tokC.requestAccessToken({prompt:'consent'})},2000);return}tokC.requestAccessToken({prompt:'consent'})}
-function chkGC(){updGUI(!!gapi?.client?.getToken())}
-function updGUI(c){_('gcalDot').className='gcal-dot '+(c?'on':'off');_('gcalLbl').textContent=c?'Connected':'Not connected';const b=_('gcalBtn');b.textContent=c?'Refresh Events':'Connect Calendar';b.onclick=c?fetchGE:handleGCal}
-async function fetchGE(){try{const r=await gapi.client.calendar.events.list({calendarId:D.settings.calendarId||'primary',timeMin:new Date(new Date().getFullYear(),new Date().getMonth(),1).toISOString(),timeMax:new Date(new Date().getFullYear(),new Date().getMonth()+2,0).toISOString(),singleEvents:true,orderBy:'startTime'});window.gcE=(r.result.items||[]).map(e=>({summary:e.summary,start:e.start?.dateTime||e.start?.date,end:e.end?.dateTime||e.end?.date}));rCal()}catch(e){console.error(e)}}
-async function addGCal(d){try{const st=D.students.find(s=>s.id===d.studentId);await gapi.client.calendar.events.insert({calendarId:D.settings.calendarId||'primary',resource:{summary:`${SB[d.subject]?.l||d.subject} — ${st?(st.nickname||st.name):''}`,description:d.topic||'',start:{dateTime:`${d.date}T${d.start}:00`,timeZone:'Asia/Bangkok'},end:{dateTime:`${d.date}T${d.end}:00`,timeZone:'Asia/Bangkok'}}})}catch{alert('Failed to add to Calendar')}}
+let gapiReady=false;
+let gisReady=false;
+
+function initG(){
+  if(!D.settings.clientId)return;
+  // Load GAPI client
+  const s1=document.createElement('script');
+  s1.src='https://apis.google.com/js/api.js';
+  s1.onload=()=>{
+    gapi.load('client',async()=>{
+      try{
+        await gapi.client.init({discoveryDocs:['https://www.googleapis.com/discovery/v1/apis/calendar/v3/rest']});
+        gapiReady=true;
+        console.log('[GCal] GAPI client initialized');
+        chkGC();
+      }catch(e){console.error('[GCal] GAPI init failed:',e)}
+    });
+  };
+  document.head.appendChild(s1);
+  // Load GIS (Google Identity Services)
+  const s2=document.createElement('script');
+  s2.src='https://accounts.google.com/gsi/client';
+  s2.onload=()=>{
+    try{
+      tokC=google.accounts.oauth2.initTokenClient({
+        client_id:D.settings.clientId,
+        scope:'https://www.googleapis.com/auth/calendar.events https://www.googleapis.com/auth/calendar.readonly',
+        callback:(resp)=>{
+          if(resp.error){
+            console.error('[GCal] Auth error:',resp);
+            toast(`Google Auth Error: ${resp.error}`,'err');
+            return;
+          }
+          console.log('[GCal] Auth success, token received');
+          gisReady=true;
+          updGUI(true);
+          fetchGE();
+        },
+      });
+      console.log('[GCal] GIS token client created');
+    }catch(e){console.error('[GCal] GIS init failed:',e)}
+  };
+  document.head.appendChild(s2);
+}
+
+function handleGCal(){
+  if(!D.settings.clientId){go('settings');toast('Enter Client ID in Settings first','err');return}
+  if(!tokC){
+    initG();
+    setTimeout(()=>{if(tokC){tokC.requestAccessToken({prompt:'consent'})}else{toast('Google scripts still loading, try again','err')}},2500);
+    return;
+  }
+  tokC.requestAccessToken({prompt:'consent'});
+}
+
+function chkGC(){
+  const hasToken=gapiReady&&gapi?.client?.getToken();
+  updGUI(!!hasToken);
+}
+
+function updGUI(c){
+  _('gcalDot').className='gcal-dot '+(c?'on':'off');
+  _('gcalLbl').textContent=c?'Connected':'Not connected';
+  const b=_('gcalBtn');b.textContent=c?'Refresh Events':'Connect Calendar';
+  b.onclick=c?fetchGE:handleGCal;
+  const cnt=(D.gcalImported||[]).length;
+  _('gcalCount').textContent=cnt?`${cnt} events imported`:'';
+}
+
+// FETCH Google Calendar events and store as separate imported layer
+async function fetchGE(){
+  if(!gapiReady||!gapi?.client?.getToken()){toast('Not connected to Google Calendar','err');return}
+  try{
+    const calId=D.settings.calendarId||'primary';
+    const now=new Date();
+    const timeMin=new Date(now.getFullYear(),now.getMonth()-1,1).toISOString();
+    const timeMax=new Date(now.getFullYear(),now.getMonth()+3,0).toISOString();
+    console.log(`[GCal] Fetching events from ${calId}, range: ${timeMin} to ${timeMax}`);
+    const resp=await gapi.client.calendar.events.list({
+      calendarId:calId,
+      timeMin:timeMin,
+      timeMax:timeMax,
+      singleEvents:true,
+      orderBy:'startTime',
+      maxResults:250
+    });
+    const items=resp.result.items||[];
+    console.log(`[GCal] Fetched ${items.length} events`);
+    // Parse and store imported events with separate structure
+    D.gcalImported=items.map(ev=>{
+      const startDT=ev.start?.dateTime;
+      const startD=ev.start?.date;
+      const endDT=ev.end?.dateTime;
+      let date='',startTime='',endTime='';
+      if(startDT){
+        const d=new Date(startDT);
+        date=d.toISOString().split('T')[0];
+        startTime=d.toTimeString().substr(0,5);
+      }else if(startD){date=startD}
+      if(endDT){endTime=new Date(endDT).toTimeString().substr(0,5)}
+      return{
+        gcalId:ev.id,
+        summary:ev.summary||'',
+        description:ev.description||'',
+        date,startTime,endTime,
+        importedFromGoogle:true,
+        rawStart:ev.start,
+        rawEnd:ev.end
+      };
+    });
+    saveD();
+    updGUI(true);
+    rCal();rDash();rGCalImp();
+    toast(`✅ Imported ${items.length} events from Google Calendar`,'ok');
+  }catch(e){
+    const errMsg=e?.result?.error?.message||e?.message||JSON.stringify(e);
+    console.error('[GCal] Fetch error:',e);
+    toast(`Failed to fetch: ${errMsg}`,'err',6000);
+  }
+}
+
+// INSERT event into Google Calendar — FIXED with proper error handling
+async function addGCal(sessionData){
+  if(!gapiReady||!gapi?.client?.getToken()){
+    toast('Not connected to Google Calendar — session saved locally only','err');
+    return;
+  }
+  try{
+    const calId=D.settings.calendarId||'primary';
+    const st=D.students.find(s=>s.id===sessionData.studentId);
+    const summary=`${SB[sessionData.subject]?.l||sessionData.subject} — ${st?(st.nickname||st.name):'Tutoring'}`;
+    // Build proper RFC3339 datetime strings
+    const startDT=`${sessionData.date}T${sessionData.start}:00+07:00`;
+    const endDT=`${sessionData.date}T${sessionData.end}:00+07:00`;
+    const eventResource={
+      summary:summary,
+      description:sessionData.topic?`Topic: ${sessionData.topic}`:'',
+      start:{dateTime:startDT,timeZone:'Asia/Bangkok'},
+      end:{dateTime:endDT,timeZone:'Asia/Bangkok'}
+    };
+    console.log('[GCal] Inserting event:',eventResource);
+    const resp=await gapi.client.calendar.events.insert({
+      calendarId:calId,
+      resource:eventResource
+    });
+    console.log('[GCal] Event created:',resp.result);
+    toast(`✅ Added to Google Calendar: ${summary}`,'ok');
+    // Refresh imported events to include the new one
+    setTimeout(()=>fetchGE(),1000);
+  }catch(e){
+    const errBody=e?.result?.error;
+    const errMsg=errBody?.message||e?.message||'Unknown error';
+    const errCode=errBody?.code||e?.status||'';
+    const fullErr=`Google Calendar Error${errCode?' ('+errCode+')':''}: ${errMsg}`;
+    console.error('[GCal] Insert error:',e);
+    console.error('[GCal] Error details:',JSON.stringify(e?.result||e));
+    toast(fullErr,'err',8000);
+  }
+}
 
 // === HELPERS ===
 function eM(m){return['January','February','March','April','May','June','July','August','September','October','November','December'][m]}
-function fDT(ds){const[y,m,d]=ds.split('-').map(Number);return`${d} ${eM(m-1).substr(0,3)}`}
+function fDT(ds){if(!ds)return'-';const[y,m,d]=ds.split('-').map(Number);return`${d} ${eM(m-1).substr(0,3)}`}
 function popMF(id){const sel=_(id);if(!sel)return;const mos=new Set();D.sessions.forEach(s=>{if(s.date)mos.add(s.date.substr(0,7))});D.transactions.forEach(t=>{if(t.date)mos.add(t.date.substr(0,7))});const now=new Date();const cm=`${now.getFullYear()}-${String(now.getMonth()+1).padStart(2,'0')}`;mos.add(cm);const sorted=[...mos].sort().reverse();const prev=sel.value;sel.innerHTML='<option value="">All Months</option>';sorted.forEach(m=>{const[y,mo]=m.split('-').map(Number);sel.innerHTML+=`<option value="${m}" ${m===prev?'selected':''}>${eM(mo-1)} ${y}</option>`});if(!prev)sel.value=cm;syncCSel(id)}
 
 // === CUSTOM SELECT ENGINE ===
-function toggleCSel(display){
-  const csel=display.parentElement;const opts=csel.querySelector('.csel-opts');const isOpen=opts.classList.contains('show');
-  closeAllCSel();
-  if(!isOpen){display.classList.add('open');opts.classList.add('show');buildCSelOpts(csel)}
-}
+function toggleCSel(display){const csel=display.parentElement;const opts=csel.querySelector('.csel-opts');const isOpen=opts.classList.contains('show');closeAllCSel();if(!isOpen){display.classList.add('open');opts.classList.add('show');buildCSelOpts(csel)}}
 function closeAllCSel(){document.querySelectorAll('.csel-display.open').forEach(d=>d.classList.remove('open'));document.querySelectorAll('.csel-opts.show').forEach(o=>o.classList.remove('show'))}
 document.addEventListener('click',e=>{if(!e.target.closest('.csel'))closeAllCSel()});
-
-function buildCSelOpts(csel){
-  const sel=csel.querySelector('select');const optsDiv=csel.querySelector('.csel-opts');if(!sel)return;
-  let h='';Array.from(sel.options).forEach((opt,i)=>{
-    const icon=opt.dataset.icon||'';const isActive=opt.value===sel.value;
-    h+=`<div class="csel-opt ${isActive?'active':''}" data-val="${opt.value}" onclick="pickCSel(this)">`;
-    if(icon)h+=`<span class="opt-icon">${icon}</span>`;
-    h+=`<span>${opt.textContent}</span></div>`;
-  });
-  optsDiv.innerHTML=h;
-}
-function pickCSel(optEl){
-  const csel=optEl.closest('.csel');const sel=csel.querySelector('select');const display=csel.querySelector('.csel-display');
-  const val=optEl.dataset.val;sel.value=val;
-  const opt=sel.options[sel.selectedIndex];const icon=opt?.dataset?.icon||'';
-  display.textContent=(icon?icon+' ':'')+opt.textContent;
-  closeAllCSel();
-  sel.dispatchEvent(new Event('change'));
-}
-function syncCSel(selId){
-  const sel=_(selId);if(!sel)return;const csel=sel.closest('.csel');if(!csel)return;
-  const display=csel.querySelector('.csel-display');const opt=sel.options[sel.selectedIndex];
-  if(opt){const icon=opt.dataset?.icon||'';display.textContent=(icon?icon+' ':'')+opt.textContent}
-}
-function setCSel(selId,val){
-  const sel=_(selId);if(!sel)return;sel.value=val;syncCSel(selId);
-}
-// Override popSel for student dropdowns
-const _origPopSel=popSel;
-popSel=function(){_origPopSel();syncCSel('seSt')}
-const _origPopTxSt=popTxSt;
-popTxSt=function(){_origPopTxSt();syncCSel('txSt')}
-
-// Init all custom selects on page load
-function initAllCSel(){document.querySelectorAll('.csel').forEach(csel=>{const sel=csel.querySelector('select');if(sel)syncCSel(sel.id)})}
+function buildCSelOpts(csel){const sel=csel.querySelector('select');const optsDiv=csel.querySelector('.csel-opts');if(!sel)return;let h='';Array.from(sel.options).forEach(opt=>{const icon=opt.dataset.icon||'';const isActive=opt.value===sel.value;h+=`<div class="csel-opt ${isActive?'active':''}" data-val="${opt.value}" onclick="pickCSel(this)">`;if(icon)h+=`<span class="opt-icon">${icon}</span>`;h+=`<span>${opt.textContent}</span></div>`});optsDiv.innerHTML=h}
+function pickCSel(optEl){const csel=optEl.closest('.csel');const sel=csel.querySelector('select');const display=csel.querySelector('.csel-display');const val=optEl.dataset.val;sel.value=val;const opt=sel.options[sel.selectedIndex];const icon=opt?.dataset?.icon||'';display.textContent=(icon?icon+' ':'')+opt.textContent;closeAllCSel();sel.dispatchEvent(new Event('change'))}
+function syncCSel(selId){const sel=_(selId);if(!sel)return;const csel=sel.closest('.csel');if(!csel)return;const display=csel.querySelector('.csel-display');const opt=sel.options[sel.selectedIndex];if(opt){const icon=opt.dataset?.icon||'';display.textContent=(icon?icon+' ':'')+opt.textContent}}
+function initAllCSel(){document.querySelectorAll('.csel').forEach(csel=>{const sel=csel.querySelector('select');if(sel&&sel.id)syncCSel(sel.id)})}
 
 document.addEventListener('DOMContentLoaded',()=>{initAllCSel();rDash();if(D.settings.clientId)initG()});
 </script>
