@@ -293,7 +293,10 @@ tr:hover td{background:var(--bg2)}
 <div class="page" id="page-income">
   <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:20px" class="an"><h1 style="font-size:24px;font-weight:900">💰 Finance</h1><button class="btn btn-g btn-sm" onclick="openTxM()">+ Add Transaction</button></div>
   <div class="stats" id="incSt"></div>
-  <div class="tabs an a1"><div class="tab on" onclick="setIV('overview')">Overview</div><div class="tab" onclick="setIV('student')">By Student</div><div class="tab" onclick="setIV('transactions')">All Transactions</div></div>
+  <div style="display:flex;gap:12px;flex-wrap:wrap;margin-bottom:16px" class="an a1">
+    <div class="tabs"><div class="tab on" onclick="setIV('overview')">Overview</div><div class="tab" onclick="setIV('student')">By Student</div><div class="tab" onclick="setIV('transactions')">All</div></div>
+    <div class="tabs" id="incChTabs"><div class="tab on" onclick="setICh('all')">All</div><div class="tab" onclick="setICh('private')">🏠 Private</div><div class="tab" onclick="setICh('institute')">🏫 Institute</div></div>
+  </div>
   <div class="cd an a2"><div class="cd-h"><div class="cd-t" id="incT">Overview</div><div class="csel" id="csel-incMo" style="width:180px"><div class="csel-display" onclick="toggleCSel(this)">All Months</div><div class="csel-opts"></div><select id="incMo" onchange="rInc()"></select></div></div><div id="incB"></div></div>
 </div>
 
@@ -332,26 +335,33 @@ tr:hover td{background:var(--bg2)}
 
 <!-- STUDENT MODAL -->
 <div class="mo" id="stModal"><div class="mo-box"><div class="mo-t" id="stMT">Add Student</div>
-<div class="fg"><label>Full Name</label><input id="stN" placeholder="Student name"></div>
-<div class="fg"><label>Nickname</label><input id="stNK" placeholder="Nickname"></div>
+<div class="fg"><label>Nickname *</label><input id="stNK" placeholder="e.g. Beam, Ploy, Golf"></div>
+<div class="fr">
+  <div class="fg"><label>Full Name (optional)</label><input id="stN" placeholder="Full name"></div>
+  <div class="fg"><label>Year / Grade</label><input id="stYr" placeholder="e.g. ม.4, ป.1, Year 2"></div>
+</div>
+<div class="fg"><label>Start Date (first lesson)</label><input type="date" id="stSD"></div>
 <div class="fg"><label>Type</label><div class="csel"><div class="csel-display" onclick="toggleCSel(this)">👤 Individual</div><div class="csel-opts"></div><select id="stTy" onchange="_('stGW').style.display=this.value==='group'?'block':'none'"><option value="individual" data-icon="👤">Individual</option><option value="group" data-icon="👥">Group</option></select></div></div>
 <div class="fg" id="stGW" style="display:none"><label>Group Name</label><input id="stGN" placeholder="Group A"></div>
 <div class="fg"><label>Subjects</label><div style="display:flex;gap:14px;flex-wrap:wrap"><label class="tw"><div class="tg" id="stSM" onclick="this.classList.toggle('on')"></div>Math</label><label class="tw"><div class="tg" id="stSP" onclick="this.classList.toggle('on')"></div>Physics</label><label class="tw"><div class="tg" id="stSY" onclick="this.classList.toggle('on')"></div>Python</label></div></div>
 <div class="fg"><label>Custom Rate (฿/hr)</label><div class="fr"><input type="number" id="stRM" placeholder="Math"><input type="number" id="stRP" placeholder="Physics"></div><div style="margin-top:8px;max-width:calc(50% - 6px)"><input type="number" id="stRY" placeholder="Python"></div></div>
 <div class="fg"><label>Contact</label><input id="stC" placeholder="Phone / Line"></div>
 <div class="fg"><label>Notes</label><textarea id="stNo" rows="2" placeholder="Notes"></textarea></div>
+<div id="stYearLog" style="display:none;margin-bottom:14px"></div>
 <input type="hidden" id="stEI">
 <div style="display:flex;gap:8px;justify-content:flex-end;margin-top:20px"><button class="btn btn-o" onclick="clM('stModal')">Cancel</button><button class="btn btn-g" onclick="saveSt()">Save</button></div></div></div>
 
 <!-- SESSION MODAL -->
 <div class="mo" id="sesModal"><div class="mo-box"><div class="mo-t" id="sesMT">Add Session</div>
+<div class="fg"><label>Channel</label><div class="csel"><div class="csel-display" onclick="toggleCSel(this)">🏠 Private</div><div class="csel-opts"></div><select id="seCh"><option value="private" data-icon="🏠">Private (สอนส่วนตัว)</option><option value="institute" data-icon="🏫">Institute (สถาบัน)</option></select></div></div>
+<div class="fg" id="seInstWrap" style="display:none"><label>Institute Name</label><input id="seInst" placeholder="e.g. ALG, Kumon"></div>
 <div class="fg"><label>Date</label><input type="date" id="seD"></div>
 <div class="fr"><div class="fg"><label>Start</label><input type="time" id="seS" value="17:00"></div><div class="fg"><label>End</label><input type="time" id="seE" value="18:00"></div></div>
 <div class="fg"><label>Subject</label><div class="csel"><div class="csel-display" onclick="toggleCSel(this)">🔢 Math</div><div class="csel-opts"></div><select id="seSb"><option value="math" data-icon="🔢">Math</option><option value="physics" data-icon="⚛️">Physics</option><option value="python" data-icon="🐍">Python</option></select></div></div>
 <div class="fg"><label>Student</label><div class="csel"><div class="csel-display" onclick="toggleCSel(this)">-- Select --</div><div class="csel-opts"></div><select id="seSt"></select></div></div>
 <div class="fg"><label>Topic</label><input id="seTo" placeholder="e.g. Linear equations"></div>
 <div class="fg"><label>Notes</label><textarea id="seNo" rows="2" placeholder="Notes"></textarea></div>
-<div class="fg"><label>Payment</label><div class="csel"><div class="csel-display" onclick="toggleCSel(this)">⏳ Unpaid</div><div class="csel-opts"></div><select id="sePd"><option value="unpaid" data-icon="⏳">Unpaid</option><option value="paid" data-icon="✅">Paid</option></select></div></div>
+<div class="fg"><label>Payment</label><div class="csel"><div class="csel-display" onclick="toggleCSel(this)">⏳ Unpaid</div><div class="csel-opts"></div><select id="sePd"><option value="unpaid" data-icon="⏳">Unpaid</option><option value="paid" data-icon="✅">Paid</option><option value="end-of-month" data-icon="📅">End of Month</option></select></div></div>
 <div class="fg"><label class="tw"><div class="tg" id="seGC" onclick="this.classList.toggle('on')"></div>Add to Google Calendar</label></div>
 <input type="hidden" id="seEI">
 <div style="display:flex;gap:8px;justify-content:flex-end;margin-top:20px"><button class="btn btn-o" onclick="clM('sesModal')">Cancel</button><button class="btn btn-g" onclick="saveSes()">Save</button></div></div></div>
@@ -374,6 +384,8 @@ tr:hover td{background:var(--bg2)}
 <!-- CONVERT GCAL TO SESSION MODAL -->
 <div class="mo" id="cvModal"><div class="mo-box"><div class="mo-t">📥 Convert to Session</div>
 <div id="cvInfo" style="padding:14px;background:var(--gcalBg);border-radius:var(--r3);margin-bottom:16px;font-size:14px;color:var(--gcalF);font-weight:600"></div>
+<div class="fg"><label>Channel</label><div class="csel"><div class="csel-display" onclick="toggleCSel(this)">🏠 Private</div><div class="csel-opts"></div><select id="cvCh"><option value="private" data-icon="🏠">Private (สอนส่วนตัว)</option><option value="institute" data-icon="🏫">Institute (สถาบัน)</option></select></div></div>
+<div class="fg" id="cvInstWrap" style="display:none"><label>Institute Name</label><input id="cvInst" placeholder="e.g. ALG"></div>
 <div class="fg"><label>Date</label><input type="date" id="cvDate" readonly style="opacity:.7"></div>
 <div class="fr"><div class="fg"><label>Start</label><input type="time" id="cvStart"></div><div class="fg"><label>End</label><input type="time" id="cvEnd"></div></div>
 <div class="fg"><label>Subject</label><div class="csel"><div class="csel-display" onclick="toggleCSel(this)">🔢 Math</div><div class="csel-opts"></div><select id="cvSubj"><option value="math" data-icon="🔢">Math</option><option value="physics" data-icon="⚛️">Physics</option><option value="python" data-icon="🐍">Python</option></select></div></div>
@@ -407,28 +419,54 @@ function go(p){document.querySelectorAll('.page').forEach(x=>x.classList.remove(
 let stV='individual';
 function setSV(v){stV=v;document.querySelectorAll('#page-students .tab').forEach((t,i)=>t.classList.toggle('on',(i===0&&v==='individual')||(i===1&&v==='group')));rStu()}
 function openStM(eid){
-  if(eid){const s=D.students.find(x=>x.id===eid);if(!s)return;_('stMT').textContent='Edit Student';_('stN').value=s.name;_('stNK').value=s.nickname||'';_('stTy').value=s.type||'individual';_('stGN').value=s.groupName||'';_('stC').value=s.contact||'';_('stNo').value=s.note||'';_('stRM').value=s.rates?.math||'';_('stRP').value=s.rates?.physics||'';_('stRY').value=s.rates?.python||'';
-  _('stSM').classList.toggle('on',(s.subjects||[]).includes('math'));_('stSP').classList.toggle('on',(s.subjects||[]).includes('physics'));_('stSY').classList.toggle('on',(s.subjects||[]).includes('python'));_('stEI').value=eid}
-  else{_('stMT').textContent='Add Student';['stN','stNK','stGN','stC','stNo','stRM','stRP','stRY'].forEach(id=>_(id).value='');_('stTy').value=stV==='group'?'group':'individual';['stSM','stSP','stSY'].forEach(id=>_(id).classList.remove('on'));_('stEI').value=''}
+  if(eid){const s=D.students.find(x=>x.id===eid);if(!s)return;_('stMT').textContent='Edit Student';_('stN').value=s.name||'';_('stNK').value=s.nickname||'';_('stYr').value=s.year||'';_('stSD').value=s.startDate||'';_('stTy').value=s.type||'individual';_('stGN').value=s.groupName||'';_('stC').value=s.contact||'';_('stNo').value=s.note||'';_('stRM').value=s.rates?.math||'';_('stRP').value=s.rates?.physics||'';_('stRY').value=s.rates?.python||'';
+  _('stSM').classList.toggle('on',(s.subjects||[]).includes('math'));_('stSP').classList.toggle('on',(s.subjects||[]).includes('physics'));_('stSY').classList.toggle('on',(s.subjects||[]).includes('python'));_('stEI').value=eid;
+  // Show year history
+  const yh=s.yearHistory||[];
+  if(yh.length){let yl='<div style="padding:12px;background:var(--bg2);border-radius:var(--r3);font-size:13px"><div style="font-weight:800;margin-bottom:6px">📚 Year History</div>';yh.forEach(y=>{yl+=`<div style="color:var(--tx2)">• ${y.year} <span style="color:var(--tx3)">(since ${fDT(y.date)})</span></div>`});yl+='</div>';_('stYearLog').innerHTML=yl;_('stYearLog').style.display='block'}else{_('stYearLog').style.display='none'}}
+  else{_('stMT').textContent='Add Student';['stN','stNK','stGN','stC','stNo','stRM','stRP','stRY','stYr','stSD'].forEach(id=>_(id).value='');_('stTy').value=stV==='group'?'group':'individual';['stSM','stSP','stSY'].forEach(id=>_(id).classList.remove('on'));_('stEI').value='';_('stYearLog').style.display='none'}
   _('stGW').style.display=_('stTy').value==='group'?'block':'none';syncCSel('stTy');opM('stModal')}
-function saveSt(){const name=_('stN').value.trim();if(!name)return alert('Enter a name');const subs=[];if(_('stSM').classList.contains('on'))subs.push('math');if(_('stSP').classList.contains('on'))subs.push('physics');if(_('stSY').classList.contains('on'))subs.push('python');
-  const d={name,nickname:_('stNK').value.trim(),type:_('stTy').value,groupName:_('stGN').value.trim(),subjects:subs,rates:{math:parseInt(_('stRM').value)||null,physics:parseInt(_('stRP').value)||null,python:parseInt(_('stRY').value)||null},contact:_('stC').value.trim(),note:_('stNo').value.trim()};
-  const eid=_('stEI').value;if(eid){const i=D.students.findIndex(s=>s.id===eid);if(i!==-1)D.students[i]={...D.students[i],...d}}else{d.id=uid();d.createdAt=new Date().toISOString();D.students.push(d)}saveD();clM('stModal');rStu()}
+function saveSt(){const nick=_('stNK').value.trim();if(!nick)return alert('Enter a nickname');const subs=[];if(_('stSM').classList.contains('on'))subs.push('math');if(_('stSP').classList.contains('on'))subs.push('physics');if(_('stSY').classList.contains('on'))subs.push('python');
+  const newYear=_('stYr').value.trim();
+  const d={name:_('stN').value.trim(),nickname:nick,year:newYear,startDate:_('stSD').value||'',type:_('stTy').value,groupName:_('stGN').value.trim(),subjects:subs,rates:{math:parseInt(_('stRM').value)||null,physics:parseInt(_('stRP').value)||null,python:parseInt(_('stRY').value)||null},contact:_('stC').value.trim(),note:_('stNo').value.trim()};
+  const eid=_('stEI').value;
+  if(eid){const i=D.students.findIndex(s=>s.id===eid);if(i!==-1){
+    const old=D.students[i];
+    // Auto-log year change
+    if(newYear&&old.year&&newYear!==old.year){
+      if(!old.yearHistory)old.yearHistory=[];
+      if(old.year&&!old.yearHistory.find(y=>y.year===old.year))old.yearHistory.push({year:old.year,date:old.yearChangedAt||old.createdAt||new Date().toISOString().split('T')[0]});
+      old.yearHistory.push({year:newYear,date:new Date().toISOString().split('T')[0]});
+      d.yearHistory=old.yearHistory;d.yearChangedAt=new Date().toISOString().split('T')[0];
+    }else{d.yearHistory=old.yearHistory||[]}
+    D.students[i]={...old,...d}
+  }}else{
+    d.id=uid();d.createdAt=new Date().toISOString();d.yearHistory=[];
+    if(newYear){d.yearHistory=[{year:newYear,date:d.startDate||new Date().toISOString().split('T')[0]}]}
+    if(!d.startDate)d.startDate=new Date().toISOString().split('T')[0];
+    D.students.push(d)}
+  saveD();clM('stModal');rStu()}
 function delSt(id){if(!confirm('Delete this student?'))return;D.students=D.students.filter(s=>s.id!==id);saveD();rStu()}
 function rStu(){const list=D.students.filter(s=>(s.type||'individual')===stV);const el=_('stList');
   if(!list.length){el.innerHTML=`<div class="empty"><div class="empty-ic">👥</div>No ${stV==='group'?'group ':''}students yet<br>Click + to add</div>`;return}
-  let h='<table><thead><tr><th>Name</th><th>Nickname</th>';if(stV==='group')h+='<th>Group</th>';h+='<th>Subjects</th><th>Rate</th><th>Contact</th><th></th></tr></thead><tbody>';
-  list.forEach(s=>{h+=`<tr><td style="font-weight:800">${s.name}</td><td>${s.nickname||'-'}</td>`;if(stV==='group')h+=`<td>${s.groupName||'-'}</td>`;
+  let h='<table><thead><tr><th>Nickname</th><th>Year</th><th>Since</th>';if(stV==='group')h+='<th>Group</th>';h+='<th>Subjects</th><th>Rate</th><th>Contact</th><th></th></tr></thead><tbody>';
+  list.forEach(s=>{
+    const sessions=D.sessions.filter(x=>x.studentId===s.id);
+    h+=`<tr><td style="font-weight:800;font-size:15px">${s.nickname||s.name}${s.name&&s.nickname?` <span style="font-size:11px;color:var(--tx3)">(${s.name})</span>`:''}</td>
+    <td><span class="bg bg-gcal" style="font-size:12px">${s.year||'-'}</span></td>
+    <td style="font-size:12px;color:var(--tx3)">${s.startDate?fDT(s.startDate):'-'}</td>`;
+    if(stV==='group')h+=`<td>${s.groupName||'-'}</td>`;
     h+=`<td>${(s.subjects||[]).map(x=>sbg(x)).join(' ')}</td><td class="mono" style="font-size:13px">${fR(s)}</td><td style="font-size:13px">${s.contact||'-'}</td><td style="white-space:nowrap"><button class="btn btn-o btn-sm" onclick="openStM('${s.id}')">✏️</button> <button class="btn btn-d btn-sm" onclick="delSt('${s.id}')">🗑️</button></td></tr>`});
   h+='</tbody></table>';el.innerHTML=h}
 function fR(s){return(s.subjects||[]).map(sub=>{const r=s.rates?.[sub]||D.settings['rate'+sub.charAt(0).toUpperCase()+sub.slice(1)]||'-';return`${SB[sub]?.i||''} ฿${r}`}).join(' ')||'-'}
 
 // === SESSIONS ===
 function popSel(){const s=_('seSt');s.innerHTML='<option value="">-- Select --</option>';D.students.forEach(st=>{s.innerHTML+=`<option value="${st.id}">${st.nickname?st.name+' ('+st.nickname+')':st.name}</option>`});syncCSel('seSt')}
-function openSesM(eid,pd){popSel();if(eid){const s=D.sessions.find(x=>x.id===eid);if(!s)return;_('sesMT').textContent='Edit Session';_('seD').value=s.date;_('seS').value=s.start;_('seE').value=s.end;_('seSb').value=s.subject;_('seSt').value=s.studentId||'';_('seTo').value=s.topic||'';_('seNo').value=s.note||'';_('sePd').value=s.paid||'unpaid';_('seEI').value=eid}
-  else{_('sesMT').textContent='Add Session';_('seD').value=pd||new Date().toISOString().split('T')[0];_('seS').value='17:00';_('seE').value='18:00';_('seSb').value='math';_('seSt').value='';_('seTo').value='';_('seNo').value='';_('sePd').value='unpaid';_('seEI').value=''}
-  syncCSel('seSb');syncCSel('seSt');syncCSel('sePd');_('seGC').classList.remove('on');opM('sesModal')}
-function saveSes(){const date=_('seD').value;if(!date)return alert('Select a date');const d={date,start:_('seS').value,end:_('seE').value,subject:_('seSb').value,studentId:_('seSt').value,topic:_('seTo').value.trim(),note:_('seNo').value.trim(),paid:_('sePd').value};
+function openSesM(eid,pd){popSel();if(eid){const s=D.sessions.find(x=>x.id===eid);if(!s)return;_('sesMT').textContent='Edit Session';_('seD').value=s.date;_('seS').value=s.start;_('seE').value=s.end;_('seSb').value=s.subject;_('seSt').value=s.studentId||'';_('seTo').value=s.topic||'';_('seNo').value=s.note||'';_('sePd').value=s.paid||'unpaid';_('seCh').value=s.channel||'private';_('seInst').value=s.institute||'';_('seEI').value=eid}
+  else{_('sesMT').textContent='Add Session';_('seD').value=pd||new Date().toISOString().split('T')[0];_('seS').value='17:00';_('seE').value='18:00';_('seSb').value='math';_('seSt').value='';_('seTo').value='';_('seNo').value='';_('sePd').value='unpaid';_('seCh').value='private';_('seInst').value='';_('seEI').value=''}
+  _('seInstWrap').style.display=_('seCh').value==='institute'?'block':'none';
+  syncCSel('seSb');syncCSel('seSt');syncCSel('sePd');syncCSel('seCh');_('seGC').classList.remove('on');opM('sesModal')}
+function saveSes(){const date=_('seD').value;if(!date)return alert('Select a date');const d={date,start:_('seS').value,end:_('seE').value,subject:_('seSb').value,studentId:_('seSt').value,topic:_('seTo').value.trim(),note:_('seNo').value.trim(),paid:_('sePd').value,channel:_('seCh').value,institute:_('seInst').value.trim()};
   const[sh,sm]=d.start.split(':').map(Number),[eh,em]=d.end.split(':').map(Number);d.hours=Math.max(0,((eh*60+em)-(sh*60+sm))/60);
   const stu=D.students.find(s=>s.id===d.studentId);const rk='rate'+d.subject.charAt(0).toUpperCase()+d.subject.slice(1);d.fee=d.hours*(stu?.rates?.[d.subject]||D.settings[rk]||0);
   const eid=_('seEI').value;if(eid){const i=D.sessions.findIndex(s=>s.id===eid);if(i!==-1)D.sessions[i]={...D.sessions[i],...d}}else{d.id=uid();d.createdAt=new Date().toISOString();d.attendance='present';D.sessions.push(d)}
@@ -440,9 +478,9 @@ function delSes(id){if(!confirm('Delete?'))return;D.sessions=D.sessions.filter(s
 function rSes(){popMF('sfm');syncCSel('sfs');const fm=_('sfm').value,fs=_('sfs').value;let list=[...D.sessions].sort((a,b)=>b.date.localeCompare(a.date)||(b.start||'').localeCompare(a.start||''));
   if(fm)list=list.filter(s=>s.date.startsWith(fm));if(fs)list=list.filter(s=>s.subject===fs);
   if(!list.length){_('sesList').innerHTML='<div class="empty"><div class="empty-ic">📝</div>No sessions</div>';return}
-  let h='<table><thead><tr><th>Date</th><th>Time</th><th>Subject</th><th>Student</th><th>Topic</th><th>Hrs</th><th>Fee</th><th>Status</th><th></th></tr></thead><tbody>';
-  list.forEach(s=>{const st=D.students.find(x=>x.id===s.studentId);
-    h+=`<tr><td style="white-space:nowrap">${fDT(s.date)}</td><td class="mono" style="font-size:13px">${s.start}-${s.end}</td><td>${sbg(s.subject)}</td><td style="font-weight:700">${st?(st.nickname||st.name):'-'}</td><td style="font-size:13px">${s.topic||'-'}</td><td class="mono">${s.hours?.toFixed(1)||'-'}</td><td class="mono" style="font-weight:800">฿${(s.fee||0).toLocaleString()}</td><td>${s.paid==='paid'?'<span class="bg bg-pd">Paid</span>':'<span class="bg bg-up">Unpaid</span>'}</td><td style="white-space:nowrap"><button class="btn btn-o btn-sm" onclick="openAtt('${s.id}')">📋</button> <button class="btn btn-o btn-sm" onclick="openSesM('${s.id}')">✏️</button> <button class="btn btn-d btn-sm" onclick="delSes('${s.id}')">🗑️</button></td></tr>`});
+  let h='<table><thead><tr><th>Date</th><th>Time</th><th>Ch.</th><th>Subject</th><th>Student</th><th>Topic</th><th>Hrs</th><th>Fee</th><th>Status</th><th></th></tr></thead><tbody>';
+  list.forEach(s=>{const st=D.students.find(x=>x.id===s.studentId);const chBg=s.channel==='institute'?'bg-gcal':'bg-pd';
+    h+=`<tr><td style="white-space:nowrap">${fDT(s.date)}</td><td class="mono" style="font-size:13px">${s.start}-${s.end}</td><td><span class="bg ${chBg}" style="font-size:10px">${s.channel==='institute'?'🏫 '+(s.institute||'Inst.'):'🏠'}</span></td><td>${sbg(s.subject)}</td><td style="font-weight:700">${st?(st.nickname||st.name):'-'}</td><td style="font-size:13px">${s.topic||'-'}</td><td class="mono">${s.hours?.toFixed(1)||'-'}</td><td class="mono" style="font-weight:800">฿${(s.fee||0).toLocaleString()}</td><td>${s.paid==='paid'?'<span class="bg bg-pd">Paid</span>':s.paid==='end-of-month'?'<span class="bg bg-gcal">End of Mo.</span>':'<span class="bg bg-up">Unpaid</span>'}</td><td style="white-space:nowrap"><button class="btn btn-o btn-sm" onclick="openAtt('${s.id}')">📋</button> <button class="btn btn-o btn-sm" onclick="openSesM('${s.id}')">✏️</button> <button class="btn btn-d btn-sm" onclick="delSes('${s.id}')">🗑️</button></td></tr>`});
   h+='</tbody></table>';_('sesList').innerHTML=h}
 
 // === ATTENDANCE ===
@@ -466,8 +504,12 @@ function delTx(id){if(!confirm('Delete?'))return;D.transactions=D.transactions.f
 
 const CATS={tuition:'Tuition',books:'Books / Supplies',treats:'Treats / Snacks',transport:'Transport',material:'Teaching Material',other:'Other'};
 let incV='overview';
-function setIV(v){incV=v;document.querySelectorAll('#page-income .tab').forEach((t,i)=>t.classList.toggle('on',['overview','student','transactions'][i]===v));rInc()}
+let incCh='all';
+function setIV(v){incV=v;document.querySelectorAll('#page-income .tabs:first-of-type .tab').forEach((t,i)=>t.classList.toggle('on',['overview','student','transactions'][i]===v));rInc()}
+function setICh(c){incCh=c;document.querySelectorAll('#incChTabs .tab').forEach((t,i)=>t.classList.toggle('on',['all','private','institute'][i]===c));rInc()}
 function rInc(){popMF('incMo');const fm=_('incMo').value;let ses=[...D.sessions];if(fm)ses=ses.filter(s=>s.date.startsWith(fm));let txs=[...D.transactions];if(fm)txs=txs.filter(t=>t.date.startsWith(fm));
+  // Channel filter
+  if(incCh!=='all')ses=ses.filter(s=>(s.channel||'private')===incCh);
   const sI=ses.reduce((s,x)=>s+(x.fee||0),0),tI=txs.filter(t=>t.type==='income').reduce((s,x)=>s+x.amount,0),totI=sI+tI;
   const totE=txs.filter(t=>t.type==='expense').reduce((s,x)=>s+x.amount,0),net=totI-totE;
   const unpd=ses.filter(s=>s.paid!=='paid').reduce((s,x)=>s+(x.fee||0),0);
@@ -569,11 +611,19 @@ function openConvert(gcalId){
   _('cvPaid').value='unpaid';
   _('cvInfo').innerHTML=`📅 <strong>${ev.summary||'(No title)'}</strong><br>🕐 ${ev.startTime||''}–${ev.endTime||''} · ${fDT(ev.date)}${ev.calendarName?' · 📋 '+ev.calendarName:''}`;
   
-  // Try to auto-detect subject from calendar name
-  const cn=(ev.calendarName||'').toLowerCase();
-  if(cn.includes('online'))_('cvSubj').value='python'; // guess
+  // Auto-detect channel from event title or calendar name
+  const title=(ev.summary||'').toLowerCase();
+  const calName=(ev.calendarName||'').toLowerCase();
+  if(title.startsWith('alg')||calName.includes('alg')){
+    _('cvCh').value='institute';_('cvInst').value='ALG';_('cvInstWrap').style.display='block';_('cvPaid').value='end-of-month';
+  }else{
+    _('cvCh').value='private';_('cvInst').value='';_('cvInstWrap').style.display='none';
+  }
   
-  syncCSel('cvSubj');syncCSel('cvStudent');syncCSel('cvPaid');
+  // Auto-detect subject
+  if(calName.includes('online'))_('cvSubj').value='python';
+  
+  syncCSel('cvSubj');syncCSel('cvStudent');syncCSel('cvPaid');syncCSel('cvCh');
   updateCvFee();
   opM('cvModal');
 }
@@ -605,26 +655,26 @@ function saveConvert(){
   const rk='rate'+subj.charAt(0).toUpperCase()+subj.slice(1);
   const rate=stu?.rates?.[subj]||D.settings[rk]||0;
   const fee=hours*rate;
+  const ch=_('cvCh').value;
   
   const session={
-    id:uid(),
-    date,start,end,
-    subject:subj,
-    studentId:stId,
+    id:uid(),date,start,end,
+    subject:subj,studentId:stId,
     topic:_('cvTopic').value.trim(),
     note:'',
     paid:_('cvPaid').value,
     hours,fee,
     attendance:'present',
-    gcalId:gcalId, // Link to Google Calendar event
+    channel:ch,
+    institute:ch==='institute'?_('cvInst').value.trim():'',
+    gcalId:gcalId,
     convertedFromGoogle:true,
     createdAt:new Date().toISOString()
   };
   
   D.sessions.push(session);
-  saveD();
-  clM('cvModal');
-  toast(`✅ Converted! ${stu?.nickname||stu?.name} · ฿${fee.toLocaleString()}`,'ok');
+  saveD();clM('cvModal');
+  toast(`✅ Converted! ${stu?.nickname||stu?.name} · ${ch==='institute'?'🏫':'🏠'} · ฿${fee.toLocaleString()}`,'ok');
   rGCalImp();rSes();rCal();rDash();
 }
 function toggleGCalVis(gcalId,el){
@@ -953,6 +1003,9 @@ document.addEventListener('DOMContentLoaded',()=>{
   initAllCSel();rDash();if(D.settings.clientId)initG();
   // Live fee preview listeners for convert modal
   ['cvStart','cvEnd'].forEach(id=>{const el=_(id);if(el)el.addEventListener('input',updateCvFee)});
+  // Channel toggle: show/hide institute name field
+  const seCh=_('seCh');if(seCh)seCh.addEventListener('change',()=>{_('seInstWrap').style.display=seCh.value==='institute'?'block':'none'});
+  const cvCh=_('cvCh');if(cvCh)cvCh.addEventListener('change',()=>{_('cvInstWrap').style.display=cvCh.value==='institute'?'block':'none'});
 });
 </script>
 </body>
