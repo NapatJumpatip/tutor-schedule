@@ -515,17 +515,17 @@ function saveSes(){const date=_('seD').value;if(!date)return alert('Select a dat
   else{d.id=uid();d.createdAt=new Date().toISOString();d.attendance='present';D.sessions.push(d)}
   const wantGCal=_('seGC').classList.contains('on');saveD();clM('sesModal');rSes();rCal();rDash();if(wantGCal)addGCal(d)}
 // #9 delete with confirmation
-function delSes(id){const s=D.sessions.find(x=>x.id===id);if(!s)return;const stu=D.students.find(x=>x.id===s.studentId);if(!confirm(`Delete session: ${fDT(s.date)} ${s.start} ${stu?(stu.nickname||stu.name):''} (฿${(s.fee||0).toLocaleString()})?`))return;D.sessions=D.sessions.filter(x=>x.id!==id);saveD();rSes();rCal();rDash()}
+function delSes(id){const s=D.sessions.find(x=>x.id===id);if(!s)return;const stu=D.students.find(x=>x.id===s.studentId);if(!confirm(`Delete session: ${fDT(s.date)} ${s.start} ${stu?(stu.nickname||stu.name):''} (฿${(s.fee||0).toLocaleString()})?`))return;D.sessions=D.sessions.filter(x=>x.id!==id);saveD();rSes();rCal();rDash();rGCalImp();closeSesPopupForce();toast('Session deleted','info')}
 // #3 Session status actions
-function cancelSes(id){const s=D.sessions.find(x=>x.id===id);if(!s)return;if(!confirm('Cancel this session? Fee will be set to ฿0'))return;s.sessionStatus='cancelled';s.fee=0;saveD();rSes();rCal();rDash();toast('Session cancelled','info');closeSesPopupForce()}
-function noShowSes(id){const s=D.sessions.find(x=>x.id===id);if(!s)return;if(!confirm('Mark as absent? Fee will be set to ฿0'))return;s.sessionStatus='absent';s.attendance='absent';s.fee=0;saveD();rSes();rCal();rDash();toast('Marked as absent','info');closeSesPopupForce()}
+function cancelSes(id){const s=D.sessions.find(x=>x.id===id);if(!s)return;if(!confirm('Cancel this session? Fee will be set to ฿0'))return;s.sessionStatus='cancelled';s.fee=0;saveD();rSes();rCal();rDash();rGCalImp();toast('Session cancelled','info');closeSesPopupForce()}
+function noShowSes(id){const s=D.sessions.find(x=>x.id===id);if(!s)return;if(!confirm('Mark as absent? Fee will be set to ฿0'))return;s.sessionStatus='absent';s.attendance='absent';s.fee=0;saveD();rSes();rCal();rDash();rGCalImp();toast('Marked as absent','info');closeSesPopupForce()}
 function undoSesStatus(id){const s=D.sessions.find(x=>x.id===id);if(!s)return;
   // Recalculate fee from original data
   const[sh,sm]=s.start.split(':').map(Number),[eh,em]=s.end.split(':').map(Number);
   const hours=Math.max(0,((eh*60+em)-(sh*60+sm))/60);
   s.fee=calcFee(s.subject,s.channel||'private',hours,s.studentId,s.grpSize,s.algCourseId,s.customFee);
   s.sessionStatus='completed';s.attendance='present';s.hours=hours;
-  saveD();rSes();rCal();rDash();toast(`✅ Restored! Fee: ฿${s.fee.toLocaleString()}`,'ok');closeSesPopupForce()}
+  saveD();rSes();rCal();rDash();rGCalImp();toast(`✅ Restored! Fee: ฿${s.fee.toLocaleString()}`,'ok');closeSesPopupForce()}
 function rSes(){popMF('sfm');syncCSel('sfs');const fm=_('sfm').value,fs=_('sfs').value;let list=[...D.sessions].sort((a,b)=>b.date.localeCompare(a.date)||(b.start||'').localeCompare(a.start||''));
   if(fm)list=list.filter(s=>s.date.startsWith(fm));if(fs)list=list.filter(s=>s.subject===fs);
   // exclude cancelled from default view? No — show all but mark visually
