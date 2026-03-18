@@ -193,6 +193,7 @@ tr.inactive-row{opacity:.45}
   <div class="ni" data-p="students" onclick="go('students')"><span class="ni-i">👥</span>Students</div>
   <div class="ni" data-p="sessions" onclick="go('sessions')"><span class="ni-i">📝</span>Sessions</div>
   <div class="ni" data-p="income" onclick="go('income')"><span class="ni-i">💰</span>Finance</div>
+  <div class="ni" data-p="reminders" onclick="go('reminders')"><span class="ni-i">🔔</span>Reminders</div>
   <div class="ni" data-p="gcalimport" onclick="go('gcalimport')"><span class="ni-i">📥</span>Google Events</div>
   <div class="ni-sep"></div>
   <div class="ni" data-p="settings" onclick="go('settings')"><span class="ni-i">⚙️</span>Settings</div>
@@ -256,6 +257,12 @@ tr.inactive-row{opacity:.45}
   </div>
   <div class="tabs an a1" id="gcalFilterTabs" style="margin-bottom:16px"></div>
   <div class="cd an a2"><div class="cd-h"><div class="cd-t" id="gcalImpTitle">Imported Events</div></div><div id="gcalImpList"></div></div>
+</div>
+<!-- #7 REMINDERS PAGE -->
+<div class="page" id="page-reminders">
+  <div class="greet an"><h1>🔔 Reminders & Tasks</h1><p>Manage lesson reminders — mark done or undo</p></div>
+  <div class="tabs an a1" id="remTabs"><div class="tab on" onclick="setRemTab('pending')">⏳ Pending</div><div class="tab" onclick="setRemTab('done')">✅ Done</div><div class="tab" onclick="setRemTab('all')">All</div></div>
+  <div class="cd an a2" id="remPageList"></div>
 </div>
 <!-- SETTINGS -->
 <div class="page" id="page-settings">
@@ -361,6 +368,18 @@ tr.inactive-row{opacity:.45}
 <input type="hidden" id="cvGcalId">
 <div style="display:flex;gap:8px;justify-content:flex-end;margin-top:20px"><button class="btn btn-o" onclick="clM('cvModal')">Cancel</button><button class="btn btn-g" onclick="saveConvert()">✅ Convert & Save</button></div></div></div>
 
+<!-- #14 STUDENT PROFILE MODAL -->
+<div class="mo" id="stProfModal"><div class="mo-box"><div class="mo-t" id="stProfTitle">Student Profile</div><div id="stProfBody"></div>
+<div style="display:flex;gap:8px;justify-content:flex-end;margin-top:20px"><button class="btn btn-o" onclick="clM('stProfModal')">Close</button><button class="btn btn-g" onclick="clM('stProfModal');openStM(document.getElementById('stProfBody').dataset.sid)">✏️ Edit</button></div></div></div>
+
+<!-- #5 ALG COURSE EDIT MODAL -->
+<div class="mo" id="algModal"><div class="mo-box"><div class="mo-t" id="algMT">Add Course</div>
+<div class="fg"><label>Course Name</label><input id="algName" placeholder="e.g. Robotics, AI"></div>
+<div class="fr"><div class="fg"><label>Duration (hours)</label><input type="number" id="algDur" step="0.5" placeholder="1.5"></div><div class="fg"></div></div>
+<div class="fr"><div class="fg"><label>👤 Private Rate ฿ (1-2 students)</label><input type="number" id="algPriv" placeholder="500"></div><div class="fg"><label>👥 Group Rate ฿ (3+ students)</label><input type="number" id="algGrp" placeholder="600"></div></div>
+<input type="hidden" id="algEI">
+<div style="display:flex;gap:8px;justify-content:flex-end;margin-top:20px"><button class="btn btn-o" onclick="clM('algModal')">Cancel</button><button class="btn btn-g" onclick="saveAlgCourse()">Save</button></div></div></div>
+
 <script>
 const K='tutorScheduleData',_=id=>document.getElementById(id);
 let D=loadD();
@@ -385,11 +404,16 @@ function loadD(){try{const d=JSON.parse(localStorage.getItem(K));if(!d)return de
     if(s.rates?.python!==undefined&&s.rates?.computer===undefined){s.rates.computer=s.rates.python;delete s.rates.python}
     if(s.subjects){s.subjects=s.subjects.map(x=>x==='python'?'computer':x)}
   });
-  // MIGRATION: sessions — python→computer, ensure status field
+  // MIGRATION: sessions — python→computer, ensure status field, #8 classType
   d.sessions.forEach(s=>{
     if(s.subject==='python')s.subject='computer';
-    if(!s.sessionStatus)s.sessionStatus='completed'; // existing sessions assumed completed
+    if(!s.sessionStatus)s.sessionStatus='completed';
+    if(!s.classType)s.classType='private'; // #8 ready: private|pair|group
+    if(!s.billingMode)s.billingMode='per-student'; // #8 ready: per-student|per-class
+    if(!s.studentIds)s.studentIds=s.studentId?[s.studentId]:[]; // #8 ready: multi-student array
   });
+  // #16 track last export
+  if(!d.lastExport)d.lastExport=null;
   return d}catch{return defD()}}
 function saveD(){localStorage.setItem(K,JSON.stringify(D))}
 function uid(){return Date.now().toString(36)+Math.random().toString(36).substr(2,5)}
@@ -400,7 +424,7 @@ const SB={math:{l:'Math',i:'🔢',c:'m',em:'📐'},physics:{l:'Physics',i:'⚛�
 function sbg(s){const x=SB[s]||{l:s,c:'m',i:'📚'};return`<span class="bg bg-${x.c}">${x.i} ${x.l}</span>`}
 function opM(id){_(id).classList.add('show')}
 function clM(id){_(id).classList.remove('show')}
-function go(p){document.querySelectorAll('.page').forEach(x=>x.classList.remove('active'));_('page-'+p).classList.add('active');document.querySelectorAll('.ni').forEach(n=>n.classList.remove('on'));const nav=document.querySelector(`.ni[data-p="${p}"]`);if(nav)nav.classList.add('on');_('sidebar').classList.remove('open');({dashboard:rDash,calendar:rCal,students:rStu,sessions:rSes,income:rInc,settings:loadSett,gcalimport:rGCalImp})[p]?.()}
+function go(p){document.querySelectorAll('.page').forEach(x=>x.classList.remove('active'));_('page-'+p).classList.add('active');document.querySelectorAll('.ni').forEach(n=>n.classList.remove('on'));const nav=document.querySelector(`.ni[data-p="${p}"]`);if(nav)nav.classList.add('on');_('sidebar').classList.remove('open');({dashboard:rDash,calendar:rCal,students:rStu,sessions:rSes,income:rInc,settings:loadSett,gcalimport:rGCalImp,reminders:rRemPage})[p]?.()}
 
 // ============ #1 FIX: CENTRALIZED FEE CALCULATION ============
 // Returns {fee, rateSource} so UI can show WHY this rate was used
@@ -420,10 +444,20 @@ function calcFeeEx(subject,channel,hours,studentId,grpSize,algCourseId,customFee
 }
 function calcFee(subject,channel,hours,studentId,grpSize,algCourseId,customFee){return calcFeeEx(subject,channel,hours,studentId,grpSize,algCourseId,customFee).fee}
 
-// ============ ALG COURSES ============
+// ============ #5 ALG COURSES — proper edit modal ============
 function renderAlgCourses(){const el=_('algCourseList');if(!el)return;const courses=D.algCourses||[];if(!courses.length){el.innerHTML='<div style="color:var(--tx3);font-size:13px">No courses</div>';return}let h='';
-  courses.forEach((c,i)=>{h+=`<div class="imp-item" style="margin-bottom:8px"><div style="flex:1"><div style="font-weight:700">${c.name} <span style="color:var(--tx3);font-size:12px">(${c.duration}hr)</span></div><div style="font-size:12px;color:var(--tx2)">👤 Private: ฿${c.privateRate} · 👥 Group: ฿${c.groupRate}</div></div><button class="btn btn-d btn-sm" onclick="delAlgCourse(${i})">🗑️</button></div>`});el.innerHTML=h}
-function addAlgCourse(){const name=prompt('Course name:');if(!name)return;const dur=parseFloat(prompt('Hours per session (e.g. 1.5):'))||1.5;const priv=parseInt(prompt('Private rate ฿:'))||500;const grp=parseInt(prompt('Group rate ฿:'))||600;D.algCourses.push({id:uid(),name,duration:dur,privateRate:priv,groupRate:grp});saveD();renderAlgCourses()}
+  courses.forEach((c,i)=>{h+=`<div class="imp-item" style="margin-bottom:8px"><div style="flex:1"><div style="font-weight:700">${c.name} <span style="color:var(--tx3);font-size:12px">(${c.duration}hr)</span></div><div style="font-size:12px;color:var(--tx2)">👤 ฿${c.privateRate} · 👥 ฿${c.groupRate}</div></div><button class="btn btn-o btn-sm" onclick="openAlgM('${c.id}')">✏️</button> <button class="btn btn-d btn-sm" onclick="delAlgCourse(${i})">🗑️</button></div>`});el.innerHTML=h}
+function openAlgM(editId){
+  if(editId){const c=(D.algCourses||[]).find(x=>x.id===editId);if(!c)return;_('algMT').textContent='Edit Course';_('algName').value=c.name;_('algDur').value=c.duration;_('algPriv').value=c.privateRate;_('algGrp').value=c.groupRate;_('algEI').value=editId}
+  else{_('algMT').textContent='Add Course';_('algName').value='';_('algDur').value='1.5';_('algPriv').value='';_('algGrp').value='';_('algEI').value=''}
+  opM('algModal')}
+function saveAlgCourse(){const name=_('algName').value.trim();if(!name)return alert('Enter course name');
+  const dur=parseFloat(_('algDur').value)||1.5;const priv=parseInt(_('algPriv').value)||500;const grp=parseInt(_('algGrp').value)||600;
+  const eid=_('algEI').value;
+  if(eid){const i=(D.algCourses||[]).findIndex(c=>c.id===eid);if(i!==-1){D.algCourses[i]={...D.algCourses[i],name,duration:dur,privateRate:priv,groupRate:grp}}}
+  else{D.algCourses.push({id:uid(),name,duration:dur,privateRate:priv,groupRate:grp})}
+  saveD();clM('algModal');renderAlgCourses();toast('✅ Course saved','ok')}
+function addAlgCourse(){openAlgM()}
 function delAlgCourse(i){if(!confirm('Delete this course?'))return;D.algCourses.splice(i,1);saveD();renderAlgCourses()}
 function popAlgSel(selId){const sel=_(selId);if(!sel)return;sel.innerHTML='<option value="">-- Select Course --</option>';(D.algCourses||[]).forEach(c=>{sel.innerHTML+=`<option value="${c.id}" data-icon="🏫">${c.name} (฿${c.privateRate}/฿${c.groupRate})</option>`})}
 
@@ -448,7 +482,7 @@ function rStu(){let list=D.students.filter(s=>(s.type||'individual')===stV);
   const el=_('stList');if(!list.length){el.innerHTML='<div class="empty"><div class="empty-ic">👥</div>No students</div>';return}
   let h='<div class="tbl-wrap"><table><thead><tr><th>Nickname</th><th>Year</th><th>Rate</th><th>Comm.</th><th>Since</th><th>Status</th><th></th></tr></thead><tbody>';
   list.forEach(s=>{const isOff=s.status==='inactive'||s.status==='paused'||s.status==='stopped';const statBg=s.status==='active'?'bg-pd':s.status==='paused'?'bg-eom':'bg-inactive';const statTxt=s.status==='active'?'🟢 Active':s.status==='paused'?'⏸️ Paused':'🔴 Stopped';
-    h+=`<tr class="${isOff?'inactive-row':''}"><td style="font-weight:800;font-size:15px">${s.nickname||s.name}</td><td><span class="bg bg-gcal" style="font-size:12px">${s.year||'-'}</span></td><td class="mono" style="font-size:12px">${fR(s)}</td><td class="mono" style="font-size:12px">${s.commission?'฿'+s.commission:'-'}</td><td style="font-size:12px;color:var(--tx3)">${s.startDate?fDT(s.startDate):'-'}</td><td><span class="bg ${statBg}" style="font-size:11px">${statTxt}</span></td><td style="white-space:nowrap"><button class="btn btn-o btn-sm" onclick="openStM('${s.id}')">✏️</button> <button class="btn btn-d btn-sm" onclick="delSt('${s.id}')">🗑️</button></td></tr>`});
+    h+=`<tr class="${isOff?'inactive-row':''}"><td style="font-weight:800;font-size:15px"><span style="cursor:pointer" onclick="openStProf('${s.id}')">${s.nickname||s.name}</span></td><td><span class="bg bg-gcal" style="font-size:12px">${s.year||'-'}</span></td><td class="mono" style="font-size:12px">${fR(s)}</td><td class="mono" style="font-size:12px">${s.commission?'฿'+s.commission:'-'}</td><td style="font-size:12px;color:var(--tx3)">${s.startDate?fDT(s.startDate):'-'}</td><td><span class="bg ${statBg}" style="font-size:11px">${statTxt}</span></td><td style="white-space:nowrap"><button class="btn btn-blue btn-sm" onclick="openStProf('${s.id}')" title="Profile">👤</button> <button class="btn btn-o btn-sm" onclick="openStM('${s.id}')">✏️</button> <button class="btn btn-d btn-sm" onclick="delSt('${s.id}')">🗑️</button></td></tr>`});
   h+='</tbody></table></div>';el.innerHTML=h}
 function fR(s){return(s.subjects||[]).map(sub=>{const r=s.rates?.[sub]||D.settings['rate'+(sub==='math'?'Math':sub==='physics'?'Physics':'Computer')]||'-';return`${SB[sub]?.i||''} ฿${r}`}).join(' ')||'-'}
 
@@ -469,7 +503,7 @@ function saveSes(){const date=_('seD').value;if(!date)return alert('Select a dat
   const ch=_('seCh').value,algId=_('seAlgCourse').value,grp=_('seGrpSize').value,stId=_('seSt').value;const customFee=parseFloat(_('seFee').value);const commOvr=parseInt(_('seCommOvr').value);
   const fee=calcFee(ch==='institute'?'computer':_('seSb').value,ch,hours,stId,grp,algId,customFee>0?customFee:null);
   const stu=D.students.find(s=>s.id===stId);const commission=commOvr>0?commOvr:(stu?.commission||0);
-  const d={date,start,end,subject:ch==='institute'?'computer':_('seSb').value,studentId:stId,topic:_('seTo').value.trim(),note:_('seNo').value.trim(),paid:_('sePd').value,channel:ch,algCourseId:algId,grpSize:grp,hours,fee,customFee:customFee>0?customFee:null,reminder:_('seRem').value.trim(),reminderDone:false,commission,commissionOverride:commOvr>0?commOvr:null,sessionStatus:'scheduled'};
+  const d={date,start,end,subject:ch==='institute'?'computer':_('seSb').value,studentId:stId,studentIds:stId?[stId]:[],topic:_('seTo').value.trim(),note:_('seNo').value.trim(),paid:_('sePd').value,channel:ch,algCourseId:algId,grpSize:grp,hours,fee,customFee:customFee>0?customFee:null,reminder:_('seRem').value.trim(),reminderDone:false,commission,commissionOverride:commOvr>0?commOvr:null,sessionStatus:'scheduled',classType:'private',billingMode:'per-student'};
   const eid=_('seEI').value;if(eid){const i=D.sessions.findIndex(s=>s.id===eid);if(i!==-1){const old=D.sessions[i];d.reminderDone=old.reminderDone||false;d.sessionStatus=old.sessionStatus||'completed';D.sessions[i]={...old,...d}}}
   else{d.id=uid();d.createdAt=new Date().toISOString();d.attendance='present';D.sessions.push(d)}
   const wantGCal=_('seGC').classList.contains('on');saveD();clM('sesModal');rSes();rCal();rDash();if(wantGCal)addGCal(d)}
@@ -516,12 +550,67 @@ function closeSesPopup(evt){if(!evt.target.closest('.ses-popup')&&!evt.target.cl
 function closeSesPopupForce(){_('sesPopup').style.display='none'}
 
 // ============ REMINDERS ============
-function getReminders(){return D.sessions.filter(s=>s.reminder&&!s.reminderDone&&s.sessionStatus!=='cancelled').sort((a,b)=>a.date.localeCompare(b.date))}
-function toggleRemDone(sesId){const s=D.sessions.find(x=>x.id===sesId);if(s){s.reminderDone=!s.reminderDone;saveD();rDash()}}
+function getAllRemSessions(){return D.sessions.filter(s=>s.reminder&&s.sessionStatus!=='cancelled').sort((a,b)=>a.date.localeCompare(b.date))}
+function getReminders(){return getAllRemSessions().filter(s=>!s.reminderDone)}
+function toggleRemDone(sesId){const s=D.sessions.find(x=>x.id===sesId);if(s){s.reminderDone=!s.reminderDone;saveD();rDash();rRemPage()}}
+function editReminder(sesId){const s=D.sessions.find(x=>x.id===sesId);if(!s)return;const txt=prompt('Edit reminder:',s.reminder);if(txt===null)return;s.reminder=txt.trim();saveD();rDash();rRemPage()}
 function renderReminders(){const rems=getReminders();const card=_('dashRemCard');const cont=_('dashReminders');
   _('sbRemCount').textContent=rems.length?`${rems.length} pending!`:'No pending reminders';
   if(!rems.length){card.style.display='none';return}card.style.display='block';let h='';
-  rems.slice(0,5).forEach(s=>{const st=D.students.find(x=>x.id===s.studentId);h+=`<div class="rem-item"><div class="rem-ck" onclick="toggleRemDone('${s.id}')"></div><div style="flex:1"><div style="font-weight:700;font-size:13px">${s.reminder}</div><div style="font-size:11px;color:var(--tx3)">${fDT(s.date)} · ${st?(st.nickname||st.name):'-'}</div></div></div>`});cont.innerHTML=h}
+  rems.slice(0,5).forEach(s=>{const st=D.students.find(x=>x.id===s.studentId);h+=`<div class="rem-item"><div class="rem-ck" onclick="toggleRemDone('${s.id}')"></div><div style="flex:1"><div style="font-weight:700;font-size:13px">${s.reminder}</div><div style="font-size:11px;color:var(--tx3)">${fDT(s.date)} · ${st?(st.nickname||st.name):'-'}</div></div></div>`});
+  if(rems.length>5)h+=`<div style="text-align:center;margin-top:8px"><span class="sa" onclick="go('reminders')">View all ${rems.length} →</span></div>`;
+  cont.innerHTML=h}
+
+// #7 REMINDERS PAGE
+let remTabF='pending';
+function setRemTab(v){remTabF=v;document.querySelectorAll('#remTabs .tab').forEach((t,i)=>t.classList.toggle('on',['pending','done','all'][i]===v));rRemPage()}
+function rRemPage(){
+  const all=getAllRemSessions();
+  let list=all;
+  if(remTabF==='pending')list=all.filter(s=>!s.reminderDone);
+  else if(remTabF==='done')list=all.filter(s=>s.reminderDone);
+  const el=_('remPageList');
+  if(!list.length){el.innerHTML=`<div class="empty"><div class="empty-ic">🔔</div>No ${remTabF} reminders</div>`;return}
+  let h='';
+  list.forEach(s=>{
+    const st=D.students.find(x=>x.id===s.studentId);const done=s.reminderDone;
+    h+=`<div class="rem-item ${done?'done':''}" style="margin-bottom:8px">
+      <div class="rem-ck ${done?'done':''}" onclick="toggleRemDone('${s.id}')">${done?'✓':''}</div>
+      <div style="flex:1;min-width:0">
+        <div style="font-weight:700;font-size:14px${done?';text-decoration:line-through':''}">${s.reminder}</div>
+        <div style="font-size:12px;color:var(--tx3)">📅 ${fDT(s.date)} · ⏰ ${s.start||''}-${s.end||''} · ${st?(st.nickname||st.name):'-'} · ${sbg(s.subject)}</div>
+      </div>
+      <div style="display:flex;gap:4px;flex-shrink:0">
+        <button class="btn btn-o btn-sm" onclick="editReminder('${s.id}')" title="Edit">✏️</button>
+        ${done?'<button class="btn btn-blue btn-sm" onclick="toggleRemDone(\''+s.id+'\')" title="Undo">↩️</button>':''}
+      </div></div>`});
+  el.innerHTML=h}
+
+// #14 STUDENT PROFILE VIEW
+function openStProf(stId){
+  const s=D.students.find(x=>x.id===stId);if(!s)return;
+  const ses=D.sessions.filter(x=>x.studentId===stId&&x.sessionStatus!=='cancelled');
+  const totalFee=ses.reduce((a,x)=>a+(x.fee||0),0);
+  const totalHrs=ses.reduce((a,x)=>a+(x.hours||0),0);
+  const totalComm=ses.reduce((a,x)=>a+(x.commission||0),0);
+  const attended=ses.filter(x=>x.attendance==='present').length;
+  const attRate=ses.length?Math.round(attended/ses.length*100):0;
+  const yh=s.yearHistory||[];
+  const body=_('stProfBody');body.dataset.sid=stId;
+  _('stProfTitle').textContent=`${s.nickname||s.name}`;
+  let h=`<div style="display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-bottom:16px">
+    <div style="padding:14px;background:var(--grnL2);border-radius:var(--r3)"><div style="font-size:12px;color:var(--tx3);font-weight:700">Total Sessions</div><div class="mono" style="font-size:24px;font-weight:900;color:var(--grn3)">${ses.length}</div><div style="font-size:11px;color:var(--tx3)">${totalHrs.toFixed(1)} hours</div></div>
+    <div style="padding:14px;background:var(--bluL);border-radius:var(--r3)"><div style="font-size:12px;color:var(--tx3);font-weight:700">Total Income</div><div class="mono" style="font-size:24px;font-weight:900;color:var(--bluF)">฿${totalFee.toLocaleString()}</div>${totalComm?`<div style="font-size:11px;color:var(--orgF)">Comm: ฿${totalComm.toLocaleString()}</div>`:''}</div>
+    <div style="padding:14px;background:var(--orgL);border-radius:var(--r3)"><div style="font-size:12px;color:var(--tx3);font-weight:700">Attendance</div><div class="mono" style="font-size:24px;font-weight:900;color:var(--orgF)">${attRate}%</div><div style="font-size:11px;color:var(--tx3)">${attended}/${ses.length} present</div></div>
+    <div style="padding:14px;background:var(--bg2);border-radius:var(--r3)"><div style="font-size:12px;color:var(--tx3);font-weight:700">Info</div><div style="font-size:13px;font-weight:700;margin-top:4px">${s.year||'-'} · Since ${s.startDate?fDT(s.startDate):'-'}</div><div style="font-size:12px;color:var(--tx3)">${s.contact||'-'}</div></div></div>`;
+  // Year history
+  if(yh.length){h+='<div style="margin-bottom:14px;padding:12px;background:var(--bg2);border-radius:var(--r3);font-size:13px"><div style="font-weight:800;margin-bottom:6px">📚 Year History</div>';yh.forEach(y=>{h+=`<div style="color:var(--tx2)">• ${y.year} (since ${fDT(y.date)})</div>`});h+='</div>'}
+  // Recent sessions
+  const recent=ses.sort((a,b)=>b.date.localeCompare(a.date)).slice(0,5);
+  if(recent.length){h+='<div style="font-weight:800;margin-bottom:8px">Recent Sessions</div>';
+    recent.forEach(r=>{h+=`<div style="display:flex;justify-content:space-between;padding:8px 0;border-bottom:1px solid var(--border2);font-size:13px"><div>${fDT(r.date)} · ${r.start}-${r.end} · ${sbg(r.subject)}</div><div class="mono" style="font-weight:800">฿${(r.fee||0).toLocaleString()}</div></div>`})}
+  if(s.note)h+=`<div style="margin-top:14px;padding:12px;background:var(--bg2);border-radius:var(--r3);font-size:13px;color:var(--tx2)">📝 ${s.note}</div>`;
+  body.innerHTML=h;opM('stProfModal')}
 
 // ============ TRANSACTIONS ============
 function popTxSt(){const s=_('txSt');s.innerHTML='<option value="">-- None --</option>';D.students.forEach(st=>{s.innerHTML+=`<option value="${st.id}">${st.nickname||st.name}</option>`});syncCSel('txSt')}
@@ -616,7 +705,7 @@ function saveConvert(){
   const ch=_('cvCh').value,algId=_('cvAlgCourse').value,grp=_('cvGrpSize').value;const subj=ch==='institute'?'computer':_('cvSubj').value;
   const custom=parseFloat(_('cvFee').value);const fee=calcFee(subj,ch,hours,stId,grp,algId,custom>0?custom:null);
   const stu=D.students.find(s=>s.id===stId);
-  D.sessions.push({id:uid(),date,start,end,subject:subj,studentId:stId,topic:_('cvTopic').value.trim(),note:'',paid:_('cvPaid').value,hours,fee,customFee:custom>0?custom:null,channel:ch,algCourseId:algId,grpSize:grp,attendance:'present',gcalId,convertedFromGoogle:true,commission:stu?.commission||0,sessionStatus:'completed',createdAt:new Date().toISOString()});
+  D.sessions.push({id:uid(),date,start,end,subject:subj,studentId:stId,studentIds:stId?[stId]:[],topic:_('cvTopic').value.trim(),note:'',paid:_('cvPaid').value,hours,fee,customFee:custom>0?custom:null,channel:ch,algCourseId:algId,grpSize:grp,attendance:'present',gcalId,convertedFromGoogle:true,commission:stu?.commission||0,sessionStatus:'completed',classType:'private',billingMode:'per-student',createdAt:new Date().toISOString()});
   saveD();clM('cvModal');toast(`✅ ${stu?.nickname||stu?.name} · ฿${fee.toLocaleString()}`,'ok');rGCalImp();rSes();rCal();rDash()}
 
 // ============ CALENDAR — #3 popup on click ============
@@ -667,7 +756,11 @@ function rDash(){const now=new Date(),hr=now.getHours();_('greetH').textContent=
   let fh='<div style="display:grid;grid-template-columns:repeat(3,1fr);gap:10px">';
   ['math','physics','computer'].forEach(sub=>{const ss=ms.filter(x=>x.subject===sub);const fee=ss.reduce((s,x)=>s+(x.fee||0),0);
     fh+=`<div style="padding:16px;background:var(--${sub==='math'?'math':sub==='physics'?'phy':'comp'}Bg);border-radius:var(--r2)">${sbg(sub)}<div class="mono" style="font-size:22px;font-weight:900;margin-top:8px;color:var(--${sub==='math'?'math':sub==='physics'?'phy':'comp'}F)">฿${fee.toLocaleString()}</div><div style="font-size:12px;opacity:.6;font-weight:700">${ss.length} sessions</div></div>`});
-  fh+='</div>';_('dashFin').innerHTML=fh;renderMC();
+  fh+='</div>';
+  // #16 backup reminder
+  const lastExp=D.lastExport;const daysSinceExp=lastExp?Math.floor((Date.now()-new Date(lastExp).getTime())/(1000*60*60*24)):999;
+  if(daysSinceExp>=7)fh+=`<div style="margin-top:12px;padding:12px 16px;background:var(--orgL);border-radius:var(--r3);display:flex;justify-content:space-between;align-items:center;font-size:13px"><div style="font-weight:700;color:var(--orgF)">💾 ${lastExp?'Last backup: '+daysSinceExp+' days ago':'Never backed up — data is in browser only!'}</div><button class="btn btn-o btn-sm" onclick="expD()">📤 Export</button></div>`;
+  _('dashFin').innerHTML=fh;renderMC();
   const todayGCal=getVisibleGCalForDate(ts);
   if(!tds.length&&!todayGCal.length)_('todayTL').innerHTML='<div style="color:var(--tx3);font-size:14px;padding:12px 0">No sessions today ☀️</div>';
   else{let h='';tds.sort((a,b)=>(a.start||'').localeCompare(b.start||'')).forEach(s=>{const st=D.students.find(x=>x.id===s.studentId);h+=`<div class="ms-item" onclick="openSesM('${s.id}')"><div class="ms-thumb ${s.subject}">${SB[s.subject]?.em||'📚'}</div><div class="ms-info"><div class="ms-name">${st?(st.nickname||st.name):'-'}</div><div class="ms-meta">⏰ ${s.start}–${s.end} · ${s.topic||''}</div></div></div>`});
@@ -682,7 +775,7 @@ function renderMC(){const now=new Date(),y=now.getFullYear(),m=now.getMonth();co
 // ============ SETTINGS ============
 function loadSett(){_('sCI').value=D.settings.clientId||'';_('sCL').value=D.settings.calendarId||'primary';_('sRM').value=D.settings.rateMath||'';_('sRP').value=D.settings.ratePhysics||'';_('sRC').value=D.settings.rateComputer||'';renderCalList();renderAlgCourses()}
 function saveSett(){D.settings.clientId=_('sCI').value.trim();D.settings.calendarId=_('sCL').value.trim()||'primary';D.settings.rateMath=parseInt(_('sRM').value)||300;D.settings.ratePhysics=parseInt(_('sRP').value)||300;D.settings.rateComputer=parseInt(_('sRC').value)||300;saveD()}
-function expD(){const b=new Blob([JSON.stringify(D,null,2)],{type:'application/json'});const a=document.createElement('a');a.href=URL.createObjectURL(b);a.download=`tutor-${new Date().toISOString().split('T')[0]}.json`;a.click()}
+function expD(){D.lastExport=new Date().toISOString();saveD();const b=new Blob([JSON.stringify(D,null,2)],{type:'application/json'});const a=document.createElement('a');a.href=URL.createObjectURL(b);a.download=`tutor-${new Date().toISOString().split('T')[0]}.json`;a.click();toast('✅ Data exported','ok')}
 function impD(e){const f=e.target.files[0];if(!f)return;const r=new FileReader();r.onload=ev=>{try{const d=JSON.parse(ev.target.result);if(confirm('Replace current data?')){D={...defD(),...d};saveD();location.reload()}}catch{alert('Invalid file')}};r.readAsText(f)}
 function clrD(){if(confirm('Clear all data?')&&confirm('Sure?')){localStorage.removeItem(K);D=defD();location.reload()}}
 
