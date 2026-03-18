@@ -376,7 +376,7 @@ tr.inactive-row{opacity:.45}
 <div class="mo" id="algModal"><div class="mo-box"><div class="mo-t" id="algMT">Add Course</div>
 <div class="fg"><label>Course Name</label><input id="algName" placeholder="e.g. Robotics, AI"></div>
 <div class="fr"><div class="fg"><label>Duration (hours)</label><input type="number" id="algDur" step="0.5" placeholder="1.5"></div><div class="fg"></div></div>
-<div class="fr"><div class="fg"><label>👤 Private Rate ฿/hr</label><input type="number" id="algPriv" placeholder="400"></div><div class="fg"><label>👥 Group Rate ฿/hr</label><input type="number" id="algGrp" placeholder="467"></div></div>
+<div class="fr"><div class="fg"><label>👤 Private Rate ฿/session</label><input type="number" id="algPriv" placeholder="500"></div><div class="fg"><label>👥 Group Rate ฿/session</label><input type="number" id="algGrp" placeholder="600"></div></div>
 <input type="hidden" id="algEI">
 <div style="display:flex;gap:8px;justify-content:flex-end;margin-top:20px"><button class="btn btn-o" onclick="clM('algModal')">Cancel</button><button class="btn btn-g" onclick="saveAlgCourse()">Save</button></div></div></div>
 
@@ -387,8 +387,8 @@ let D=loadD();
 // ============ DATA LAYER ============
 function defD(){return{students:[],sessions:[],transactions:[],gcalImported:[],gcalHidden:{},gcalCalendars:[],
   algCourses:[
-    {id:'visprog',name:'Visual Programming / IECC',duration:1.5,privateRate:334,groupRate:400},
-    {id:'game-python',name:'Game (G5+) / Python (G7+)',duration:1.5,privateRate:400,groupRate:467}
+    {id:'visprog',name:'Visual Programming / IECC',duration:1.5,privateRate:500,groupRate:600},
+    {id:'game-python',name:'Game (G5+) / Python (G7+)',duration:1.5,privateRate:600,groupRate:700}
   ],
   settings:{clientId:'',calendarId:'primary',selectedCalendars:[],rateMath:300,ratePhysics:300,rateComputer:300}}}
 function loadD(){try{const d=JSON.parse(localStorage.getItem(K));if(!d)return defD();const def=defD();
@@ -429,21 +429,22 @@ function opM(id){_(id).classList.add('show')}
 function clM(id){_(id).classList.remove('show')}
 function go(p){document.querySelectorAll('.page').forEach(x=>x.classList.remove('active'));_('page-'+p).classList.add('active');document.querySelectorAll('.ni').forEach(n=>n.classList.remove('on'));const nav=document.querySelector(`.ni[data-p="${p}"]`);if(nav)nav.classList.add('on');_('sidebar').classList.remove('open');({dashboard:rDash,calendar:rCal,students:rStu,sessions:rSes,income:rInc,settings:loadSett,gcalimport:rGCalImp,reminders:rRemPage})[p]?.()}
 
-// ============ #1 FIX: CENTRALIZED FEE CALCULATION ============
-// ALG courses: rate is PER HOUR, multiplied by actual duration from calendar
-// e.g. ALG Python private: ฿400/hr → 1hr=400, 1.5hr=600
+// ============ CENTRALIZED FEE CALCULATION ============
+// ALG courses: rate is PER SESSION (for standard duration), pro-rated if actual duration differs
+// e.g. Game/Python private: ฿600 per 1.5hr → 1hr = 600×(1/1.5) = ฿400, 1.5hr = ฿600
 function calcFeeEx(subject,channel,hours,studentId,grpSize,algCourseId,customFee){
   if(customFee&&customFee>0)return{fee:customFee,src:'Custom override'};
   if(channel==='institute'&&algCourseId){
     const course=(D.algCourses||[]).find(c=>c.id===algCourseId);
     if(course){
-      const rate=grpSize==='group'?(course.groupRate||0):(course.privateRate||0);
-      // Rate is per-hour: multiply by actual hours
-      const fee=Math.round(rate*hours);
-      return{fee,src:`ALG: ${course.name} (${grpSize}) ฿${rate}/hr × ${hours.toFixed(1)}hr`}}}
+      const sessionRate=grpSize==='group'?(course.groupRate||0):(course.privateRate||0);
+      const stdDur=course.duration||1.5;
+      // Pro-rate: if actual hours differ from standard duration
+      const fee=Math.round(sessionRate*(hours/stdDur));
+      return{fee,src:`ALG: ${course.name} (${grpSize}) ฿${sessionRate}/${stdDur}hr × ${hours.toFixed(1)}hr`}}}
   const stu=D.students.find(s=>s.id===studentId);
   const stuRate=stu?.rates?.[subject];
-  if(stuRate&&stuRate>0)return{fee:Math.round(hours*stuRate),src:`Student rate: ฿${stuRate}/hr × ${hours.toFixed(1)}hr`};
+  if(stuRate&&stuRate>0)return{fee:Math.round(hours*stuRate),src:`Student: ฿${stuRate}/hr × ${hours.toFixed(1)}hr`};
   const rateMap={math:'rateMath',physics:'ratePhysics',computer:'rateComputer'};
   const defaultRate=D.settings[rateMap[subject]]||0;
   return{fee:Math.round(hours*defaultRate),src:defaultRate?`Default: ฿${defaultRate}/hr × ${hours.toFixed(1)}hr`:'No rate set'}
@@ -452,7 +453,7 @@ function calcFee(subject,channel,hours,studentId,grpSize,algCourseId,customFee){
 
 // ============ #5 ALG COURSES — proper edit modal ============
 function renderAlgCourses(){const el=_('algCourseList');if(!el)return;const courses=D.algCourses||[];if(!courses.length){el.innerHTML='<div style="color:var(--tx3);font-size:13px">No courses</div>';return}let h='';
-  courses.forEach((c,i)=>{h+=`<div class="imp-item" style="margin-bottom:8px"><div style="flex:1"><div style="font-weight:700">${c.name} <span style="color:var(--tx3);font-size:12px">(std ${c.duration}hr)</span></div><div style="font-size:12px;color:var(--tx2)">👤 ฿${c.privateRate}/hr (${c.duration}hr=฿${Math.round(c.privateRate*c.duration)}) · 👥 ฿${c.groupRate}/hr (${c.duration}hr=฿${Math.round(c.groupRate*c.duration)})</div></div><button class="btn btn-o btn-sm" onclick="openAlgM('${c.id}')">✏️</button> <button class="btn btn-d btn-sm" onclick="delAlgCourse(${i})">🗑️</button></div>`});el.innerHTML=h}
+  courses.forEach((c,i)=>{h+=`<div class="imp-item" style="margin-bottom:8px"><div style="flex:1"><div style="font-weight:700">${c.name} <span style="color:var(--tx3);font-size:12px">(${c.duration}hr/session)</span></div><div style="font-size:12px;color:var(--tx2)">👤 ฿${c.privateRate}/${c.duration}hr · 👥 ฿${c.groupRate}/${c.duration}hr</div></div><button class="btn btn-o btn-sm" onclick="openAlgM('${c.id}')">✏️</button> <button class="btn btn-d btn-sm" onclick="delAlgCourse(${i})">🗑️</button></div>`});el.innerHTML=h}
 function openAlgM(editId){
   if(editId){const c=(D.algCourses||[]).find(x=>x.id===editId);if(!c)return;_('algMT').textContent='Edit Course';_('algName').value=c.name;_('algDur').value=c.duration;_('algPriv').value=c.privateRate;_('algGrp').value=c.groupRate;_('algEI').value=editId}
   else{_('algMT').textContent='Add Course';_('algName').value='';_('algDur').value='1.5';_('algPriv').value='';_('algGrp').value='';_('algEI').value=''}
@@ -465,7 +466,7 @@ function saveAlgCourse(){const name=_('algName').value.trim();if(!name)return al
   saveD();clM('algModal');renderAlgCourses();toast('✅ Course saved','ok')}
 function addAlgCourse(){openAlgM()}
 function delAlgCourse(i){if(!confirm('Delete this course?'))return;D.algCourses.splice(i,1);saveD();renderAlgCourses()}
-function popAlgSel(selId){const sel=_(selId);if(!sel)return;sel.innerHTML='<option value="">-- Select Course --</option>';(D.algCourses||[]).forEach(c=>{sel.innerHTML+=`<option value="${c.id}" data-icon="🏫">${c.name} (฿${c.privateRate}/hr)</option>`})}
+function popAlgSel(selId){const sel=_(selId);if(!sel)return;sel.innerHTML='<option value="">-- Select Course --</option>';(D.algCourses||[]).forEach(c=>{sel.innerHTML+=`<option value="${c.id}" data-icon="🏫">${c.name} (฿${c.privateRate}/${c.duration}hr)</option>`})}
 
 // ============ #2 STUDENTS — 3 statuses ============
 let stV='individual',stStatF='active';
