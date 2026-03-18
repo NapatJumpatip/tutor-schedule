@@ -15,9 +15,7 @@
 --pnk:#e84393;--pnkL:rgba(232,67,147,.10);--pnkF:#a32d68;
 --blu:#3498db;--bluL:rgba(52,152,219,.10);--bluF:#2271a3;
 --red:#e74c3c;--redL:rgba(231,76,60,.10);--redF:#a93226;
---mathBg:#fff8e1;--mathF:#7c6210;--mathB:#ffd54f;
---phyBg:#fce4ec;--phyF:#880e4f;--phyB:#f06292;
---pyBg:#e0f2f1;--pyF:#004d40;--pyB:#26a69a;
+--mathBg:#fff8e1;--mathF:#7c6210;--phyBg:#fce4ec;--phyF:#880e4f;--pyBg:#e0f2f1;--pyF:#004d40;
 --gcalBg:#e3f2fd;--gcalF:#1565c0;--gcalB:#42a5f5;
 --r:20px;--r2:14px;--r3:10px;
 --sh:0 2px 16px rgba(0,0,0,.05);--sh2:0 8px 32px rgba(0,0,0,.07);
@@ -26,8 +24,6 @@
 body{font-family:'Nunito',sans-serif;background:var(--bg);color:var(--tx);min-height:100vh;line-height:1.55}
 .mono{font-family:'JetBrains Mono',monospace}
 .app{display:flex;min-height:100vh}
-
-/* SIDEBAR */
 .sb{width:230px;background:var(--sidebar);padding:20px 14px;display:flex;flex-direction:column;gap:2px;position:fixed;top:0;left:0;bottom:0;z-index:100;border-right:1px solid var(--border2);overflow-y:auto}
 .sb-logo{padding:12px 10px 28px;display:flex;align-items:center;gap:10px}
 .sb-ico{width:42px;height:42px;background:var(--grn);border-radius:14px;display:flex;align-items:center;justify-content:center;color:#fff;font-size:20px;font-weight:900}
@@ -50,13 +46,10 @@ body{font-family:'Nunito',sans-serif;background:var(--bg);color:var(--tx);min-he
 .gcal-btn{margin-top:10px;width:100%;padding:9px;border-radius:var(--r3);border:1.5px solid var(--border);background:var(--white);color:var(--tx2);cursor:pointer;font-family:'Nunito',sans-serif;font-size:13px;font-weight:700;transition:all .2s}
 .gcal-btn:hover{border-color:var(--grn);color:var(--grn)}
 .gcal-count{font-size:11px;color:var(--tx3);margin-top:6px;font-weight:600}
-
 .mn{flex:1;margin-left:230px;padding:28px 32px}
 .greet{margin-bottom:24px}
 .greet h1{font-size:28px;font-weight:900;letter-spacing:-.5px}
 .greet p{font-size:15px;color:var(--tx2);margin-top:2px;font-weight:500}
-
-/* STATS */
 .stats{display:grid;grid-template-columns:repeat(4,1fr);gap:14px;margin-bottom:24px}
 .st{padding:20px;border-radius:var(--r);position:relative;overflow:hidden;transition:transform .2s;cursor:default}
 .st:hover{transform:translateY(-3px)}
@@ -68,26 +61,19 @@ body{font-family:'Nunito',sans-serif;background:var(--bg);color:var(--tx);min-he
 .st.o{background:var(--orgL);color:var(--orgF)}.st.o .st-ic{background:var(--org);color:#fff}
 .st.p{background:var(--pnkL);color:var(--pnkF)}.st.p .st-ic{background:var(--pnk);color:#fff}
 .st.b{background:var(--bluL);color:var(--bluF)}.st.b .st-ic{background:var(--blu);color:#fff}
-
-/* CARD */
 .cd{background:var(--white);border:1.5px solid var(--border);border-radius:var(--r);padding:22px;margin-bottom:16px;box-shadow:var(--sh)}
 .cd-h{display:flex;justify-content:space-between;align-items:center;margin-bottom:16px;flex-wrap:wrap;gap:8px}
 .cd-t{font-size:17px;font-weight:800;letter-spacing:-.2px}
 .sa{font-size:13px;color:var(--grn2);cursor:pointer;font-weight:700}.sa:hover{text-decoration:underline}
-
-/* BTN */
 .btn{padding:10px 20px;border-radius:var(--r3);border:none;cursor:pointer;font-family:'Nunito',sans-serif;font-size:14px;font-weight:700;transition:all .2s;display:inline-flex;align-items:center;gap:6px}
 .btn-g{background:var(--grn);color:#fff;box-shadow:0 4px 14px rgba(46,204,113,.3)}.btn-g:hover{background:var(--grn2);transform:translateY(-1px)}
 .btn-o{background:transparent;border:1.5px solid var(--border);color:var(--tx2)}.btn-o:hover{border-color:var(--grn);color:var(--grn)}
 .btn-d{background:var(--redL);color:var(--redF)}.btn-d:hover{background:var(--red);color:#fff}
 .btn-sm{padding:7px 14px;font-size:13px;border-radius:8px}
 .btn-blue{background:var(--gcalBg);color:var(--gcalF);border:1.5px solid rgba(21,101,192,.2)}.btn-blue:hover{background:#bbdefb}
-
-/* FORMS */
 input,textarea{background:var(--bg2);border:1.5px solid var(--border);border-radius:var(--r3);padding:11px 14px;color:var(--tx);font-family:'Nunito',sans-serif;font-size:14px;width:100%;outline:none;transition:all .2s;font-weight:600}
 input:focus,textarea:focus{border-color:var(--grn);background:#fff;box-shadow:0 0 0 3px rgba(46,204,113,.12)}
 label{font-size:13px;color:var(--tx2);margin-bottom:5px;display:block;font-weight:700}
-/* CUSTOM SELECT */
 .csel{position:relative;width:100%;user-select:none}
 .csel-display{background:var(--white);border:1.5px solid var(--border);border-radius:var(--r3);padding:11px 40px 11px 14px;color:var(--tx);font-family:'Nunito',sans-serif;font-size:14px;font-weight:600;cursor:pointer;transition:all .2s;position:relative;min-height:42px;display:flex;align-items:center}
 .csel-display:hover{border-color:var(--grn)}
@@ -98,31 +84,21 @@ label{font-size:13px;color:var(--tx2);margin-bottom:5px;display:block;font-weigh
 .csel-opts.show{display:block;animation:dropIn .15s ease-out}
 @keyframes dropIn{from{opacity:0;transform:translateY(-4px)}to{opacity:1;transform:translateY(0)}}
 .csel-opt{padding:10px 14px;font-size:14px;font-weight:600;cursor:pointer;transition:all .12s;display:flex;align-items:center;gap:8px}
-.csel-opt:hover{background:var(--grnL)}
-.csel-opt.active{background:var(--grnL2);color:var(--grn3)}
+.csel-opt:hover{background:var(--grnL)}.csel-opt.active{background:var(--grnL2);color:var(--grn3)}
 .csel-opt:last-child{border-radius:0 0 8px 8px}
 .csel-opt .opt-icon{font-size:16px;width:22px;text-align:center}
 .csel select{position:absolute;opacity:0;pointer-events:none;width:0;height:0}
-
-/* BADGES */
 .bg{display:inline-flex;align-items:center;padding:4px 12px;border-radius:20px;font-size:12px;font-weight:800;gap:4px}
-.bg-m{background:var(--mathBg);color:var(--mathF)}
-.bg-ph{background:var(--phyBg);color:var(--phyF)}
-.bg-py{background:var(--pyBg);color:var(--pyF)}
-.bg-pd{background:var(--grnL2);color:var(--grn3)}
-.bg-up{background:var(--orgL);color:var(--orgF)}
-.bg-in{background:var(--grnL2);color:var(--grn3)}
-.bg-ex{background:var(--redL);color:var(--redF)}
-.bg-gcal{background:var(--gcalBg);color:var(--gcalF)}
-
-/* TABLE */
+.bg-m{background:var(--mathBg);color:var(--mathF)}.bg-ph{background:var(--phyBg);color:var(--phyF)}.bg-py{background:var(--pyBg);color:var(--pyF)}
+.bg-pd{background:var(--grnL2);color:var(--grn3)}.bg-up{background:var(--orgL);color:var(--orgF)}
+.bg-in{background:var(--grnL2);color:var(--grn3)}.bg-ex{background:var(--redL);color:var(--redF)}.bg-gcal{background:var(--gcalBg);color:var(--gcalF)}
+.bg-inactive{background:#f5f5f5;color:#999}
 table{width:100%;border-collapse:collapse}
 th{text-align:left;padding:10px 12px;font-size:12px;color:var(--tx3);font-weight:800;text-transform:uppercase;letter-spacing:.5px;border-bottom:2px solid var(--border)}
 td{padding:12px;font-size:14px;border-bottom:1px solid var(--border2);font-weight:500}
 tr:last-child td{border-bottom:none}
 tr:hover td{background:var(--bg2)}
-
-/* CALENDAR */
+tr.inactive-row{opacity:.5}
 .cc{display:flex;align-items:center;gap:10px;margin-bottom:16px;flex-wrap:wrap}
 .cl{font-size:18px;font-weight:900;min-width:200px;text-align:center;letter-spacing:-.3px}
 .cg{display:grid;grid-template-columns:repeat(7,1fr);gap:4px}
@@ -136,9 +112,6 @@ tr:hover td{background:var(--bg2)}
 .cv{font-size:10px;padding:2px 6px;margin-bottom:2px;border-radius:6px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;font-weight:700;cursor:pointer}
 .cv.math{background:var(--mathBg);color:var(--mathF)}.cv.physics{background:var(--phyBg);color:var(--phyF)}.cv.python{background:var(--pyBg);color:var(--pyF)}
 .cv.gcal{background:var(--gcalBg);color:var(--gcalF);font-style:italic}
-.cv.gcal-hidden{opacity:.3;text-decoration:line-through}
-
-/* WEEK */
 .wg{display:grid;grid-template-columns:56px repeat(7,1fr);border:1.5px solid var(--border);border-radius:var(--r);overflow:hidden;background:var(--white)}
 .wh{padding:10px 4px;text-align:center;font-size:12px;font-weight:700;color:var(--tx2);background:var(--bg2);border-bottom:1.5px solid var(--border);border-right:1px solid var(--border2)}
 .wh.wtd{color:var(--grn2)}
@@ -147,85 +120,62 @@ tr:hover td{background:var(--bg2)}
 .ws{height:50px;border-bottom:1px solid var(--border2);border-right:1px solid var(--border2);position:relative;cursor:pointer}
 .ws:hover{background:var(--bg2)}
 .we{position:absolute;left:2px;right:2px;padding:3px 6px;border-radius:8px;font-size:11px;font-weight:700;overflow:hidden;z-index:2;cursor:pointer;border-left:3px solid}
-
-/* SCHEDULE CARDS */
 .sch-card{display:flex;gap:14px;padding:14px;background:var(--bg2);border-radius:var(--r2);margin-bottom:10px;border:1.5px solid var(--border2);transition:all .2s;cursor:pointer}
 .sch-card:hover{border-color:var(--grn);box-shadow:var(--sh)}
 .sch-thumb{width:56px;height:56px;border-radius:var(--r2);display:flex;align-items:center;justify-content:center;font-size:26px;flex-shrink:0}
 .sch-thumb.math{background:var(--mathBg)}.sch-thumb.physics{background:var(--phyBg)}.sch-thumb.python{background:var(--pyBg)}.sch-thumb.gcal{background:var(--gcalBg)}
-.sch-info{flex:1;min-width:0}
-.sch-name{font-weight:800;font-size:14px;margin-bottom:2px}
-.sch-meta{font-size:12px;color:var(--tx3);font-weight:600}
+.sch-info{flex:1;min-width:0}.sch-name{font-weight:800;font-size:14px;margin-bottom:2px}.sch-meta{font-size:12px;color:var(--tx3);font-weight:600}
 .sch-price{font-weight:900;font-size:16px;color:var(--grn3);white-space:nowrap;align-self:center}
-
 .dc{display:grid;grid-template-columns:1fr 330px;gap:16px}
 .mc-nav{display:flex;align-items:center;justify-content:space-between;margin-bottom:8px}
 .mc-lbl{font-size:16px;font-weight:900}
 .mc-g{display:grid;grid-template-columns:repeat(7,1fr);gap:2px;text-align:center}
 .mc-h{font-size:11px;font-weight:800;color:var(--tx3);padding:4px}
 .mc-d{font-size:13px;padding:6px;border-radius:50%;cursor:pointer;font-weight:600;color:var(--tx2);transition:background .15s}
-.mc-d:hover{background:var(--grnL)}
-.mc-d.td{background:var(--grn);color:#fff;font-weight:900}
-.mc-d.hev{color:var(--grn2);font-weight:900}
-.mc-d.ot{opacity:.2}
-
+.mc-d:hover{background:var(--grnL)}.mc-d.td{background:var(--grn);color:#fff;font-weight:900}.mc-d.hev{color:var(--grn2);font-weight:900}.mc-d.ot{opacity:.2}
 .ms-item{display:flex;gap:12px;padding:14px;background:var(--bg2);border-radius:var(--r2);margin-bottom:8px;border:1.5px solid var(--border2);transition:all .15s}
 .ms-item:hover{border-color:var(--grn);transform:translateX(2px)}
 .ms-thumb{width:48px;height:48px;border-radius:var(--r2);display:flex;align-items:center;justify-content:center;font-size:22px;flex-shrink:0}
 .ms-thumb.math{background:var(--mathBg)}.ms-thumb.physics{background:var(--phyBg)}.ms-thumb.python{background:var(--pyBg)}.ms-thumb.gcal{background:var(--gcalBg)}
-.ms-info{flex:1}
-.ms-name{font-weight:800;font-size:14px}
-.ms-meta{font-size:12px;color:var(--tx3);font-weight:600;margin-top:1px}
-
-/* IMPORTED EVENTS */
+.ms-info{flex:1}.ms-name{font-weight:800;font-size:14px}.ms-meta{font-size:12px;color:var(--tx3);font-weight:600;margin-top:1px}
 .imp-item{display:flex;align-items:center;gap:10px;padding:10px 12px;border-radius:var(--r3);margin-bottom:4px;background:var(--bg2);border:1px solid var(--border2);transition:all .15s}
-.imp-item:hover{border-color:var(--gcalB)}
-.imp-item.hidden-ev{opacity:.45}
+.imp-item:hover{border-color:var(--gcalB)}.imp-item.hidden-ev{opacity:.45}
 .imp-toggle{width:36px;height:20px;background:var(--border);border-radius:10px;position:relative;cursor:pointer;flex-shrink:0;transition:background .2s}
 .imp-toggle::after{content:'';position:absolute;top:2px;left:2px;width:16px;height:16px;background:#fff;border-radius:50%;transition:transform .2s;box-shadow:0 1px 2px rgba(0,0,0,.15)}
-.imp-toggle.on{background:var(--gcalB)}
-.imp-toggle.on::after{transform:translateX(16px)}
-
-/* TOAST */
+.imp-toggle.on{background:var(--gcalB)}.imp-toggle.on::after{transform:translateX(16px)}
 .toast{position:fixed;bottom:24px;right:24px;padding:14px 20px;border-radius:var(--r2);font-size:14px;font-weight:700;z-index:2000;transform:translateY(100px);opacity:0;transition:all .3s cubic-bezier(.4,0,.2,1);max-width:420px;box-shadow:var(--sh2)}
 .toast.show{transform:translateY(0);opacity:1}
 .toast.ok{background:#c8e6c9;color:#2e7d32;border:1.5px solid #81c784}
 .toast.err{background:#ffcdd2;color:#c62828;border:1.5px solid #ef9a9a}
 .toast.info{background:var(--gcalBg);color:var(--gcalF);border:1.5px solid var(--gcalB)}
-
-/* MODAL */
 .mo{position:fixed;inset:0;background:rgba(0,0,0,.3);backdrop-filter:blur(4px);display:flex;align-items:center;justify-content:center;z-index:1000;opacity:0;pointer-events:none;transition:opacity .25s}
 .mo.show{opacity:1;pointer-events:auto}
-.mo-box{background:var(--white);border-radius:24px;padding:30px;width:90%;max-width:520px;max-height:85vh;overflow-y:auto;transform:translateY(16px) scale(.97);transition:transform .25s cubic-bezier(.4,0,.2,1);box-shadow:var(--sh2)}
+.mo-box{background:var(--white);border-radius:24px;padding:30px;width:90%;max-width:540px;max-height:85vh;overflow-y:auto;transform:translateY(16px) scale(.97);transition:transform .25s cubic-bezier(.4,0,.2,1);box-shadow:var(--sh2)}
 .mo.show .mo-box{transform:translateY(0) scale(1)}
 .mo-t{font-size:20px;font-weight:900;margin-bottom:20px}
 .fg{margin-bottom:14px}.fr{display:grid;grid-template-columns:1fr 1fr;gap:12px}
-
-/* TABS */
 .tabs{display:inline-flex;gap:0;background:var(--bg2);border-radius:var(--r3);padding:4px;margin-bottom:20px;border:1.5px solid var(--border)}
 .tab{padding:8px 20px;border-radius:8px;cursor:pointer;font-size:14px;font-weight:700;color:var(--tx2);transition:all .2s}
-.tab:hover{color:var(--tx)}
-.tab.on{background:var(--white);color:var(--grn2);box-shadow:var(--sh)}
-
-/* TOGGLE */
+.tab:hover{color:var(--tx)}.tab.on{background:var(--white);color:var(--grn2);box-shadow:var(--sh)}
 .tw{display:flex;align-items:center;gap:8px;cursor:pointer;font-weight:600;font-size:14px}
 .tg{width:42px;height:24px;background:var(--border);border-radius:12px;position:relative;transition:background .2s}
 .tg::after{content:'';position:absolute;top:3px;left:3px;width:18px;height:18px;background:#fff;border-radius:50%;transition:transform .2s;box-shadow:0 1px 3px rgba(0,0,0,.15)}
 .tg.on{background:var(--grn)}.tg.on::after{transform:translateX(18px)}
-
-/* ATTEND */
 .at-r{display:flex;align-items:center;gap:12px;padding:12px 0;border-bottom:1px solid var(--border2)}
 .at-c{width:26px;height:26px;border-radius:8px;border:2px solid var(--border);cursor:pointer;display:flex;align-items:center;justify-content:center;transition:all .15s;flex-shrink:0;font-size:14px;font-weight:900}
-.at-c.ck{background:var(--grnL2);border-color:var(--grn2);color:var(--grn2)}
-.at-c.ab{background:var(--redL);border-color:var(--redF);color:var(--redF)}
-
+.at-c.ck{background:var(--grnL2);border-color:var(--grn2);color:var(--grn2)}.at-c.ab{background:var(--redL);border-color:var(--redF);color:var(--redF)}
+/* Reminder */
+.rem-item{display:flex;align-items:flex-start;gap:10px;padding:10px 12px;border-radius:var(--r3);margin-bottom:6px;background:var(--orgL);border:1px solid rgba(243,156,18,.2)}
+.rem-item.done{opacity:.4;text-decoration:line-through;background:var(--bg2);border-color:var(--border2)}
+.rem-ck{width:22px;height:22px;border-radius:6px;border:2px solid var(--org);cursor:pointer;display:flex;align-items:center;justify-content:center;flex-shrink:0;font-size:12px;font-weight:900;transition:all .15s}
+.rem-ck.done{background:var(--grn);border-color:var(--grn);color:#fff}
 .page{display:none}.page.active{display:block}
 .empty{text-align:center;padding:48px 20px;color:var(--tx3);font-weight:600}
 .empty-ic{font-size:48px;margin-bottom:12px;opacity:.35}
 .mob{display:none;position:fixed;top:14px;left:14px;z-index:200;background:var(--white);border:1.5px solid var(--border);border-radius:var(--r3);padding:8px 12px;color:var(--tx);cursor:pointer;font-size:18px;box-shadow:var(--sh)}
 @media(max-width:900px){.mob{display:block}.sb{transform:translateX(-100%);z-index:300}.sb.open{transform:translateX(0);box-shadow:var(--sh2)}.mn{margin-left:0;padding:20px 16px;padding-top:56px}.stats{grid-template-columns:1fr 1fr}.dc{grid-template-columns:1fr}.ce{min-height:60px}.fr{grid-template-columns:1fr}}
 ::-webkit-scrollbar{width:5px}::-webkit-scrollbar-thumb{background:var(--border);border-radius:3px}
-@keyframes up{from{opacity:0;transform:translateY(14px)}to{opacity:1;transform:translateY(0)}}.an{animation:up .45s ease-out both}.a1{animation-delay:.06s}.a2{animation-delay:.12s}.a3{animation-delay:.18s}.a4{animation-delay:.24s}
+@keyframes up{from{opacity:0;transform:translateY(14px)}to{opacity:1;transform:translateY(0)}}.an{animation:up .45s ease-out both}.a1{animation-delay:.06s}.a2{animation-delay:.12s}.a3{animation-delay:.18s}
 </style>
 </head>
 <body>
@@ -242,10 +192,7 @@ tr:hover td{background:var(--bg2)}
   <div class="ni" data-p="gcalimport" onclick="go('gcalimport')"><span class="ni-i">📥</span>Google Events</div>
   <div class="ni-sep"></div>
   <div class="ni" data-p="settings" onclick="go('settings')"><span class="ni-i">⚙️</span>Settings</div>
-  <div class="sb-promo">
-    <div class="sb-promo-title">📚 Teaching Tip</div>
-    <div class="sb-promo-sub">Use spaced repetition to help your students retain concepts longer!</div>
-  </div>
+  <div class="sb-promo"><div class="sb-promo-title">📚 Reminders</div><div class="sb-promo-sub" id="sbRemCount">No pending reminders</div></div>
   <div class="gcal-box"><div><span class="gcal-dot off" id="gcalDot"></span><span class="gcal-lbl" id="gcalLbl">Not connected</span></div><button class="gcal-btn" id="gcalBtn" onclick="handleGCal()">Connect Calendar</button><div class="gcal-count" id="gcalCount"></div></div>
 </aside>
 <main class="mn">
@@ -256,6 +203,7 @@ tr:hover td{background:var(--bg2)}
   <div class="stats" id="dashSt"></div>
   <div class="dc">
     <div>
+      <div class="cd an a2" id="dashRemCard" style="display:none"><div class="cd-h"><div class="cd-t">🔔 Reminders</div></div><div id="dashReminders"></div></div>
       <div class="cd an a2"><div class="cd-h"><div class="cd-t">Upcoming Sessions</div><span class="sa" onclick="go('sessions')">Show all →</span></div><div id="upcoming"></div></div>
       <div class="cd an a3"><div class="cd-h"><div class="cd-t">Monthly Summary 💰</div></div><div id="dashFin"></div></div>
     </div>
@@ -279,14 +227,17 @@ tr:hover td{background:var(--bg2)}
 <!-- STUDENTS -->
 <div class="page" id="page-students">
   <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:20px" class="an"><h1 style="font-size:24px;font-weight:900">👥 Students</h1><button class="btn btn-g btn-sm" onclick="openStM()">+ Add Student</button></div>
-  <div class="tabs an a1"><div class="tab on" onclick="setSV('individual')">Individual</div><div class="tab" onclick="setSV('group')">Group</div></div>
+  <div style="display:flex;gap:12px;flex-wrap:wrap;margin-bottom:16px" class="an a1">
+    <div class="tabs"><div class="tab on" onclick="setSV('individual')">Individual</div><div class="tab" onclick="setSV('group')">Group</div></div>
+    <div class="tabs"><div class="tab on" onclick="setStStatus('active')">Active</div><div class="tab" onclick="setStStatus('all')">All</div><div class="tab" onclick="setStStatus('inactive')">Inactive</div></div>
+  </div>
   <div class="cd an a2" id="stList"></div>
 </div>
 
 <!-- SESSIONS -->
 <div class="page" id="page-sessions">
   <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:20px" class="an"><h1 style="font-size:24px;font-weight:900">📝 Sessions</h1><button class="btn btn-g btn-sm" onclick="openSesM()">+ Add Session</button></div>
-  <div class="cd an a1"><div class="cd-h"><div style="display:flex;gap:8px"><div class="csel" id="csel-sfm" style="width:180px"><div class="csel-display" onclick="toggleCSel(this)">All Months</div><div class="csel-opts"></div><select id="sfm" onchange="rSes()"></select></div><div class="csel" id="csel-sfs" style="width:160px"><div class="csel-display" onclick="toggleCSel(this)">All Subjects</div><div class="csel-opts"></div><select id="sfs" onchange="rSes()"><option value="">All Subjects</option><option value="math" data-icon="🔢">Math</option><option value="physics" data-icon="⚛️">Physics</option><option value="python" data-icon="🐍">Python</option></select></div></div></div><div id="sesList"></div></div>
+  <div class="cd an a1"><div class="cd-h"><div style="display:flex;gap:8px"><div class="csel" style="width:180px"><div class="csel-display" onclick="toggleCSel(this)">All Months</div><div class="csel-opts"></div><select id="sfm" onchange="rSes()"></select></div><div class="csel" style="width:160px"><div class="csel-display" onclick="toggleCSel(this)">All Subjects</div><div class="csel-opts"></div><select id="sfs" onchange="rSes()"><option value="">All Subjects</option><option value="math" data-icon="🔢">Math</option><option value="physics" data-icon="⚛️">Physics</option><option value="python" data-icon="🐍">Python</option></select></div></div></div><div id="sesList"></div></div>
 </div>
 
 <!-- FINANCE -->
@@ -297,10 +248,10 @@ tr:hover td{background:var(--bg2)}
     <div class="tabs"><div class="tab on" onclick="setIV('overview')">Overview</div><div class="tab" onclick="setIV('student')">By Student</div><div class="tab" onclick="setIV('transactions')">All</div></div>
     <div class="tabs" id="incChTabs"><div class="tab on" onclick="setICh('all')">All</div><div class="tab" onclick="setICh('private')">🏠 Private</div><div class="tab" onclick="setICh('institute')">🏫 Institute</div></div>
   </div>
-  <div class="cd an a2"><div class="cd-h"><div class="cd-t" id="incT">Overview</div><div class="csel" id="csel-incMo" style="width:180px"><div class="csel-display" onclick="toggleCSel(this)">All Months</div><div class="csel-opts"></div><select id="incMo" onchange="rInc()"></select></div></div><div id="incB"></div></div>
+  <div class="cd an a2"><div class="cd-h"><div class="cd-t" id="incT">Overview</div><div class="csel" style="width:180px"><div class="csel-display" onclick="toggleCSel(this)">All Months</div><div class="csel-opts"></div><select id="incMo" onchange="rInc()"></select></div></div><div id="incB"></div></div>
 </div>
 
-<!-- GOOGLE EVENTS (imported) -->
+<!-- GOOGLE EVENTS -->
 <div class="page" id="page-gcalimport">
   <div class="greet an"><h1>📥 Google Calendar Events</h1><p>Import teaching events as sessions — link with students and track income</p></div>
   <div style="display:flex;gap:8px;margin-bottom:16px;flex-wrap:wrap" class="an a1">
@@ -309,10 +260,7 @@ tr:hover td{background:var(--bg2)}
     <button class="btn btn-o btn-sm" onclick="hideAllGE()">🙈 Hide All</button>
   </div>
   <div class="tabs an a1" id="gcalFilterTabs" style="margin-bottom:16px"></div>
-  <div class="cd an a2">
-    <div class="cd-h"><div class="cd-t" id="gcalImpTitle">Imported Events</div></div>
-    <div id="gcalImpList"></div>
-  </div>
+  <div class="cd an a2"><div class="cd-h"><div class="cd-t" id="gcalImpTitle">Imported Events</div></div><div id="gcalImpList"></div></div>
 </div>
 
 <!-- SETTINGS -->
@@ -320,14 +268,19 @@ tr:hover td{background:var(--bg2)}
   <div class="greet an"><h1>⚙️ Settings</h1></div>
   <div class="cd an a1"><div class="cd-t" style="margin-bottom:16px">Google Calendar</div>
     <div class="fg"><label>Client ID</label><input id="sCI" placeholder="xxxx.apps.googleusercontent.com" onchange="saveSett()"></div>
-    <div class="fg"><label>Calendar for new events (insert target)</label><input id="sCL" placeholder="primary" onchange="saveSett()"></div>
+    <div class="fg"><label>Calendar for new events</label><input id="sCL" placeholder="primary" onchange="saveSett()"></div>
     <div class="cd-t" style="margin:20px 0 12px;font-size:15px">📋 Calendars to import from</div>
-    <div id="calListPicker"><div style="color:var(--tx3);font-size:13px;padding:8px 0">Connect Google Calendar first, then click "Load My Calendars"</div></div>
+    <div id="calListPicker"><div style="color:var(--tx3);font-size:13px;padding:8px 0">Connect Google Calendar first</div></div>
     <button class="btn btn-blue btn-sm" style="margin-top:10px" onclick="fetchCalList()">📋 Load My Calendars</button>
-    <div style="padding:12px 16px;background:var(--orgL);border-radius:var(--r3);font-size:13px;color:var(--orgF);font-weight:600;margin-top:12px">⚠️ Add <code style="font-weight:800">https://napatjumpatip.github.io</code> to Authorized JavaScript Origins in Google Cloud Console</div></div>
-  <div class="cd an a2"><div class="cd-t" style="margin-bottom:16px">Default Rates (฿/hr)</div>
-    <div class="fr"><div class="fg"><label>🔢 Math</label><input type="number" id="sRM" placeholder="500" onchange="saveSett()"></div><div class="fg"><label>⚛️ Physics</label><input type="number" id="sRP" placeholder="500" onchange="saveSett()"></div></div>
-    <div class="fg" style="max-width:calc(50% - 6px)"><label>🐍 Python</label><input type="number" id="sRY" placeholder="600" onchange="saveSett()"></div></div>
+    <div style="padding:12px 16px;background:var(--orgL);border-radius:var(--r3);font-size:13px;color:var(--orgF);font-weight:600;margin-top:12px">⚠️ Add <code style="font-weight:800">https://napatjumpatip.github.io</code> to Authorized JavaScript Origins</div></div>
+  <div class="cd an a2"><div class="cd-t" style="margin-bottom:16px">🏠 Default Private Rates (฿/hr)</div>
+    <div class="fr"><div class="fg"><label>🔢 Math</label><input type="number" id="sRM" placeholder="300" onchange="saveSett()"></div><div class="fg"><label>⚛️ Physics</label><input type="number" id="sRP" placeholder="300" onchange="saveSett()"></div></div>
+    <div class="fg" style="max-width:calc(50% - 6px)"><label>🐍 Python</label><input type="number" id="sRY" placeholder="300" onchange="saveSett()"></div>
+    <div style="padding:10px 14px;background:var(--bg2);border-radius:var(--r3);font-size:12px;color:var(--tx3);margin-top:8px">💡 Individual students can have custom rates that override these defaults</div></div>
+  <div class="cd an a3"><div class="cd-t" style="margin-bottom:16px">🏫 ALG Institute Courses</div>
+    <div id="algCourseList"></div>
+    <button class="btn btn-o btn-sm" style="margin-top:10px" onclick="addAlgCourse()">+ Add Course</button>
+    <div style="padding:10px 14px;background:var(--bg2);border-radius:var(--r3);font-size:12px;color:var(--tx3);margin-top:8px">💡 Pricing: set flat fee per session OR per-hour rate. Private = 1-2 students, Group = 3+</div></div>
   <div class="cd an a3"><div class="cd-t" style="margin-bottom:16px">Data</div><div style="display:flex;gap:8px;flex-wrap:wrap"><button class="btn btn-o" onclick="expD()">📤 Export</button><button class="btn btn-o" onclick="_('impF').click()">📥 Import</button><input type="file" id="impF" accept=".json" style="display:none" onchange="impD(event)"><button class="btn btn-d" onclick="clrD()">🗑️ Clear All</button></div></div>
 </div>
 </main>
@@ -335,16 +288,15 @@ tr:hover td{background:var(--bg2)}
 
 <!-- STUDENT MODAL -->
 <div class="mo" id="stModal"><div class="mo-box"><div class="mo-t" id="stMT">Add Student</div>
-<div class="fg"><label>Nickname *</label><input id="stNK" placeholder="e.g. Beam, Ploy, Golf"></div>
-<div class="fr">
-  <div class="fg"><label>Full Name (optional)</label><input id="stN" placeholder="Full name"></div>
-  <div class="fg"><label>Year / Grade</label><input id="stYr" placeholder="e.g. ม.4, ป.1, Year 2"></div>
-</div>
-<div class="fg"><label>Start Date (first lesson)</label><input type="date" id="stSD"></div>
+<div class="fg"><label>Nickname *</label><input id="stNK" placeholder="e.g. Beam, Ploy"></div>
+<div class="fr"><div class="fg"><label>Full Name</label><input id="stN" placeholder="Optional"></div><div class="fg"><label>Year / Grade</label><input id="stYr" placeholder="e.g. ม.4, Year 2"></div></div>
+<div class="fg"><label>Start Date</label><input type="date" id="stSD"></div>
+<div class="fg"><label>Status</label><div class="csel"><div class="csel-display" onclick="toggleCSel(this)">🟢 Active</div><div class="csel-opts"></div><select id="stStat"><option value="active" data-icon="🟢">Active</option><option value="inactive" data-icon="⏸️">Inactive / Stopped</option></select></div></div>
 <div class="fg"><label>Type</label><div class="csel"><div class="csel-display" onclick="toggleCSel(this)">👤 Individual</div><div class="csel-opts"></div><select id="stTy" onchange="_('stGW').style.display=this.value==='group'?'block':'none'"><option value="individual" data-icon="👤">Individual</option><option value="group" data-icon="👥">Group</option></select></div></div>
 <div class="fg" id="stGW" style="display:none"><label>Group Name</label><input id="stGN" placeholder="Group A"></div>
 <div class="fg"><label>Subjects</label><div style="display:flex;gap:14px;flex-wrap:wrap"><label class="tw"><div class="tg" id="stSM" onclick="this.classList.toggle('on')"></div>Math</label><label class="tw"><div class="tg" id="stSP" onclick="this.classList.toggle('on')"></div>Physics</label><label class="tw"><div class="tg" id="stSY" onclick="this.classList.toggle('on')"></div>Python</label></div></div>
-<div class="fg"><label>Custom Rate (฿/hr)</label><div class="fr"><input type="number" id="stRM" placeholder="Math"><input type="number" id="stRP" placeholder="Physics"></div><div style="margin-top:8px;max-width:calc(50% - 6px)"><input type="number" id="stRY" placeholder="Python"></div></div>
+<div class="fg"><label>Custom Rate ฿/hr (overrides default — leave blank to use default)</label><div class="fr"><input type="number" id="stRM" placeholder="Math rate"><input type="number" id="stRP" placeholder="Physics rate"></div><div style="margin-top:8px;max-width:calc(50% - 6px)"><input type="number" id="stRY" placeholder="Python rate"></div></div>
+<div class="fg"><label>Commission ฿ per session (optional — e.g. referral fee from FB group)</label><input type="number" id="stComm" placeholder="0 = no commission"></div>
 <div class="fg"><label>Contact</label><input id="stC" placeholder="Phone / Line"></div>
 <div class="fg"><label>Notes</label><textarea id="stNo" rows="2" placeholder="Notes"></textarea></div>
 <div id="stYearLog" style="display:none;margin-bottom:14px"></div>
@@ -353,15 +305,21 @@ tr:hover td{background:var(--bg2)}
 
 <!-- SESSION MODAL -->
 <div class="mo" id="sesModal"><div class="mo-box"><div class="mo-t" id="sesMT">Add Session</div>
-<div class="fg"><label>Channel</label><div class="csel"><div class="csel-display" onclick="toggleCSel(this)">🏠 Private</div><div class="csel-opts"></div><select id="seCh"><option value="private" data-icon="🏠">Private (สอนส่วนตัว)</option><option value="institute" data-icon="🏫">Institute (สถาบัน)</option></select></div></div>
-<div class="fg" id="seInstWrap" style="display:none"><label>Institute Name</label><input id="seInst" placeholder="e.g. ALG, Kumon"></div>
+<div class="fg"><label>Channel</label><div class="csel"><div class="csel-display" onclick="toggleCSel(this)">🏠 Private</div><div class="csel-opts"></div><select id="seCh"><option value="private" data-icon="🏠">Private</option><option value="institute" data-icon="🏫">Institute (ALG)</option></select></div></div>
+<div class="fg" id="seInstWrap" style="display:none"><label>ALG Course</label><div class="csel"><div class="csel-display" onclick="toggleCSel(this)">-- Select --</div><div class="csel-opts"></div><select id="seAlgCourse"></select></div></div>
 <div class="fg"><label>Date</label><input type="date" id="seD"></div>
 <div class="fr"><div class="fg"><label>Start</label><input type="time" id="seS" value="17:00"></div><div class="fg"><label>End</label><input type="time" id="seE" value="18:00"></div></div>
 <div class="fg"><label>Subject</label><div class="csel"><div class="csel-display" onclick="toggleCSel(this)">🔢 Math</div><div class="csel-opts"></div><select id="seSb"><option value="math" data-icon="🔢">Math</option><option value="physics" data-icon="⚛️">Physics</option><option value="python" data-icon="🐍">Python</option></select></div></div>
 <div class="fg"><label>Student</label><div class="csel"><div class="csel-display" onclick="toggleCSel(this)">-- Select --</div><div class="csel-opts"></div><select id="seSt"></select></div></div>
+<div class="fg"><label>Group Size (for ALG pricing)</label><div class="csel"><div class="csel-display" onclick="toggleCSel(this)">👤 Private (1-2)</div><div class="csel-opts"></div><select id="seGrpSize"><option value="private" data-icon="👤">Private (1-2)</option><option value="group" data-icon="👥">Group (3+)</option></select></div></div>
 <div class="fg"><label>Topic</label><input id="seTo" placeholder="e.g. Linear equations"></div>
+<div class="fg"><label>Reminder / To-Do (optional)</label><input id="seRem" placeholder="e.g. remind parent, prepare docs"></div>
 <div class="fg"><label>Notes</label><textarea id="seNo" rows="2" placeholder="Notes"></textarea></div>
-<div class="fg"><label>Payment</label><div class="csel"><div class="csel-display" onclick="toggleCSel(this)">⏳ Unpaid</div><div class="csel-opts"></div><select id="sePd"><option value="unpaid" data-icon="⏳">Unpaid</option><option value="paid" data-icon="✅">Paid</option><option value="end-of-month" data-icon="📅">End of Month</option></select></div></div>
+<div class="fr">
+  <div class="fg"><label>Payment</label><div class="csel"><div class="csel-display" onclick="toggleCSel(this)">⏳ Unpaid</div><div class="csel-opts"></div><select id="sePd"><option value="unpaid" data-icon="⏳">Unpaid</option><option value="paid" data-icon="✅">Paid</option><option value="end-of-month" data-icon="📅">End of Month</option></select></div></div>
+  <div class="fg"><label>Custom Fee ฿ (blank = auto)</label><input type="number" id="seFee" placeholder="auto"></div>
+</div>
+<div id="seFeePreview" style="padding:10px 14px;background:var(--grnL2);border-radius:var(--r3);font-weight:700;color:var(--grn3);margin-bottom:10px;font-size:13px;display:none"></div>
 <div class="fg"><label class="tw"><div class="tg" id="seGC" onclick="this.classList.toggle('on')"></div>Add to Google Calendar</label></div>
 <input type="hidden" id="seEI">
 <div style="display:flex;gap:8px;justify-content:flex-end;margin-top:20px"><button class="btn btn-o" onclick="clM('sesModal')">Cancel</button><button class="btn btn-g" onclick="saveSes()">Save</button></div></div></div>
@@ -375,24 +333,28 @@ tr:hover td{background:var(--bg2)}
 <div class="fg"><label>Type</label><div class="csel"><div class="csel-display" onclick="toggleCSel(this)">💰 Income</div><div class="csel-opts"></div><select id="txTy"><option value="income" data-icon="💰">Income</option><option value="expense" data-icon="🛒">Expense</option></select></div></div>
 <div class="fg"><label>Date</label><input type="date" id="txDt"></div>
 <div class="fg"><label>Amount (฿)</label><input type="number" id="txAm" placeholder="0"></div>
-<div class="fg"><label>Student (optional)</label><div class="csel"><div class="csel-display" onclick="toggleCSel(this)">-- None --</div><div class="csel-opts"></div><select id="txSt"></select></div></div>
-<div class="fg"><label>Description</label><input id="txDs" placeholder="e.g. Bought textbook, treats"></div>
-<div class="fg"><label>Category</label><div class="csel"><div class="csel-display" onclick="toggleCSel(this)">📚 Tuition</div><div class="csel-opts"></div><select id="txCat"><option value="tuition" data-icon="📚">Tuition</option><option value="books" data-icon="📖">Books / Supplies</option><option value="treats" data-icon="🍰">Treats / Snacks</option><option value="transport" data-icon="🚗">Transport</option><option value="material" data-icon="📐">Teaching Material</option><option value="other" data-icon="📦">Other</option></select></div></div>
+<div class="fg"><label>Student</label><div class="csel"><div class="csel-display" onclick="toggleCSel(this)">-- None --</div><div class="csel-opts"></div><select id="txSt"></select></div></div>
+<div class="fg"><label>Description</label><input id="txDs" placeholder="e.g. textbook, treats"></div>
+<div class="fg"><label>Category</label><div class="csel"><div class="csel-display" onclick="toggleCSel(this)">📚 Tuition</div><div class="csel-opts"></div><select id="txCat"><option value="tuition" data-icon="📚">Tuition</option><option value="books" data-icon="📖">Books</option><option value="treats" data-icon="🍰">Treats</option><option value="commission" data-icon="💸">Commission</option><option value="transport" data-icon="🚗">Transport</option><option value="material" data-icon="📐">Material</option><option value="other" data-icon="📦">Other</option></select></div></div>
 <input type="hidden" id="txEI">
 <div style="display:flex;gap:8px;justify-content:flex-end;margin-top:20px"><button class="btn btn-o" onclick="clM('txModal')">Cancel</button><button class="btn btn-g" onclick="saveTx()">Save</button></div></div></div>
 
-<!-- CONVERT GCAL TO SESSION MODAL -->
+<!-- CONVERT GCAL MODAL -->
 <div class="mo" id="cvModal"><div class="mo-box"><div class="mo-t">📥 Convert to Session</div>
 <div id="cvInfo" style="padding:14px;background:var(--gcalBg);border-radius:var(--r3);margin-bottom:16px;font-size:14px;color:var(--gcalF);font-weight:600"></div>
-<div class="fg"><label>Channel</label><div class="csel"><div class="csel-display" onclick="toggleCSel(this)">🏠 Private</div><div class="csel-opts"></div><select id="cvCh"><option value="private" data-icon="🏠">Private (สอนส่วนตัว)</option><option value="institute" data-icon="🏫">Institute (สถาบัน)</option></select></div></div>
-<div class="fg" id="cvInstWrap" style="display:none"><label>Institute Name</label><input id="cvInst" placeholder="e.g. ALG"></div>
+<div class="fg"><label>Channel</label><div class="csel"><div class="csel-display" onclick="toggleCSel(this)">🏠 Private</div><div class="csel-opts"></div><select id="cvCh"><option value="private" data-icon="🏠">Private</option><option value="institute" data-icon="🏫">Institute (ALG)</option></select></div></div>
+<div class="fg" id="cvInstWrap" style="display:none"><label>ALG Course</label><div class="csel"><div class="csel-display" onclick="toggleCSel(this)">-- Select --</div><div class="csel-opts"></div><select id="cvAlgCourse"></select></div></div>
 <div class="fg"><label>Date</label><input type="date" id="cvDate" readonly style="opacity:.7"></div>
 <div class="fr"><div class="fg"><label>Start</label><input type="time" id="cvStart"></div><div class="fg"><label>End</label><input type="time" id="cvEnd"></div></div>
 <div class="fg"><label>Subject</label><div class="csel"><div class="csel-display" onclick="toggleCSel(this)">🔢 Math</div><div class="csel-opts"></div><select id="cvSubj"><option value="math" data-icon="🔢">Math</option><option value="physics" data-icon="⚛️">Physics</option><option value="python" data-icon="🐍">Python</option></select></div></div>
 <div class="fg"><label>Student</label><div class="csel"><div class="csel-display" onclick="toggleCSel(this)">-- Select --</div><div class="csel-opts"></div><select id="cvStudent"></select></div></div>
-<div class="fg"><label>Topic (from Google event title)</label><input id="cvTopic"></div>
-<div class="fg"><label>Payment</label><div class="csel"><div class="csel-display" onclick="toggleCSel(this)">⏳ Unpaid</div><div class="csel-opts"></div><select id="cvPaid"><option value="unpaid" data-icon="⏳">Unpaid</option><option value="paid" data-icon="✅">Paid</option></select></div></div>
-<div id="cvFeePreview" style="padding:12px 16px;background:var(--grnL2);border-radius:var(--r3);font-weight:800;color:var(--grn3);margin-bottom:8px"></div>
+<div class="fg"><label>Group Size</label><div class="csel"><div class="csel-display" onclick="toggleCSel(this)">👤 Private (1-2)</div><div class="csel-opts"></div><select id="cvGrpSize"><option value="private" data-icon="👤">Private (1-2)</option><option value="group" data-icon="👥">Group (3+)</option></select></div></div>
+<div class="fg"><label>Topic</label><input id="cvTopic"></div>
+<div class="fr">
+  <div class="fg"><label>Payment</label><div class="csel"><div class="csel-display" onclick="toggleCSel(this)">⏳ Unpaid</div><div class="csel-opts"></div><select id="cvPaid"><option value="unpaid" data-icon="⏳">Unpaid</option><option value="paid" data-icon="✅">Paid</option><option value="end-of-month" data-icon="📅">End of Month</option></select></div></div>
+  <div class="fg"><label>Custom Fee ฿ (blank = auto)</label><input type="number" id="cvFee" placeholder="auto"></div>
+</div>
+<div id="cvFeePreview" style="padding:10px 14px;background:var(--grnL2);border-radius:var(--r3);font-weight:700;color:var(--grn3);margin-bottom:10px;font-size:13px"></div>
 <input type="hidden" id="cvGcalId">
 <div style="display:flex;gap:8px;justify-content:flex-end;margin-top:20px"><button class="btn btn-o" onclick="clM('cvModal')">Cancel</button><button class="btn btn-g" onclick="saveConvert()">✅ Convert & Save</button></div></div></div>
 
@@ -400,90 +362,253 @@ tr:hover td{background:var(--bg2)}
 const K='tutorScheduleData',_=id=>document.getElementById(id);
 let D=loadD();
 
-function defD(){return{students:[],sessions:[],transactions:[],gcalImported:[],gcalHidden:{},gcalCalendars:[],settings:{clientId:'',calendarId:'primary',selectedCalendars:[],rateMath:500,ratePhysics:500,ratePython:600}}}
-function loadD(){try{const d=JSON.parse(localStorage.getItem(K));return d?{...defD(),...d,transactions:d.transactions||[],gcalImported:d.gcalImported||[],gcalHidden:d.gcalHidden||{},gcalCalendars:d.gcalCalendars||[],settings:{...defD().settings,...(d.settings||{}),selectedCalendars:d.settings?.selectedCalendars||[]}}:defD()}catch{return defD()}}
+// ============ DATA LAYER ============
+function defD(){return{
+  students:[],sessions:[],transactions:[],
+  gcalImported:[],gcalHidden:{},gcalCalendars:[],
+  // DATA-DRIVEN ALG COURSES — add new courses here without changing logic
+  algCourses:[
+    {id:'visprog',name:'Visual Programming / IECC',duration:1.5,privateRate:500,groupRate:600},
+    {id:'game-python',name:'Game (G5+) / Python (G7+)',duration:1.5,privateRate:600,groupRate:700}
+  ],
+  settings:{clientId:'',calendarId:'primary',selectedCalendars:[],
+    rateMath:300,ratePhysics:300,ratePython:300}
+}}
+function loadD(){
+  try{
+    const d=JSON.parse(localStorage.getItem(K));
+    if(!d)return defD();
+    const def=defD();
+    // Merge settings safely
+    d.settings={...def.settings,...(d.settings||{}),selectedCalendars:d.settings?.selectedCalendars||[]};
+    // Ensure all arrays exist
+    d.students=d.students||[];d.sessions=d.sessions||[];d.transactions=d.transactions||[];
+    d.gcalImported=d.gcalImported||[];d.gcalHidden=d.gcalHidden||{};d.gcalCalendars=d.gcalCalendars||[];
+    // Ensure algCourses exists (migrate old data)
+    if(!d.algCourses||!d.algCourses.length)d.algCourses=def.algCourses;
+    // MIGRATION: ensure every student has yearHistory array and status
+    d.students.forEach(s=>{
+      if(!Array.isArray(s.yearHistory))s.yearHistory=[];
+      if(!s.status)s.status='active';
+      if(typeof s.commission==='undefined')s.commission=0;
+    });
+    return d;
+  }catch{return defD()}
+}
 function saveD(){localStorage.setItem(K,JSON.stringify(D))}
 function uid(){return Date.now().toString(36)+Math.random().toString(36).substr(2,5)}
-
-// Toast notifications
 function toast(msg,type='info',dur=4000){const t=_('toast');t.textContent=msg;t.className='toast '+type+' show';clearTimeout(t._tid);t._tid=setTimeout(()=>t.classList.remove('show'),dur)}
 
+// ============ SUBJECTS (display config) ============
 const SB={math:{l:'Math',i:'🔢',c:'m',em:'📐'},physics:{l:'Physics',i:'⚛️',c:'ph',em:'🔭'},python:{l:'Python',i:'🐍',c:'py',em:'💻'}};
-function sbg(s){const x=SB[s]||{l:s,c:'m'};return`<span class="bg bg-${x.c}">${x.i} ${x.l}</span>`}
+function sbg(s){const x=SB[s]||{l:s,c:'m',i:'📚'};return`<span class="bg bg-${x.c}">${x.i} ${x.l}</span>`}
 function opM(id){_(id).classList.add('show')}
 function clM(id){_(id).classList.remove('show')}
-
 function go(p){document.querySelectorAll('.page').forEach(x=>x.classList.remove('active'));_('page-'+p).classList.add('active');document.querySelectorAll('.ni').forEach(n=>n.classList.remove('on'));const nav=document.querySelector(`.ni[data-p="${p}"]`);if(nav)nav.classList.add('on');_('sidebar').classList.remove('open');({dashboard:rDash,calendar:rCal,students:rStu,sessions:rSes,income:rInc,settings:loadSett,gcalimport:rGCalImp})[p]?.()}
 
-// === STUDENTS ===
-let stV='individual';
-function setSV(v){stV=v;document.querySelectorAll('#page-students .tab').forEach((t,i)=>t.classList.toggle('on',(i===0&&v==='individual')||(i===1&&v==='group')));rStu()}
-function openStM(eid){
-  if(eid){const s=D.students.find(x=>x.id===eid);if(!s)return;_('stMT').textContent='Edit Student';_('stN').value=s.name||'';_('stNK').value=s.nickname||'';_('stYr').value=s.year||'';_('stSD').value=s.startDate||'';_('stTy').value=s.type||'individual';_('stGN').value=s.groupName||'';_('stC').value=s.contact||'';_('stNo').value=s.note||'';_('stRM').value=s.rates?.math||'';_('stRP').value=s.rates?.physics||'';_('stRY').value=s.rates?.python||'';
-  _('stSM').classList.toggle('on',(s.subjects||[]).includes('math'));_('stSP').classList.toggle('on',(s.subjects||[]).includes('physics'));_('stSY').classList.toggle('on',(s.subjects||[]).includes('python'));_('stEI').value=eid;
-  // Show year history
-  const yh=s.yearHistory||[];
-  if(yh.length){let yl='<div style="padding:12px;background:var(--bg2);border-radius:var(--r3);font-size:13px"><div style="font-weight:800;margin-bottom:6px">📚 Year History</div>';yh.forEach(y=>{yl+=`<div style="color:var(--tx2)">• ${y.year} <span style="color:var(--tx3)">(since ${fDT(y.date)})</span></div>`});yl+='</div>';_('stYearLog').innerHTML=yl;_('stYearLog').style.display='block'}else{_('stYearLog').style.display='none'}}
-  else{_('stMT').textContent='Add Student';['stN','stNK','stGN','stC','stNo','stRM','stRP','stRY','stYr','stSD'].forEach(id=>_(id).value='');_('stTy').value=stV==='group'?'group':'individual';['stSM','stSP','stSY'].forEach(id=>_(id).classList.remove('on'));_('stEI').value='';_('stYearLog').style.display='none'}
-  _('stGW').style.display=_('stTy').value==='group'?'block':'none';syncCSel('stTy');opM('stModal')}
-function saveSt(){const nick=_('stNK').value.trim();if(!nick)return alert('Enter a nickname');const subs=[];if(_('stSM').classList.contains('on'))subs.push('math');if(_('stSP').classList.contains('on'))subs.push('physics');if(_('stSY').classList.contains('on'))subs.push('python');
-  const newYear=_('stYr').value.trim();
-  const d={name:_('stN').value.trim(),nickname:nick,year:newYear,startDate:_('stSD').value||'',type:_('stTy').value,groupName:_('stGN').value.trim(),subjects:subs,rates:{math:parseInt(_('stRM').value)||null,physics:parseInt(_('stRP').value)||null,python:parseInt(_('stRY').value)||null},contact:_('stC').value.trim(),note:_('stNo').value.trim()};
-  const eid=_('stEI').value;
-  if(eid){const i=D.students.findIndex(s=>s.id===eid);if(i!==-1){
-    const old=D.students[i];
-    // Auto-log year change
-    if(newYear&&old.year&&newYear!==old.year){
-      if(!old.yearHistory)old.yearHistory=[];
-      if(old.year&&!old.yearHistory.find(y=>y.year===old.year))old.yearHistory.push({year:old.year,date:old.yearChangedAt||old.createdAt||new Date().toISOString().split('T')[0]});
-      old.yearHistory.push({year:newYear,date:new Date().toISOString().split('T')[0]});
-      d.yearHistory=old.yearHistory;d.yearChangedAt=new Date().toISOString().split('T')[0];
-    }else{d.yearHistory=old.yearHistory||[]}
-    D.students[i]={...old,...d}
-  }}else{
-    d.id=uid();d.createdAt=new Date().toISOString();d.yearHistory=[];
-    if(newYear){d.yearHistory=[{year:newYear,date:d.startDate||new Date().toISOString().split('T')[0]}]}
-    if(!d.startDate)d.startDate=new Date().toISOString().split('T')[0];
-    D.students.push(d)}
-  saveD();clM('stModal');rStu()}
-function delSt(id){if(!confirm('Delete this student?'))return;D.students=D.students.filter(s=>s.id!==id);saveD();rStu()}
-function rStu(){const list=D.students.filter(s=>(s.type||'individual')===stV);const el=_('stList');
-  if(!list.length){el.innerHTML=`<div class="empty"><div class="empty-ic">👥</div>No ${stV==='group'?'group ':''}students yet<br>Click + to add</div>`;return}
-  let h='<table><thead><tr><th>Nickname</th><th>Year</th><th>Since</th>';if(stV==='group')h+='<th>Group</th>';h+='<th>Subjects</th><th>Rate</th><th>Contact</th><th></th></tr></thead><tbody>';
-  list.forEach(s=>{
-    const sessions=D.sessions.filter(x=>x.studentId===s.id);
-    h+=`<tr><td style="font-weight:800;font-size:15px">${s.nickname||s.name}${s.name&&s.nickname?` <span style="font-size:11px;color:var(--tx3)">(${s.name})</span>`:''}</td>
-    <td><span class="bg bg-gcal" style="font-size:12px">${s.year||'-'}</span></td>
-    <td style="font-size:12px;color:var(--tx3)">${s.startDate?fDT(s.startDate):'-'}</td>`;
-    if(stV==='group')h+=`<td>${s.groupName||'-'}</td>`;
-    h+=`<td>${(s.subjects||[]).map(x=>sbg(x)).join(' ')}</td><td class="mono" style="font-size:13px">${fR(s)}</td><td style="font-size:13px">${s.contact||'-'}</td><td style="white-space:nowrap"><button class="btn btn-o btn-sm" onclick="openStM('${s.id}')">✏️</button> <button class="btn btn-d btn-sm" onclick="delSt('${s.id}')">🗑️</button></td></tr>`});
-  h+='</tbody></table>';el.innerHTML=h}
-function fR(s){return(s.subjects||[]).map(sub=>{const r=s.rates?.[sub]||D.settings['rate'+sub.charAt(0).toUpperCase()+sub.slice(1)]||'-';return`${SB[sub]?.i||''} ฿${r}`}).join(' ')||'-'}
+// ============ CENTRALIZED FEE CALCULATION (THE FIX) ============
+// This is the SINGLE source of truth for pricing.
+// Priority: customFee > student-specific rate > ALG course rate > default setting rate
+function calcFee(subject, channel, hours, studentId, grpSize, algCourseId, customFee){
+  // 1. Custom fee override always wins
+  if(customFee && customFee > 0) return customFee;
+  
+  // 2. Institute (ALG) — use data-driven course config
+  if(channel === 'institute' && algCourseId){
+    const course = (D.algCourses||[]).find(c=>c.id===algCourseId);
+    if(course){
+      return grpSize==='group' ? (course.groupRate||0) : (course.privateRate||0);
+    }
+  }
+  
+  // 3. Private — student-specific rate first, then default
+  const stu = D.students.find(s=>s.id===studentId);
+  const stuRate = stu?.rates?.[subject];
+  if(stuRate && stuRate > 0) return hours * stuRate;
+  
+  // 4. Default rate from settings
+  const rateMap = {math:'rateMath',physics:'ratePhysics',python:'ratePython'};
+  const defaultRate = D.settings[rateMap[subject]] || 0;
+  return hours * defaultRate;
+}
 
-// === SESSIONS ===
-function popSel(){const s=_('seSt');s.innerHTML='<option value="">-- Select --</option>';D.students.forEach(st=>{s.innerHTML+=`<option value="${st.id}">${st.nickname?st.name+' ('+st.nickname+')':st.name}</option>`});syncCSel('seSt')}
-function openSesM(eid,pd){popSel();if(eid){const s=D.sessions.find(x=>x.id===eid);if(!s)return;_('sesMT').textContent='Edit Session';_('seD').value=s.date;_('seS').value=s.start;_('seE').value=s.end;_('seSb').value=s.subject;_('seSt').value=s.studentId||'';_('seTo').value=s.topic||'';_('seNo').value=s.note||'';_('sePd').value=s.paid||'unpaid';_('seCh').value=s.channel||'private';_('seInst').value=s.institute||'';_('seEI').value=eid}
-  else{_('sesMT').textContent='Add Session';_('seD').value=pd||new Date().toISOString().split('T')[0];_('seS').value='17:00';_('seE').value='18:00';_('seSb').value='math';_('seSt').value='';_('seTo').value='';_('seNo').value='';_('sePd').value='unpaid';_('seCh').value='private';_('seInst').value='';_('seEI').value=''}
+// ============ ALG COURSE MANAGEMENT (DATA-DRIVEN) ============
+function renderAlgCourses(){
+  const el=_('algCourseList');if(!el)return;
+  const courses=D.algCourses||[];
+  if(!courses.length){el.innerHTML='<div style="color:var(--tx3);font-size:13px">No courses configured</div>';return}
+  let h='';
+  courses.forEach((c,i)=>{
+    h+=`<div class="imp-item" style="margin-bottom:8px"><div style="flex:1">
+      <div style="font-weight:700">${c.name} <span style="color:var(--tx3);font-size:12px">(${c.duration}hr)</span></div>
+      <div style="font-size:12px;color:var(--tx2)">👤 Private: ฿${c.privateRate} · 👥 Group: ฿${c.groupRate}</div>
+    </div><button class="btn btn-d btn-sm" onclick="delAlgCourse(${i})">🗑️</button></div>`;
+  });
+  el.innerHTML=h;
+}
+function addAlgCourse(){
+  const name=prompt('Course name (e.g. "Robotics"):');if(!name)return;
+  const dur=parseFloat(prompt('Duration in hours (e.g. 1.5):'))||1.5;
+  const priv=parseInt(prompt('Private rate ฿ (1-2 students):'))||500;
+  const grp=parseInt(prompt('Group rate ฿ (3+ students):'))||600;
+  D.algCourses.push({id:uid(),name,duration:dur,privateRate:priv,groupRate:grp});
+  saveD();renderAlgCourses();toast('✅ Course added','ok');
+}
+function delAlgCourse(i){if(!confirm('Delete this course?'))return;D.algCourses.splice(i,1);saveD();renderAlgCourses()}
+function popAlgSel(selId){
+  const sel=_(selId);if(!sel)return;
+  sel.innerHTML='<option value="">-- Select Course --</option>';
+  (D.algCourses||[]).forEach(c=>{sel.innerHTML+=`<option value="${c.id}" data-icon="🏫">${c.name} (฿${c.privateRate}/฿${c.groupRate})</option>`});
+}
+
+// ============ STUDENTS ============
+let stV='individual', stStatusFilter='active';
+function setSV(v){stV=v;document.querySelectorAll('#page-students .tabs:first-of-type .tab').forEach((t,i)=>t.classList.toggle('on',(i===0&&v==='individual')||(i===1&&v==='group')));rStu()}
+function setStStatus(v){stStatusFilter=v;document.querySelectorAll('#page-students .tabs:nth-of-type(2) .tab').forEach((t,i)=>t.classList.toggle('on',['active','all','inactive'][i]===v));rStu()}
+function openStM(eid){
+  const el=id=>_(id);
+  if(eid){
+    const s=D.students.find(x=>x.id===eid);if(!s)return;
+    el('stMT').textContent='Edit Student';el('stN').value=s.name||'';el('stNK').value=s.nickname||'';
+    el('stYr').value=s.year||'';el('stSD').value=s.startDate||'';el('stStat').value=s.status||'active';
+    el('stTy').value=s.type||'individual';el('stGN').value=s.groupName||'';
+    el('stC').value=s.contact||'';el('stNo').value=s.note||'';el('stComm').value=s.commission||'';
+    el('stRM').value=s.rates?.math||'';el('stRP').value=s.rates?.physics||'';el('stRY').value=s.rates?.python||'';
+    el('stSM').classList.toggle('on',(s.subjects||[]).includes('math'));
+    el('stSP').classList.toggle('on',(s.subjects||[]).includes('physics'));
+    el('stSY').classList.toggle('on',(s.subjects||[]).includes('python'));
+    el('stEI').value=eid;
+    // Show year history
+    const yh=s.yearHistory||[];
+    if(yh.length){let yl='<div style="padding:12px;background:var(--bg2);border-radius:var(--r3);font-size:13px"><div style="font-weight:800;margin-bottom:6px">📚 Year History</div>';yh.forEach(y=>{yl+=`<div style="color:var(--tx2)">• ${y.year} <span style="color:var(--tx3)">(since ${fDT(y.date)})</span></div>`});yl+='</div>';el('stYearLog').innerHTML=yl;el('stYearLog').style.display='block'}else{el('stYearLog').style.display='none'}
+  }else{
+    el('stMT').textContent='Add Student';
+    ['stN','stNK','stGN','stC','stNo','stRM','stRP','stRY','stYr','stSD','stComm'].forEach(id=>_(id).value='');
+    el('stStat').value='active';el('stTy').value=stV==='group'?'group':'individual';
+    ['stSM','stSP','stSY'].forEach(id=>_(id).classList.remove('on'));
+    el('stEI').value='';el('stYearLog').style.display='none';
+  }
+  _('stGW').style.display=_('stTy').value==='group'?'block':'none';
+  syncCSel('stTy');syncCSel('stStat');opM('stModal');
+}
+function saveSt(){
+  const nick=_('stNK').value.trim();if(!nick)return alert('Enter a nickname');
+  const subs=[];if(_('stSM').classList.contains('on'))subs.push('math');if(_('stSP').classList.contains('on'))subs.push('physics');if(_('stSY').classList.contains('on'))subs.push('python');
+  const newYear=_('stYr').value.trim();
+  const d={name:_('stN').value.trim(),nickname:nick,year:newYear,startDate:_('stSD').value||'',
+    status:_('stStat').value||'active',type:_('stTy').value,groupName:_('stGN').value.trim(),subjects:subs,
+    rates:{math:parseInt(_('stRM').value)||null,physics:parseInt(_('stRP').value)||null,python:parseInt(_('stRY').value)||null},
+    commission:parseInt(_('stComm').value)||0,contact:_('stC').value.trim(),note:_('stNo').value.trim()};
+  const eid=_('stEI').value;
+  if(eid){
+    const i=D.students.findIndex(s=>s.id===eid);if(i!==-1){
+      const old=D.students[i];
+      d.yearHistory=old.yearHistory||[];
+      // Auto-log year change
+      if(newYear && old.year && newYear!==old.year){
+        d.yearHistory.push({year:newYear,date:new Date().toISOString().split('T')[0]});
+      }else if(newYear && !old.year){
+        d.yearHistory.push({year:newYear,date:d.startDate||new Date().toISOString().split('T')[0]});
+      }
+      D.students[i]={...old,...d};
+    }
+  }else{
+    d.id=uid();d.createdAt=new Date().toISOString();
+    d.yearHistory=newYear?[{year:newYear,date:d.startDate||new Date().toISOString().split('T')[0]}]:[];
+    if(!d.startDate)d.startDate=new Date().toISOString().split('T')[0];
+    D.students.push(d);
+  }
+  saveD();clM('stModal');rStu();
+}
+function delSt(id){if(!confirm('Delete this student?'))return;D.students=D.students.filter(s=>s.id!==id);saveD();rStu()}
+function rStu(){
+  let list=D.students.filter(s=>(s.type||'individual')===stV);
+  if(stStatusFilter==='active')list=list.filter(s=>(s.status||'active')==='active');
+  else if(stStatusFilter==='inactive')list=list.filter(s=>s.status==='inactive');
+  const el=_('stList');
+  if(!list.length){el.innerHTML='<div class="empty"><div class="empty-ic">👥</div>No students<br>Click + to add</div>';return}
+  let h='<table><thead><tr><th>Nickname</th><th>Year</th><th>Rate</th><th>Comm.</th><th>Since</th><th>Status</th><th></th></tr></thead><tbody>';
+  list.forEach(s=>{
+    const isInactive=s.status==='inactive';
+    h+=`<tr class="${isInactive?'inactive-row':''}">
+      <td style="font-weight:800;font-size:15px">${s.nickname||s.name}${s.name&&s.nickname?` <span style="font-size:11px;color:var(--tx3)">(${s.name})</span>`:''}</td>
+      <td><span class="bg bg-gcal" style="font-size:12px">${s.year||'-'}</span></td>
+      <td class="mono" style="font-size:12px">${fR(s)}</td>
+      <td class="mono" style="font-size:12px">${s.commission?'฿'+s.commission:'-'}</td>
+      <td style="font-size:12px;color:var(--tx3)">${s.startDate?fDT(s.startDate):'-'}</td>
+      <td>${isInactive?'<span class="bg bg-inactive">⏸️ Stopped</span>':'<span class="bg bg-pd">🟢 Active</span>'}</td>
+      <td style="white-space:nowrap"><button class="btn btn-o btn-sm" onclick="openStM('${s.id}')">✏️</button> <button class="btn btn-d btn-sm" onclick="delSt('${s.id}')">🗑️</button></td></tr>`;
+  });
+  h+='</tbody></table>';el.innerHTML=h;
+}
+function fR(s){return(s.subjects||[]).map(sub=>{const r=s.rates?.[sub]||D.settings['rate'+(sub==='math'?'Math':sub==='physics'?'Physics':'Python')]||'-';return`${SB[sub]?.i||''} ฿${r}`}).join(' ')||'-'}
+
+// ============ SESSIONS ============
+function popSel(){const s=_('seSt');s.innerHTML='<option value="">-- Select --</option>';D.students.filter(st=>(st.status||'active')==='active').forEach(st=>{s.innerHTML+=`<option value="${st.id}">${st.nickname||st.name}</option>`});syncCSel('seSt')}
+function openSesM(eid,pd){
+  popSel();popAlgSel('seAlgCourse');
+  if(eid){const s=D.sessions.find(x=>x.id===eid);if(!s)return;_('sesMT').textContent='Edit Session';
+    _('seD').value=s.date;_('seS').value=s.start;_('seE').value=s.end;_('seSb').value=s.subject;_('seSt').value=s.studentId||'';
+    _('seTo').value=s.topic||'';_('seNo').value=s.note||'';_('sePd').value=s.paid||'unpaid';
+    _('seCh').value=s.channel||'private';_('seAlgCourse').value=s.algCourseId||'';_('seGrpSize').value=s.grpSize||'private';
+    _('seFee').value=s.customFee||'';_('seRem').value=s.reminder||'';_('seEI').value=eid}
+  else{_('sesMT').textContent='Add Session';_('seD').value=pd||new Date().toISOString().split('T')[0];
+    _('seS').value='17:00';_('seE').value='18:00';_('seSb').value='math';_('seSt').value='';
+    _('seTo').value='';_('seNo').value='';_('sePd').value='unpaid';_('seCh').value='private';
+    _('seAlgCourse').value='';_('seGrpSize').value='private';_('seFee').value='';_('seRem').value='';_('seEI').value=''}
   _('seInstWrap').style.display=_('seCh').value==='institute'?'block':'none';
-  syncCSel('seSb');syncCSel('seSt');syncCSel('sePd');syncCSel('seCh');_('seGC').classList.remove('on');opM('sesModal')}
-function saveSes(){const date=_('seD').value;if(!date)return alert('Select a date');const d={date,start:_('seS').value,end:_('seE').value,subject:_('seSb').value,studentId:_('seSt').value,topic:_('seTo').value.trim(),note:_('seNo').value.trim(),paid:_('sePd').value,channel:_('seCh').value,institute:_('seInst').value.trim()};
-  const[sh,sm]=d.start.split(':').map(Number),[eh,em]=d.end.split(':').map(Number);d.hours=Math.max(0,((eh*60+em)-(sh*60+sm))/60);
-  const stu=D.students.find(s=>s.id===d.studentId);const rk='rate'+d.subject.charAt(0).toUpperCase()+d.subject.slice(1);d.fee=d.hours*(stu?.rates?.[d.subject]||D.settings[rk]||0);
-  const eid=_('seEI').value;if(eid){const i=D.sessions.findIndex(s=>s.id===eid);if(i!==-1)D.sessions[i]={...D.sessions[i],...d}}else{d.id=uid();d.createdAt=new Date().toISOString();d.attendance='present';D.sessions.push(d)}
+  syncCSel('seSb');syncCSel('seSt');syncCSel('sePd');syncCSel('seCh');syncCSel('seAlgCourse');syncCSel('seGrpSize');
+  _('seGC').classList.remove('on');updateSeFee();opM('sesModal');
+}
+function updateSeFee(){
+  const start=_('seS')?.value,end=_('seE')?.value,subj=_('seSb')?.value,stId=_('seSt')?.value;
+  const ch=_('seCh')?.value||'private',algId=_('seAlgCourse')?.value,grp=_('seGrpSize')?.value;
+  const custom=parseFloat(_('seFee')?.value);
+  if(!start||!end){_('seFeePreview').style.display='none';return}
+  const[sh,sm]=start.split(':').map(Number),[eh,em]=end.split(':').map(Number);
+  const hours=Math.max(0,((eh*60+em)-(sh*60+sm))/60);
+  const fee=calcFee(subj,ch,hours,stId,grp,algId,custom>0?custom:null);
+  const stu=D.students.find(s=>s.id===stId);
+  const comm=stu?.commission||0;
+  let txt=`💰 Fee: ฿${fee.toLocaleString()} (${hours.toFixed(1)} hrs)`;
+  if(comm)txt+=` · 💸 Commission: ฿${comm} · Net: ฿${(fee-comm).toLocaleString()}`;
+  _('seFeePreview').innerHTML=txt;_('seFeePreview').style.display='block';
+}
+function saveSes(){
+  const date=_('seD').value;if(!date)return alert('Select a date');
+  const start=_('seS').value,end=_('seE').value;
+  const[sh,sm]=start.split(':').map(Number),[eh,em]=end.split(':').map(Number);
+  const hours=Math.max(0,((eh*60+em)-(sh*60+sm))/60);
+  const ch=_('seCh').value,algId=_('seAlgCourse').value,grp=_('seGrpSize').value;
+  const stId=_('seSt').value;const customFee=parseFloat(_('seFee').value);
+  const fee=calcFee(_('seSb').value,ch,hours,stId,grp,algId,customFee>0?customFee:null);
+  const stu=D.students.find(s=>s.id===stId);
+  
+  const d={date,start,end,subject:_('seSb').value,studentId:stId,topic:_('seTo').value.trim(),
+    note:_('seNo').value.trim(),paid:_('sePd').value,channel:ch,algCourseId:algId,grpSize:grp,
+    hours,fee,customFee:customFee>0?customFee:null,
+    reminder:_('seRem').value.trim(),reminderDone:false,
+    commission:stu?.commission||0};
+  const eid=_('seEI').value;
+  if(eid){const i=D.sessions.findIndex(s=>s.id===eid);if(i!==-1)D.sessions[i]={...D.sessions[i],...d}}
+  else{d.id=uid();d.createdAt=new Date().toISOString();d.attendance='present';D.sessions.push(d)}
   const wantGCal=_('seGC').classList.contains('on');
-  saveD();clM('sesModal');rSes();rCal();
+  saveD();clM('sesModal');rSes();rCal();rDash();
   if(wantGCal)addGCal(d);
 }
 function delSes(id){if(!confirm('Delete?'))return;D.sessions=D.sessions.filter(s=>s.id!==id);saveD();rSes()}
-function rSes(){popMF('sfm');syncCSel('sfs');const fm=_('sfm').value,fs=_('sfs').value;let list=[...D.sessions].sort((a,b)=>b.date.localeCompare(a.date)||(b.start||'').localeCompare(a.start||''));
+function rSes(){
+  popMF('sfm');syncCSel('sfs');const fm=_('sfm').value,fs=_('sfs').value;
+  let list=[...D.sessions].sort((a,b)=>b.date.localeCompare(a.date)||(b.start||'').localeCompare(a.start||''));
   if(fm)list=list.filter(s=>s.date.startsWith(fm));if(fs)list=list.filter(s=>s.subject===fs);
   if(!list.length){_('sesList').innerHTML='<div class="empty"><div class="empty-ic">📝</div>No sessions</div>';return}
   let h='<table><thead><tr><th>Date</th><th>Time</th><th>Ch.</th><th>Subject</th><th>Student</th><th>Topic</th><th>Hrs</th><th>Fee</th><th>Status</th><th></th></tr></thead><tbody>';
   list.forEach(s=>{const st=D.students.find(x=>x.id===s.studentId);const chBg=s.channel==='institute'?'bg-gcal':'bg-pd';
-    h+=`<tr><td style="white-space:nowrap">${fDT(s.date)}</td><td class="mono" style="font-size:13px">${s.start}-${s.end}</td><td><span class="bg ${chBg}" style="font-size:10px">${s.channel==='institute'?'🏫 '+(s.institute||'Inst.'):'🏠'}</span></td><td>${sbg(s.subject)}</td><td style="font-weight:700">${st?(st.nickname||st.name):'-'}</td><td style="font-size:13px">${s.topic||'-'}</td><td class="mono">${s.hours?.toFixed(1)||'-'}</td><td class="mono" style="font-weight:800">฿${(s.fee||0).toLocaleString()}</td><td>${s.paid==='paid'?'<span class="bg bg-pd">Paid</span>':s.paid==='end-of-month'?'<span class="bg bg-gcal">End of Mo.</span>':'<span class="bg bg-up">Unpaid</span>'}</td><td style="white-space:nowrap"><button class="btn btn-o btn-sm" onclick="openAtt('${s.id}')">📋</button> <button class="btn btn-o btn-sm" onclick="openSesM('${s.id}')">✏️</button> <button class="btn btn-d btn-sm" onclick="delSes('${s.id}')">🗑️</button></td></tr>`});
+    const hasRem=s.reminder&&!s.reminderDone;
+    h+=`<tr><td style="white-space:nowrap">${fDT(s.date)}${hasRem?' 🔔':''}</td><td class="mono" style="font-size:13px">${s.start}-${s.end}</td><td><span class="bg ${chBg}" style="font-size:10px">${s.channel==='institute'?'🏫':'🏠'}</span></td><td>${sbg(s.subject)}</td><td style="font-weight:700">${st?(st.nickname||st.name):'-'}</td><td style="font-size:13px">${s.topic||'-'}</td><td class="mono">${s.hours?.toFixed(1)||'-'}</td><td class="mono" style="font-weight:800">฿${(s.fee||0).toLocaleString()}</td><td>${s.paid==='paid'?'<span class="bg bg-pd">Paid</span>':s.paid==='end-of-month'?'<span class="bg bg-gcal">EoM</span>':'<span class="bg bg-up">Unpaid</span>'}</td><td style="white-space:nowrap"><button class="btn btn-o btn-sm" onclick="openAtt('${s.id}')">📋</button> <button class="btn btn-o btn-sm" onclick="openSesM('${s.id}')">✏️</button> <button class="btn btn-d btn-sm" onclick="delSes('${s.id}')">🗑️</button></td></tr>`});
   h+='</tbody></table>';_('sesList').innerHTML=h}
 
-// === ATTENDANCE ===
+// ============ ATTENDANCE ============
 function openAtt(sid){const s=D.sessions.find(x=>x.id===sid);if(!s)return;const st=D.students.find(x=>x.id===s.studentId);const att=s.attendance||'present';const nm=st?(st.nickname||st.name):'Unknown';
   let h=`<div style="margin-bottom:14px;font-weight:800">${fDT(s.date)} · ${s.start}-${s.end} · ${sbg(s.subject)}</div>`;
   h+=`<div class="at-r"><div class="at-c ${att==='present'?'ck':att==='absent'?'ab':''}" id="ac_${s.id}" onclick="cyc(this)">${att==='present'?'✓':att==='absent'?'✗':''}</div><div style="flex:1"><div style="font-weight:800">${nm}</div><div style="font-size:12px;color:var(--tx3)" id="al_${s.id}">${att==='present'?'✅ Present':att==='absent'?'❌ Absent':'⬜ Not checked'}</div></div></div>`;
@@ -492,8 +617,28 @@ function openAtt(sid){const s=D.sessions.find(x=>x.id===sid);if(!s)return;const 
 function cyc(el){const sid=_('attB').dataset.sid;const lb=_('al_'+sid);if(el.classList.contains('ck')){el.classList.remove('ck');el.classList.add('ab');el.textContent='✗';lb.textContent='❌ Absent'}else if(el.classList.contains('ab')){el.classList.remove('ab');el.textContent='';lb.textContent='⬜ Not checked'}else{el.classList.add('ck');el.textContent='✓';lb.textContent='✅ Present'}}
 function saveAtt(){const sid=_('attB').dataset.sid;const s=D.sessions.find(x=>x.id===sid);if(!s)return;const ck=_('ac_'+sid);s.attendance=ck.classList.contains('ck')?'present':ck.classList.contains('ab')?'absent':'none';s.attendNote=_('aNo').value.trim();saveD();clM('attModal');rSes()}
 
-// === TRANSACTIONS ===
-function popTxSt(){const s=_('txSt');s.innerHTML='<option value="">-- None --</option>';D.students.forEach(st=>{s.innerHTML+=`<option value="${st.id}">${st.nickname?st.name+' ('+st.nickname+')':st.name}</option>`});syncCSel('txSt')}
+// ============ REMINDERS ============
+function getReminders(){return D.sessions.filter(s=>s.reminder&&!s.reminderDone).sort((a,b)=>a.date.localeCompare(b.date))}
+function toggleRemDone(sesId){const s=D.sessions.find(x=>x.id===sesId);if(s){s.reminderDone=!s.reminderDone;saveD();rDash()}}
+function renderReminders(){
+  const rems=getReminders();
+  const card=_('dashRemCard');const cont=_('dashReminders');
+  _('sbRemCount').textContent=rems.length?`${rems.length} pending reminder${rems.length>1?'s':''}!`:'No pending reminders';
+  if(!rems.length){card.style.display='none';return}
+  card.style.display='block';
+  let h='';
+  rems.slice(0,5).forEach(s=>{
+    const st=D.students.find(x=>x.id===s.studentId);
+    h+=`<div class="rem-item"><div class="rem-ck" onclick="toggleRemDone('${s.id}')"></div><div style="flex:1">
+      <div style="font-weight:700;font-size:13px">${s.reminder}</div>
+      <div style="font-size:11px;color:var(--tx3)">${fDT(s.date)} · ${st?(st.nickname||st.name):'-'} · ${sbg(s.subject)}</div>
+    </div></div>`;
+  });
+  cont.innerHTML=h;
+}
+
+// ============ TRANSACTIONS ============
+function popTxSt(){const s=_('txSt');s.innerHTML='<option value="">-- None --</option>';D.students.forEach(st=>{s.innerHTML+=`<option value="${st.id}">${st.nickname||st.name}</option>`});syncCSel('txSt')}
 function openTxM(eid){popTxSt();if(eid){const t=D.transactions.find(x=>x.id===eid);if(!t)return;_('txMT').textContent='Edit Transaction';_('txTy').value=t.type;_('txDt').value=t.date;_('txAm').value=t.amount;_('txSt').value=t.studentId||'';_('txDs').value=t.desc||'';_('txCat').value=t.category||'other';_('txEI').value=eid}
   else{_('txMT').textContent='Add Transaction';_('txTy').value='expense';_('txDt').value=new Date().toISOString().split('T')[0];_('txAm').value='';_('txSt').value='';_('txDs').value='';_('txCat').value='other';_('txEI').value=''}
   syncCSel('txTy');syncCSel('txSt');syncCSel('txCat');opM('txModal')}
@@ -502,250 +647,184 @@ function saveTx(){const date=_('txDt').value;if(!date)return alert('Select a dat
   const eid=_('txEI').value;if(eid){const i=D.transactions.findIndex(t=>t.id===eid);if(i!==-1)D.transactions[i]={...D.transactions[i],...d}}else{d.id=uid();d.createdAt=new Date().toISOString();D.transactions.push(d)}saveD();clM('txModal');rInc()}
 function delTx(id){if(!confirm('Delete?'))return;D.transactions=D.transactions.filter(t=>t.id!==id);saveD();rInc()}
 
-const CATS={tuition:'Tuition',books:'Books / Supplies',treats:'Treats / Snacks',transport:'Transport',material:'Teaching Material',other:'Other'};
-let incV='overview';
-let incCh='all';
+const CATS={tuition:'Tuition',books:'Books',treats:'Treats',commission:'Commission',transport:'Transport',material:'Material',other:'Other'};
+let incV='overview',incCh='all';
 function setIV(v){incV=v;document.querySelectorAll('#page-income .tabs:first-of-type .tab').forEach((t,i)=>t.classList.toggle('on',['overview','student','transactions'][i]===v));rInc()}
 function setICh(c){incCh=c;document.querySelectorAll('#incChTabs .tab').forEach((t,i)=>t.classList.toggle('on',['all','private','institute'][i]===c));rInc()}
-function rInc(){popMF('incMo');const fm=_('incMo').value;let ses=[...D.sessions];if(fm)ses=ses.filter(s=>s.date.startsWith(fm));let txs=[...D.transactions];if(fm)txs=txs.filter(t=>t.date.startsWith(fm));
-  // Channel filter
+function rInc(){
+  popMF('incMo');const fm=_('incMo').value;
+  let ses=[...D.sessions];if(fm)ses=ses.filter(s=>s.date.startsWith(fm));
+  let txs=[...D.transactions];if(fm)txs=txs.filter(t=>t.date.startsWith(fm));
   if(incCh!=='all')ses=ses.filter(s=>(s.channel||'private')===incCh);
-  const sI=ses.reduce((s,x)=>s+(x.fee||0),0),tI=txs.filter(t=>t.type==='income').reduce((s,x)=>s+x.amount,0),totI=sI+tI;
-  const totE=txs.filter(t=>t.type==='expense').reduce((s,x)=>s+x.amount,0),net=totI-totE;
-  const unpd=ses.filter(s=>s.paid!=='paid').reduce((s,x)=>s+(x.fee||0),0);
-  _('incSt').innerHTML=`<div class="st g an"><div class="st-ic">💰</div><div class="st-lb">Total Income</div><div class="st-v">฿${totI.toLocaleString()}</div><div class="st-s">Tuition ฿${sI.toLocaleString()} + Other ฿${tI.toLocaleString()}</div></div>
-    <div class="st p an a1"><div class="st-ic">🛒</div><div class="st-lb">Total Expense</div><div class="st-v">฿${totE.toLocaleString()}</div></div>
+  const sI=ses.reduce((s,x)=>s+(x.fee||0),0);
+  const commTotal=ses.reduce((s,x)=>s+(x.commission||0),0);
+  const tI=txs.filter(t=>t.type==='income').reduce((s,x)=>s+x.amount,0);
+  const totI=sI+tI;
+  const totE=txs.filter(t=>t.type==='expense').reduce((s,x)=>s+x.amount,0)+commTotal;
+  const net=totI-totE;
+  const unpd=ses.filter(s=>s.paid!=='paid'&&s.paid!=='end-of-month').reduce((s,x)=>s+(x.fee||0),0);
+  _('incSt').innerHTML=`<div class="st g an"><div class="st-ic">💰</div><div class="st-lb">Gross Income</div><div class="st-v">฿${totI.toLocaleString()}</div><div class="st-s">Tuition ฿${sI.toLocaleString()}</div></div>
+    <div class="st p an a1"><div class="st-ic">🛒</div><div class="st-lb">Expenses + Comm.</div><div class="st-v">฿${totE.toLocaleString()}</div><div class="st-s">Comm: ฿${commTotal.toLocaleString()}</div></div>
     <div class="st b an a2"><div class="st-ic">📊</div><div class="st-lb">Net Profit</div><div class="st-v">฿${net.toLocaleString()}</div></div>
     <div class="st o an a3"><div class="st-ic">⏳</div><div class="st-lb">Unpaid</div><div class="st-v">฿${unpd.toLocaleString()}</div></div>`;
   _('incT').textContent={overview:'Overview',student:'By Student',transactions:'All Transactions'}[incV];
-  if(incV==='overview'){let h='<table><thead><tr><th>Subject</th><th>Sessions</th><th>Hours</th><th>Income</th><th>Unpaid</th></tr></thead><tbody>';
-    ['math','physics','python'].forEach(sub=>{const ss=ses.filter(s=>s.subject===sub);h+=`<tr><td>${sbg(sub)}</td><td class="mono">${ss.length}</td><td class="mono">${ss.reduce((s,x)=>s+(x.hours||0),0).toFixed(1)}</td><td class="mono" style="font-weight:800">฿${ss.reduce((s,x)=>s+(x.fee||0),0).toLocaleString()}</td><td class="mono" style="color:var(--orgF)">฿${ss.filter(s=>s.paid!=='paid').reduce((s,x)=>s+(x.fee||0),0).toLocaleString()}</td></tr>`});
-    h+='</tbody></table>';h+='<div style="margin-top:24px"><div class="cd-t" style="margin-bottom:12px">Expenses by Category</div><table><thead><tr><th>Category</th><th>Count</th><th>Total</th></tr></thead><tbody>';
-    const ct={};txs.filter(t=>t.type==='expense').forEach(t=>{if(!ct[t.category])ct[t.category]={n:0,t:0};ct[t.category].n++;ct[t.category].t+=t.amount});
-    Object.entries(ct).forEach(([c,d])=>{h+=`<tr><td style="font-weight:700">${CATS[c]||c}</td><td class="mono">${d.n}</td><td class="mono" style="font-weight:800;color:var(--redF)">฿${d.t.toLocaleString()}</td></tr>`});
-    if(!Object.keys(ct).length)h+='<tr><td colspan="3" style="color:var(--tx3);text-align:center;padding:20px">No expenses</td></tr>';
-    h+='</tbody></table></div>';_('incB').innerHTML=h}
-  else if(incV==='student'){let h='<table><thead><tr><th>Student</th><th>Sessions</th><th>Income</th><th>Expenses</th><th>Net</th><th>Unpaid</th></tr></thead><tbody>';
-    const bs={};ses.forEach(s=>{const k=s.studentId||'_';if(!bs[k])bs[k]={n:0,i:0,e:0,u:0};bs[k].n++;bs[k].i+=s.fee||0;if(s.paid!=='paid')bs[k].u+=s.fee||0});
-    txs.forEach(t=>{if(!t.studentId)return;if(!bs[t.studentId])bs[t.studentId]={n:0,i:0,e:0,u:0};if(t.type==='income')bs[t.studentId].i+=t.amount;else bs[t.studentId].e+=t.amount});
-    Object.entries(bs).forEach(([id,d])=>{const st=D.students.find(s=>s.id===id);h+=`<tr><td style="font-weight:800">${st?(st.nickname||st.name):'Unknown'}</td><td class="mono">${d.n}</td><td class="mono" style="color:var(--grn3);font-weight:800">฿${d.i.toLocaleString()}</td><td class="mono" style="color:var(--redF)">฿${d.e.toLocaleString()}</td><td class="mono" style="font-weight:800">฿${(d.i-d.e).toLocaleString()}</td><td>${d.u>0?`<span class="bg bg-up">฿${d.u.toLocaleString()}</span>`:'<span class="bg bg-pd">✅</span>'}</td></tr>`});
-    if(!Object.keys(bs).length)h+='<tr><td colspan="6" class="empty">No data</td></tr>';h+='</tbody></table>';_('incB').innerHTML=h}
-  else{const all=[];ses.forEach(s=>{all.push({date:s.date,type:'income',amount:s.fee||0,desc:`Tuition — ${SB[s.subject]?.l||s.subject}`,studentId:s.studentId,category:'tuition',src:'ses',id:s.id})});txs.forEach(t=>{all.push({...t,src:'tx'})});all.sort((a,b)=>b.date.localeCompare(a.date));
-    let h='<table><thead><tr><th>Date</th><th>Type</th><th>Description</th><th>Student</th><th>Category</th><th>Amount</th><th></th></tr></thead><tbody>';
-    all.forEach(t=>{const st=D.students.find(s=>s.id===t.studentId);const isI=t.type==='income';h+=`<tr><td style="white-space:nowrap">${fDT(t.date)}</td><td>${isI?'<span class="bg bg-in">Income</span>':'<span class="bg bg-ex">Expense</span>'}</td><td style="font-size:13px">${t.desc||'-'}</td><td>${st?(st.nickname||st.name):'-'}</td><td style="font-size:13px">${CATS[t.category]||t.category||'-'}</td><td class="mono" style="font-weight:800;color:${isI?'var(--grn3)':'var(--redF)'}">฿${(t.amount||0).toLocaleString()}</td><td>${t.src==='tx'?`<button class="btn btn-o btn-sm" onclick="openTxM('${t.id}')">✏️</button> <button class="btn btn-d btn-sm" onclick="delTx('${t.id}')">🗑️</button>`:''}</td></tr>`});
-    if(!all.length)h+='<tr><td colspan="7" class="empty">No transactions</td></tr>';h+='</tbody></table>';_('incB').innerHTML=h}
+  if(incV==='overview'){
+    let h='<table><thead><tr><th>Subject</th><th>Sessions</th><th>Hours</th><th>Income</th><th>Commission</th></tr></thead><tbody>';
+    ['math','physics','python'].forEach(sub=>{const ss=ses.filter(s=>s.subject===sub);
+      h+=`<tr><td>${sbg(sub)}</td><td class="mono">${ss.length}</td><td class="mono">${ss.reduce((s,x)=>s+(x.hours||0),0).toFixed(1)}</td><td class="mono" style="font-weight:800">฿${ss.reduce((s,x)=>s+(x.fee||0),0).toLocaleString()}</td><td class="mono" style="color:var(--orgF)">฿${ss.reduce((s,x)=>s+(x.commission||0),0).toLocaleString()}</td></tr>`});
+    h+='</tbody></table>';_('incB').innerHTML=h}
+  else if(incV==='student'){
+    let h='<table><thead><tr><th>Student</th><th>Sessions</th><th>Income</th><th>Commission</th><th>Net</th></tr></thead><tbody>';
+    const bs={};ses.forEach(s=>{const k=s.studentId||'_';if(!bs[k])bs[k]={n:0,i:0,c:0};bs[k].n++;bs[k].i+=s.fee||0;bs[k].c+=s.commission||0});
+    Object.entries(bs).forEach(([id,d])=>{const st=D.students.find(s=>s.id===id);
+      h+=`<tr><td style="font-weight:800">${st?(st.nickname||st.name):'Unknown'}</td><td class="mono">${d.n}</td><td class="mono" style="color:var(--grn3);font-weight:800">฿${d.i.toLocaleString()}</td><td class="mono" style="color:var(--orgF)">฿${d.c.toLocaleString()}</td><td class="mono" style="font-weight:800">฿${(d.i-d.c).toLocaleString()}</td></tr>`});
+    h+='</tbody></table>';_('incB').innerHTML=h}
+  else{
+    const all=[];ses.forEach(s=>{all.push({date:s.date,type:'income',amount:s.fee||0,desc:`Tuition — ${SB[s.subject]?.l||s.subject}`,studentId:s.studentId,category:'tuition',src:'ses',id:s.id})});
+    txs.forEach(t=>{all.push({...t,src:'tx'})});all.sort((a,b)=>b.date.localeCompare(a.date));
+    let h='<table><thead><tr><th>Date</th><th>Type</th><th>Desc</th><th>Student</th><th>Amount</th><th></th></tr></thead><tbody>';
+    all.forEach(t=>{const st=D.students.find(s=>s.id===t.studentId);const isI=t.type==='income';
+      h+=`<tr><td style="white-space:nowrap">${fDT(t.date)}</td><td>${isI?'<span class="bg bg-in">In</span>':'<span class="bg bg-ex">Out</span>'}</td><td style="font-size:13px">${t.desc||'-'}</td><td>${st?(st.nickname||st.name):'-'}</td><td class="mono" style="font-weight:800;color:${isI?'var(--grn3)':'var(--redF)'}">฿${(t.amount||0).toLocaleString()}</td><td>${t.src==='tx'?`<button class="btn btn-o btn-sm" onclick="openTxM('${t.id}')">✏️</button> <button class="btn btn-d btn-sm" onclick="delTx('${t.id}')">🗑️</button>`:''}</td></tr>`});
+    h+='</tbody></table>';_('incB').innerHTML=h}
 }
 
-// === GOOGLE CALENDAR IMPORTED EVENTS ===
-function getVisibleGCalForDate(dateStr){
-  return(D.gcalImported||[]).filter(ev=>{
-    if(D.gcalHidden[ev.gcalId])return false;
-    return ev.date===dateStr;
-  });
-}
+// ============ GCAL IMPORTED EVENTS ============
+function getVisibleGCalForDate(ds){return(D.gcalImported||[]).filter(ev=>!D.gcalHidden[ev.gcalId]&&ev.date===ds)}
 let gcalFilter='all';
 function setGCalFilter(f){gcalFilter=f;rGCalImp()}
-
 function rGCalImp(){
   const evts=D.gcalImported||[];
-  // Build filter tabs
   const calNames=new Set();evts.forEach(ev=>{if(ev.calendarName)calNames.add(ev.calendarName)});
   let tabH=`<div class="tab ${gcalFilter==='all'?'on':''}" onclick="setGCalFilter('all')">All (${evts.length})</div>`;
-  calNames.forEach(cn=>{
-    const cnt=evts.filter(e=>e.calendarName===cn).length;
-    const isTeach=cn.toLowerCase().includes('teach');
-    tabH+=`<div class="tab ${gcalFilter===cn?'on':''}" onclick="setGCalFilter('${cn.replace(/'/g,"\\'")}')">${isTeach?'🎓 ':''}${cn} (${cnt})</div>`;
-  });
+  calNames.forEach(cn=>{const cnt=evts.filter(e=>e.calendarName===cn).length;const isTeach=cn.toLowerCase().includes('teach');
+    tabH+=`<div class="tab ${gcalFilter===cn?'on':''}" onclick="setGCalFilter('${cn.replace(/'/g,"\\'")}')">${isTeach?'🎓 ':''}${cn} (${cnt})</div>`;});
   const tabEl=_('gcalFilterTabs');if(tabEl)tabEl.innerHTML=tabH;
-
-  // Filter events
-  let filtered=evts;
-  if(gcalFilter!=='all')filtered=evts.filter(e=>e.calendarName===gcalFilter);
-  
+  let filtered=evts;if(gcalFilter!=='all')filtered=evts.filter(e=>e.calendarName===gcalFilter);
   _('gcalImpTitle').textContent=`${gcalFilter==='all'?'All Events':'📋 '+gcalFilter} (${filtered.length})`;
-  if(!filtered.length){_('gcalImpList').innerHTML='<div class="empty"><div class="empty-ic">📥</div>No events in this calendar<br>Try Refresh or select different calendars in Settings</div>';return}
-  
-  // Check which gcal events are already converted to sessions
+  if(!filtered.length){_('gcalImpList').innerHTML='<div class="empty"><div class="empty-ic">📥</div>No events</div>';return}
   const convertedIds=new Set();D.sessions.forEach(s=>{if(s.gcalId)convertedIds.add(s.gcalId)});
-  
   let h='';
   filtered.sort((a,b)=>(a.date||'').localeCompare(b.date||'')||(a.startTime||'').localeCompare(b.startTime||'')).forEach(ev=>{
-    const hidden=!!D.gcalHidden[ev.gcalId];
-    const converted=convertedIds.has(ev.gcalId);
+    const hidden=!!D.gcalHidden[ev.gcalId];const converted=convertedIds.has(ev.gcalId);
     const isTeach=(ev.calendarName||'').toLowerCase().includes('teach');
-    const linkedSession=converted?D.sessions.find(s=>s.gcalId===ev.gcalId):null;
-    const linkedStudent=linkedSession?D.students.find(s=>s.id===linkedSession.studentId):null;
-    
+    const linked=converted?D.sessions.find(s=>s.gcalId===ev.gcalId):null;
+    const linkedSt=linked?D.students.find(s=>s.id===linked.studentId):null;
     h+=`<div class="imp-item ${hidden?'hidden-ev':''}" style="${isTeach?'border-left:3px solid var(--grn);':''}">
       <div class="imp-toggle ${hidden?'':'on'}" onclick="toggleGCalVis('${ev.gcalId}',this)"></div>
-      <div style="flex:1;min-width:0">
-        <div style="font-weight:700;font-size:14px">${ev.summary||'(No title)'}</div>
+      <div style="flex:1;min-width:0"><div style="font-weight:700;font-size:14px">${ev.summary||'(No title)'}</div>
         <div style="font-size:12px;color:var(--tx3);font-weight:600">📅 ${fDT(ev.date)} · ⏰ ${ev.startTime||'All day'}${ev.endTime?' – '+ev.endTime:''}</div>
         ${ev.calendarName?`<div style="font-size:11px;color:var(--gcalF);font-weight:700;margin-top:2px">📋 ${ev.calendarName}</div>`:''}
-        ${converted&&linkedStudent?`<div style="font-size:12px;color:var(--grn3);font-weight:700;margin-top:3px">✅ Linked: ${linkedStudent.nickname||linkedStudent.name} · ${sbg(linkedSession.subject)} · ฿${(linkedSession.fee||0).toLocaleString()}</div>`:''}
-      </div>
-      <div style="display:flex;gap:6px;flex-shrink:0;align-items:center">
-        ${converted
-          ?'<span class="bg bg-pd">Linked ✅</span>'
-          :`<button class="btn btn-g btn-sm" onclick="openConvert('${ev.gcalId}')">📥 Convert</button>`}
-        <span class="bg bg-gcal">Google</span>
-      </div>
-    </div>`;
+        ${converted&&linkedSt?`<div style="font-size:12px;color:var(--grn3);font-weight:700;margin-top:3px">✅ ${linkedSt.nickname||linkedSt.name} · ฿${(linked.fee||0).toLocaleString()}</div>`:''}
+      </div><div style="display:flex;gap:6px;flex-shrink:0;align-items:center">
+        ${converted?'<span class="bg bg-pd">Linked ✅</span>':`<button class="btn btn-g btn-sm" onclick="openConvert('${ev.gcalId}')">📥 Convert</button>`}
+      </div></div>`;
   });
   _('gcalImpList').innerHTML=h;
 }
+function toggleGCalVis(gcalId,el){if(D.gcalHidden[gcalId]){delete D.gcalHidden[gcalId];el.classList.add('on');el.closest('.imp-item').classList.remove('hidden-ev')}else{D.gcalHidden[gcalId]=true;el.classList.remove('on');el.closest('.imp-item').classList.add('hidden-ev')}saveD();rCal()}
+function showAllGE(){D.gcalHidden={};saveD();rGCalImp();rCal();toast('All visible','ok')}
+function hideAllGE(){(D.gcalImported||[]).forEach(ev=>{D.gcalHidden[ev.gcalId]=true});saveD();rGCalImp();rCal();toast('All hidden','info')}
 
-// === CONVERT GOOGLE EVENT TO LOCAL SESSION ===
-function popCvSt(){const s=_('cvStudent');s.innerHTML='<option value="">-- Select Student --</option>';D.students.forEach(st=>{s.innerHTML+=`<option value="${st.id}">${st.nickname?st.name+' ('+st.nickname+')':st.name}</option>`});syncCSel('cvStudent')}
-
+// ============ CONVERT GCAL → SESSION ============
+function popCvSt(){const s=_('cvStudent');s.innerHTML='<option value="">-- Select --</option>';D.students.filter(st=>(st.status||'active')==='active').forEach(st=>{s.innerHTML+=`<option value="${st.id}">${st.nickname||st.name}</option>`});syncCSel('cvStudent')}
 function openConvert(gcalId){
   const ev=(D.gcalImported||[]).find(e=>e.gcalId===gcalId);if(!ev)return;
-  popCvSt();
-  _('cvGcalId').value=gcalId;
-  _('cvDate').value=ev.date||'';
-  _('cvStart').value=ev.startTime||'';
-  _('cvEnd').value=ev.endTime||'';
-  _('cvTopic').value=ev.summary||'';
-  _('cvSubj').value='math';
-  _('cvStudent').value='';
-  _('cvPaid').value='unpaid';
+  popCvSt();popAlgSel('cvAlgCourse');
+  _('cvGcalId').value=gcalId;_('cvDate').value=ev.date||'';_('cvStart').value=ev.startTime||'';_('cvEnd').value=ev.endTime||'';
+  _('cvTopic').value=ev.summary||'';_('cvSubj').value='math';_('cvStudent').value='';_('cvPaid').value='unpaid';
+  _('cvFee').value='';_('cvGrpSize').value='private';
   _('cvInfo').innerHTML=`📅 <strong>${ev.summary||'(No title)'}</strong><br>🕐 ${ev.startTime||''}–${ev.endTime||''} · ${fDT(ev.date)}${ev.calendarName?' · 📋 '+ev.calendarName:''}`;
-  
-  // Auto-detect channel from event title or calendar name
-  const title=(ev.summary||'').toLowerCase();
-  const calName=(ev.calendarName||'').toLowerCase();
+  // Auto-detect
+  const title=(ev.summary||'').toLowerCase();const calName=(ev.calendarName||'').toLowerCase();
   if(title.startsWith('alg')||calName.includes('alg')){
-    _('cvCh').value='institute';_('cvInst').value='ALG';_('cvInstWrap').style.display='block';_('cvPaid').value='end-of-month';
-  }else{
-    _('cvCh').value='private';_('cvInst').value='';_('cvInstWrap').style.display='none';
-  }
-  
-  // Auto-detect subject
+    _('cvCh').value='institute';_('cvInstWrap').style.display='block';_('cvPaid').value='end-of-month';
+  }else{_('cvCh').value='private';_('cvInstWrap').style.display='none'}
   if(calName.includes('online'))_('cvSubj').value='python';
-  
-  syncCSel('cvSubj');syncCSel('cvStudent');syncCSel('cvPaid');syncCSel('cvCh');
-  updateCvFee();
-  opM('cvModal');
+  syncCSel('cvSubj');syncCSel('cvStudent');syncCSel('cvPaid');syncCSel('cvCh');syncCSel('cvAlgCourse');syncCSel('cvGrpSize');
+  updateCvFee();opM('cvModal');
 }
-
-// Live fee preview
 function updateCvFee(){
-  const start=_('cvStart').value;const end=_('cvEnd').value;const subj=_('cvSubj').value;const stId=_('cvStudent').value;
+  const start=_('cvStart')?.value,end=_('cvEnd')?.value;
   if(!start||!end){_('cvFeePreview').textContent='';return}
   const[sh,sm]=start.split(':').map(Number),[eh,em]=end.split(':').map(Number);
   const hours=Math.max(0,((eh*60+em)-(sh*60+sm))/60);
-  const stu=D.students.find(s=>s.id===stId);
-  const rk='rate'+subj.charAt(0).toUpperCase()+subj.slice(1);
-  const rate=stu?.rates?.[subj]||D.settings[rk]||0;
-  const fee=hours*rate;
-  _('cvFeePreview').innerHTML=`💰 ${hours.toFixed(1)} hrs × ฿${rate}/hr = <strong>฿${fee.toLocaleString()}</strong>`;
+  const ch=_('cvCh')?.value||'private',algId=_('cvAlgCourse')?.value,grp=_('cvGrpSize')?.value;
+  const custom=parseFloat(_('cvFee')?.value);const stId=_('cvStudent')?.value;
+  const fee=calcFee(_('cvSubj')?.value,ch,hours,stId,grp,algId,custom>0?custom:null);
+  _('cvFeePreview').innerHTML=`💰 Fee: ฿${fee.toLocaleString()} (${hours.toFixed(1)} hrs)`;
 }
-// Fee preview listeners attached in DOMContentLoaded
-
 function saveConvert(){
-  const gcalId=_('cvGcalId').value;
-  const date=_('cvDate').value;const start=_('cvStart').value;const end=_('cvEnd').value;
-  const subj=_('cvSubj').value;const stId=_('cvStudent').value;
-  if(!date||!start||!end)return alert('Date and time required');
-  if(!stId)return alert('Please select a student');
-  
+  const gcalId=_('cvGcalId').value;const date=_('cvDate').value;const start=_('cvStart').value;const end=_('cvEnd').value;
+  const stId=_('cvStudent').value;if(!date||!start||!end)return alert('Date/time required');if(!stId)return alert('Select a student');
   const[sh,sm]=start.split(':').map(Number),[eh,em]=end.split(':').map(Number);
   const hours=Math.max(0,((eh*60+em)-(sh*60+sm))/60);
+  const ch=_('cvCh').value,algId=_('cvAlgCourse').value,grp=_('cvGrpSize').value;
+  const subj=_('cvSubj').value;const custom=parseFloat(_('cvFee').value);
+  const fee=calcFee(subj,ch,hours,stId,grp,algId,custom>0?custom:null);
   const stu=D.students.find(s=>s.id===stId);
-  const rk='rate'+subj.charAt(0).toUpperCase()+subj.slice(1);
-  const rate=stu?.rates?.[subj]||D.settings[rk]||0;
-  const fee=hours*rate;
-  const ch=_('cvCh').value;
-  
-  const session={
-    id:uid(),date,start,end,
-    subject:subj,studentId:stId,
-    topic:_('cvTopic').value.trim(),
-    note:'',
-    paid:_('cvPaid').value,
-    hours,fee,
-    attendance:'present',
-    channel:ch,
-    institute:ch==='institute'?_('cvInst').value.trim():'',
-    gcalId:gcalId,
-    convertedFromGoogle:true,
-    createdAt:new Date().toISOString()
-  };
-  
-  D.sessions.push(session);
-  saveD();clM('cvModal');
-  toast(`✅ Converted! ${stu?.nickname||stu?.name} · ${ch==='institute'?'🏫':'🏠'} · ฿${fee.toLocaleString()}`,'ok');
+  D.sessions.push({id:uid(),date,start,end,subject:subj,studentId:stId,topic:_('cvTopic').value.trim(),note:'',
+    paid:_('cvPaid').value,hours,fee,customFee:custom>0?custom:null,channel:ch,algCourseId:algId,grpSize:grp,
+    attendance:'present',gcalId,convertedFromGoogle:true,commission:stu?.commission||0,
+    createdAt:new Date().toISOString()});
+  saveD();clM('cvModal');toast(`✅ Converted! ${stu?.nickname||stu?.name} · ฿${fee.toLocaleString()}`,'ok');
   rGCalImp();rSes();rCal();rDash();
 }
-function toggleGCalVis(gcalId,el){
-  if(D.gcalHidden[gcalId]){delete D.gcalHidden[gcalId];el.classList.add('on');el.closest('.imp-item').classList.remove('hidden-ev')}
-  else{D.gcalHidden[gcalId]=true;el.classList.remove('on');el.closest('.imp-item').classList.add('hidden-ev')}
-  saveD();rCal();
-}
-function showAllGE(){D.gcalHidden={};saveD();rGCalImp();rCal();toast('All Google events visible','ok')}
-function hideAllGE(){(D.gcalImported||[]).forEach(ev=>{D.gcalHidden[ev.gcalId]=true});saveD();rGCalImp();rCal();toast('All Google events hidden','info')}
 
-// === CALENDAR ===
+// ============ CALENDAR ============
 let cD=new Date(),cV='month';
 function setCV(v){cV=v;document.querySelectorAll('#page-calendar .tab').forEach((t,i)=>t.classList.toggle('on',(i===0&&v==='month')||(i===1&&v==='week')));rCal()}
 function calN(d){if(cV==='month')cD.setMonth(cD.getMonth()+d);else cD.setDate(cD.getDate()+d*7);rCal()}
 function calT(){cD=new Date();rCal()}
 function rCal(){cV==='month'?rMo():rWk()}
 function showGCal(){return _('calShowGcal')?.classList.contains('on')}
-
 function rMo(){const y=cD.getFullYear(),m=cD.getMonth();_('calLbl').textContent=`${eM(m)} ${y}`;const fd=new Date(y,m,1).getDay(),dim=new Date(y,m+1,0).getDate(),now=new Date();
   const days=['Su','Mo','Tu','We','Th','Fr','Sa'];let h='<div class="cg">';days.forEach(d=>h+=`<div class="ch">${d}</div>`);const pd=new Date(y,m,0).getDate();
   for(let i=0;i<fd;i++)h+=`<div class="ce ot"><div class="dn">${pd-fd+1+i}</div></div>`;
   for(let d=1;d<=dim;d++){const ds=`${y}-${String(m+1).padStart(2,'0')}-${String(d).padStart(2,'0')}`;const isT=now.getFullYear()===y&&now.getMonth()===m&&now.getDate()===d;
-    const evts=D.sessions.filter(s=>s.date===ds);
-    const gEvts=showGCal()?getVisibleGCalForDate(ds):[];
+    const evts=D.sessions.filter(s=>s.date===ds);const gEvts=showGCal()?getVisibleGCalForDate(ds):[];
     h+=`<div class="ce ${isT?'td':''}" onclick="openSesM(null,'${ds}')"><div class="dn">${d}</div>`;
     evts.slice(0,2).forEach(ev=>{const st=D.students.find(s=>s.id===ev.studentId);h+=`<div class="cv ${ev.subject}" onclick="event.stopPropagation();openSesM('${ev.id}')">${ev.start} ${st?(st.nickname||st.name):''}</div>`});
-    gEvts.slice(0,2).forEach(gev=>{h+=`<div class="cv gcal" onclick="event.stopPropagation()">${gev.startTime||''} ${gev.summary||''}</div>`});
-    const total=evts.length+gEvts.length;if(total>4)h+=`<div style="font-size:10px;color:var(--tx3)">+${total-4}</div>`;
-    h+='</div>'}
+    gEvts.slice(0,2).forEach(g=>{h+=`<div class="cv gcal" onclick="event.stopPropagation()">${g.startTime||''} ${g.summary||''}</div>`});
+    const tot=evts.length+gEvts.length;if(tot>4)h+=`<div style="font-size:10px;color:var(--tx3)">+${tot-4}</div>`;h+='</div>'}
   const rem=(fd+dim)%7===0?0:7-(fd+dim)%7;for(let i=1;i<=rem;i++)h+=`<div class="ce ot"><div class="dn">${i}</div></div>`;h+='</div>';_('calBox').innerHTML=h}
-
 function rWk(){const sow=new Date(cD);sow.setDate(sow.getDate()-sow.getDay());const eow=new Date(sow);eow.setDate(eow.getDate()+6);
   _('calLbl').textContent=`${sow.getDate()} ${eM(sow.getMonth()).substr(0,3)} — ${eow.getDate()} ${eM(eow.getMonth()).substr(0,3)} ${eow.getFullYear()}`;
   const now=new Date();const days=['Sun','Mon','Tue','Wed','Thu','Fri','Sat'];let h='<div class="wg"><div class="wh"></div>';
   for(let i=0;i<7;i++){const d=new Date(sow);d.setDate(d.getDate()+i);h+=`<div class="wh ${d.toDateString()===now.toDateString()?'wtd':''}">${days[i]}<span class="wdn">${d.getDate()}</span></div>`}
   for(let hr=8;hr<22;hr++){h+=`<div class="wt">${String(hr).padStart(2,'0')}:00</div>`;for(let i=0;i<7;i++){const d=new Date(sow);d.setDate(d.getDate()+i);const ds=d.toISOString().split('T')[0];h+=`<div class="ws" onclick="openSesM(null,'${ds}')">`;
-    // Local sessions
     D.sessions.filter(s=>s.date===ds).forEach(ev=>{const[sh]=ev.start.split(':').map(Number),[eh,em]=ev.end.split(':').map(Number);if(sh===hr){const dur=((eh*60+em)-sh*60)/60;const ht=Math.max(28,dur*50);const cols={math:'var(--mathF)',physics:'var(--phyF)',python:'var(--pyF)'};const bgs={math:'var(--mathBg)',physics:'var(--phyBg)',python:'var(--pyBg)'};const st=D.students.find(s=>s.id===ev.studentId);
-      h+=`<div class="we" style="top:0;height:${ht}px;background:${bgs[ev.subject]};color:${cols[ev.subject]};border-left-color:${cols[ev.subject]}" onclick="event.stopPropagation();openSesM('${ev.id}')">${ev.start} ${st?(st.nickname||st.name):''}</div>`}});
-    // Google events
-    if(showGCal()){getVisibleGCalForDate(ds).forEach(gev=>{if(!gev.startTime)return;const[gh]=gev.startTime.split(':').map(Number);if(gh===hr){
-      let ght=50;if(gev.endTime){const[geh,gem]=gev.endTime.split(':').map(Number);ght=Math.max(28,((geh*60+gem)-gh*60)/60*50)}
-      h+=`<div class="we" style="top:0;height:${ght}px;background:var(--gcalBg);color:var(--gcalF);border-left-color:var(--gcalB)" onclick="event.stopPropagation()">${gev.startTime} ${gev.summary||''}</div>`}})}
+      h+=`<div class="we" style="top:0;height:${ht}px;background:${bgs[ev.subject]||'var(--gcalBg)'};color:${cols[ev.subject]||'var(--gcalF)'};border-left-color:${cols[ev.subject]||'var(--gcalB)'}" onclick="event.stopPropagation();openSesM('${ev.id}')">${ev.start} ${st?(st.nickname||st.name):''}</div>`}});
+    if(showGCal()){getVisibleGCalForDate(ds).forEach(g=>{if(!g.startTime)return;const[gh]=g.startTime.split(':').map(Number);if(gh===hr){let ght=50;if(g.endTime){const[geh,gem]=g.endTime.split(':').map(Number);ght=Math.max(28,((geh*60+gem)-gh*60)/60*50)}
+      h+=`<div class="we" style="top:0;height:${ght}px;background:var(--gcalBg);color:var(--gcalF);border-left-color:var(--gcalB)" onclick="event.stopPropagation()">${g.startTime} ${g.summary||''}</div>`}})}
     h+='</div>'}}h+='</div>';_('calBox').innerHTML=h}
 
-// === DASHBOARD ===
-function rDash(){const now=new Date(),hr=now.getHours();_('greetH').textContent=`${hr<12?'Good Morning':hr<17?'Good Afternoon':'Good Evening'}! 👋`;
-  const tm=`${now.getFullYear()}-${String(now.getMonth()+1).padStart(2,'0')}`;const ms=D.sessions.filter(s=>s.date.startsWith(tm));const ts=now.toISOString().split('T')[0];const tds=D.sessions.filter(s=>s.date===ts);
+// ============ DASHBOARD ============
+function rDash(){
+  const now=new Date(),hr=now.getHours();_('greetH').textContent=`${hr<12?'Good Morning':hr<17?'Good Afternoon':'Good Evening'}! 👋`;
+  const tm=`${now.getFullYear()}-${String(now.getMonth()+1).padStart(2,'0')}`;const ms=D.sessions.filter(s=>s.date.startsWith(tm));
+  const ts=now.toISOString().split('T')[0];const tds=D.sessions.filter(s=>s.date===ts);
   const totF=ms.reduce((s,x)=>s+(x.fee||0),0),totH=ms.reduce((s,x)=>s+(x.hours||0),0);
   const moExp=(D.transactions||[]).filter(t=>t.date.startsWith(tm)&&t.type==='expense').reduce((s,x)=>s+x.amount,0);
-  _('greetP').textContent=`You have ${tds.length} session${tds.length!==1?'s':''} today · ${ms.length} sessions this month (${totH.toFixed(1)} hrs)`;
-  _('dashSt').innerHTML=`<div class="st g an"><div class="st-ic">👥</div><div class="st-lb">Students</div><div class="st-v">${D.students.length}</div></div>
-    <div class="st o an a1"><div class="st-ic">📝</div><div class="st-lb">Sessions</div><div class="st-v">${ms.length}</div><div class="st-s">${totH.toFixed(1)} hours</div></div>
+  _('greetP').textContent=`${tds.length} session${tds.length!==1?'s':''} today · ${ms.length} this month (${totH.toFixed(1)} hrs)`;
+  _('dashSt').innerHTML=`<div class="st g an"><div class="st-ic">👥</div><div class="st-lb">Active Students</div><div class="st-v">${D.students.filter(s=>(s.status||'active')==='active').length}</div></div>
+    <div class="st o an a1"><div class="st-ic">📝</div><div class="st-lb">Sessions</div><div class="st-v">${ms.length}</div><div class="st-s">${totH.toFixed(1)} hrs</div></div>
     <div class="st b an a2"><div class="st-ic">💰</div><div class="st-lb">Income</div><div class="st-v">฿${totF.toLocaleString()}</div></div>
     <div class="st p an a3"><div class="st-ic">🛒</div><div class="st-lb">Expenses</div><div class="st-v">฿${moExp.toLocaleString()}</div></div>`;
+  renderReminders();
   const up=D.sessions.filter(s=>s.date>=ts).sort((a,b)=>a.date.localeCompare(b.date)||(a.start||'').localeCompare(b.start||'')).slice(0,5);
   if(!up.length)_('upcoming').innerHTML='<div class="empty"><div class="empty-ic">📅</div>No upcoming sessions</div>';
-  else{let h='';up.forEach(s=>{const st=D.students.find(x=>x.id===s.studentId);h+=`<div class="sch-card" onclick="openSesM('${s.id}')"><div class="sch-thumb ${s.subject}">${SB[s.subject]?.em||'📚'}</div><div class="sch-info"><div class="sch-name">${st?(st.nickname||st.name):'-'} ${s.topic?'· '+s.topic:''}</div><div class="sch-meta">📅 ${fDT(s.date)} · ⏰ ${s.start}–${s.end}</div></div><div class="sch-price">฿${(s.fee||0).toLocaleString()}</div></div>`});_('upcoming').innerHTML=h}
+  else{let h='';up.forEach(s=>{const st=D.students.find(x=>x.id===s.studentId);h+=`<div class="sch-card" onclick="openSesM('${s.id}')"><div class="sch-thumb ${s.subject}">${SB[s.subject]?.em||'📚'}</div><div class="sch-info"><div class="sch-name">${st?(st.nickname||st.name):'-'}${s.reminder&&!s.reminderDone?' 🔔':''}</div><div class="sch-meta">📅 ${fDT(s.date)} · ⏰ ${s.start}–${s.end}</div></div><div class="sch-price">฿${(s.fee||0).toLocaleString()}</div></div>`});_('upcoming').innerHTML=h}
   let fh='<div style="display:grid;grid-template-columns:repeat(3,1fr);gap:10px">';
   ['math','physics','python'].forEach(sub=>{const ss=ms.filter(x=>x.subject===sub);const fee=ss.reduce((s,x)=>s+(x.fee||0),0);
     fh+=`<div style="padding:16px;background:var(--${sub==='math'?'math':sub==='physics'?'phy':'py'}Bg);border-radius:var(--r2)">${sbg(sub)}<div class="mono" style="font-size:22px;font-weight:900;margin-top:8px;color:var(--${sub==='math'?'math':sub==='physics'?'phy':'py'}F)">฿${fee.toLocaleString()}</div><div style="font-size:12px;opacity:.6;font-weight:700">${ss.length} sessions</div></div>`});
-  fh+='</div>';
-  if(moExp>0)fh+=`<div style="margin-top:12px;padding:12px 16px;background:var(--redL);border-radius:var(--r3);display:flex;justify-content:space-between;align-items:center"><span style="font-weight:800;color:var(--redF)">🛒 Expenses this month</span><span class="mono" style="font-weight:800;color:var(--redF)">฿${moExp.toLocaleString()}</span></div>`;
-  _('dashFin').innerHTML=fh;
+  fh+='</div>';_('dashFin').innerHTML=fh;
   renderMC();
-  // Today TL with google events
   const todayGCal=getVisibleGCalForDate(ts);
-  if(!tds.length&&!todayGCal.length)_('todayTL').innerHTML='<div style="color:var(--tx3);font-size:14px;padding:12px 0;font-weight:600">No sessions today ☀️</div>';
-  else{let h='';tds.sort((a,b)=>(a.start||'').localeCompare(b.start||'')).forEach(s=>{const st=D.students.find(x=>x.id===s.studentId);h+=`<div class="ms-item" onclick="openSesM('${s.id}')"><div class="ms-thumb ${s.subject}">${SB[s.subject]?.em||'📚'}</div><div class="ms-info"><div class="ms-name">${st?(st.nickname||st.name):'-'}</div><div class="ms-meta">⏰ ${s.start}–${s.end} · ${s.topic||SB[s.subject]?.l||''}</div></div></div>`});
-    todayGCal.forEach(gev=>{h+=`<div class="ms-item"><div class="ms-thumb gcal">📅</div><div class="ms-info"><div class="ms-name">${gev.summary||'(No title)'}</div><div class="ms-meta">⏰ ${gev.startTime||'All day'}${gev.endTime?' – '+gev.endTime:''} · <span class="bg bg-gcal" style="font-size:10px;padding:2px 6px">Google</span></div></div></div>`});
-    _('todayTL').innerHTML=h}}
+  if(!tds.length&&!todayGCal.length)_('todayTL').innerHTML='<div style="color:var(--tx3);font-size:14px;padding:12px 0">No sessions today ☀️</div>';
+  else{let h='';tds.sort((a,b)=>(a.start||'').localeCompare(b.start||'')).forEach(s=>{const st=D.students.find(x=>x.id===s.studentId);h+=`<div class="ms-item" onclick="openSesM('${s.id}')"><div class="ms-thumb ${s.subject}">${SB[s.subject]?.em||'📚'}</div><div class="ms-info"><div class="ms-name">${st?(st.nickname||st.name):'-'}</div><div class="ms-meta">⏰ ${s.start}–${s.end} · ${s.topic||''}</div></div></div>`});
+    todayGCal.forEach(g=>{h+=`<div class="ms-item"><div class="ms-thumb gcal">📅</div><div class="ms-info"><div class="ms-name">${g.summary||'(No title)'}</div><div class="ms-meta">⏰ ${g.startTime||''}${g.endTime?' – '+g.endTime:''}</div></div></div>`});
+    _('todayTL').innerHTML=h}
+}
 function renderMC(){const now=new Date(),y=now.getFullYear(),m=now.getMonth();const fd=new Date(y,m,1).getDay();const fdM=fd===0?6:fd-1;const dim=new Date(y,m+1,0).getDate();
   const days=['Mo','Tu','We','Th','Fr','Sa','Su'];let h=`<div class="mc-nav"><span class="mc-lbl">${eM(m)} ${y}</span></div><div class="mc-g">`;
   days.forEach(d=>h+=`<div class="mc-h">${d}</div>`);const pd=new Date(y,m,0).getDate();
@@ -753,257 +832,51 @@ function renderMC(){const now=new Date(),y=now.getFullYear(),m=now.getMonth();co
   for(let d=1;d<=dim;d++){const ds=`${y}-${String(m+1).padStart(2,'0')}-${String(d).padStart(2,'0')}`;h+=`<div class="mc-d ${d===now.getDate()?'td':''} ${D.sessions.some(s=>s.date===ds)?'hev':''}">${d}</div>`}
   const tot=fdM+dim;const rem=tot%7===0?0:7-tot%7;for(let i=1;i<=rem;i++)h+=`<div class="mc-d ot">${i}</div>`;h+='</div>';_('dashMC').innerHTML=h}
 
-// === SETTINGS ===
-function loadSett(){_('sCI').value=D.settings.clientId||'';_('sCL').value=D.settings.calendarId||'primary';_('sRM').value=D.settings.rateMath||'';_('sRP').value=D.settings.ratePhysics||'';_('sRY').value=D.settings.ratePython||'';renderCalList()}
-function saveSett(){D.settings.clientId=_('sCI').value.trim();D.settings.calendarId=_('sCL').value.trim()||'primary';D.settings.rateMath=parseInt(_('sRM').value)||500;D.settings.ratePhysics=parseInt(_('sRP').value)||500;D.settings.ratePython=parseInt(_('sRY').value)||600;saveD()}
+// ============ SETTINGS ============
+function loadSett(){_('sCI').value=D.settings.clientId||'';_('sCL').value=D.settings.calendarId||'primary';
+  _('sRM').value=D.settings.rateMath||'';_('sRP').value=D.settings.ratePhysics||'';_('sRY').value=D.settings.ratePython||'';
+  renderCalList();renderAlgCourses()}
+function saveSett(){D.settings.clientId=_('sCI').value.trim();D.settings.calendarId=_('sCL').value.trim()||'primary';
+  D.settings.rateMath=parseInt(_('sRM').value)||300;D.settings.ratePhysics=parseInt(_('sRP').value)||300;D.settings.ratePython=parseInt(_('sRY').value)||300;saveD()}
 function expD(){const b=new Blob([JSON.stringify(D,null,2)],{type:'application/json'});const a=document.createElement('a');a.href=URL.createObjectURL(b);a.download=`tutor-${new Date().toISOString().split('T')[0]}.json`;a.click()}
-function impD(e){const f=e.target.files[0];if(!f)return;const r=new FileReader();r.onload=ev=>{try{const d=JSON.parse(ev.target.result);if(confirm('Replace current data?')){D={...defD(),...d,transactions:d.transactions||[],gcalImported:d.gcalImported||[],gcalHidden:d.gcalHidden||{}};saveD();location.reload()}}catch{alert('Invalid file')}};r.readAsText(f)}
-function clrD(){if(confirm('Clear all data?')&&confirm('Are you sure?')){localStorage.removeItem(K);D=defD();location.reload()}}
+function impD(e){const f=e.target.files[0];if(!f)return;const r=new FileReader();r.onload=ev=>{try{const d=JSON.parse(ev.target.result);if(confirm('Replace current data?')){D={...defD(),...d};saveD();location.reload()}}catch{alert('Invalid file')}};r.readAsText(f)}
+function clrD(){if(confirm('Clear all data?')&&confirm('Sure?')){localStorage.removeItem(K);D=defD();location.reload()}}
 
-// ============================================
-// === GOOGLE CALENDAR — FIXED & IMPROVED ===
-// ============================================
-let tokC=null;
-let gapiReady=false;
-let gisReady=false;
+// ============ GOOGLE CALENDAR ============
+let tokC=null,gapiReady=false;
+function initG(){if(!D.settings.clientId)return;
+  const s1=document.createElement('script');s1.src='https://apis.google.com/js/api.js';s1.onload=()=>{gapi.load('client',async()=>{try{await gapi.client.init({discoveryDocs:['https://www.googleapis.com/discovery/v1/apis/calendar/v3/rest']});gapiReady=true;chkGC()}catch(e){console.error('[GCal]',e)}})};document.head.appendChild(s1);
+  const s2=document.createElement('script');s2.src='https://accounts.google.com/gsi/client';s2.onload=()=>{try{tokC=google.accounts.oauth2.initTokenClient({client_id:D.settings.clientId,scope:'https://www.googleapis.com/auth/calendar.events https://www.googleapis.com/auth/calendar.readonly https://www.googleapis.com/auth/calendar',callback:r=>{if(r.error){toast(`Auth Error: ${r.error}`,'err');return}updGUI(true);if(!(D.gcalCalendars||[]).length)fetchCalList().then(()=>{if((D.settings.selectedCalendars||[]).length)fetchGE()});else fetchGE()}})}catch(e){console.error('[GCal]',e)}};document.head.appendChild(s2)}
+function handleGCal(){if(!D.settings.clientId){go('settings');toast('Enter Client ID first','err');return}if(!tokC){initG();setTimeout(()=>{if(tokC)tokC.requestAccessToken({prompt:'consent'});else toast('Still loading...','err')},2500);return}tokC.requestAccessToken({prompt:'consent'})}
+function chkGC(){updGUI(gapiReady&&!!gapi?.client?.getToken())}
+function updGUI(c){_('gcalDot').className='gcal-dot '+(c?'on':'off');_('gcalLbl').textContent=c?'Connected':'Not connected';const b=_('gcalBtn');b.textContent=c?'Refresh Events':'Connect Calendar';b.onclick=c?fetchGE:handleGCal;_('gcalCount').textContent=(D.gcalImported||[]).length?`${D.gcalImported.length} events`:''}
+async function fetchCalList(){if(!gapiReady||!gapi?.client?.getToken())return;try{const r=await gapi.client.calendar.calendarList.list();D.gcalCalendars=(r.result.items||[]).map(c=>({id:c.id,summary:c.summary||c.id,bg:c.backgroundColor||'#4285f4',primary:c.primary||false}));saveD();renderCalList();toast(`Found ${D.gcalCalendars.length} calendars`,'ok')}catch(e){toast(`Calendar list error: ${e?.result?.error?.message||e}`,'err')}}
+function renderCalList(){const el=_('calListPicker');if(!el)return;const cals=D.gcalCalendars||[];if(!cals.length){el.innerHTML='<div style="color:var(--tx3);font-size:13px">No calendars loaded</div>';return}const sel=D.settings.selectedCalendars||[];let h='';cals.forEach(c=>{const ck=sel.includes(c.id);h+=`<div class="imp-item" style="margin-bottom:6px"><div class="imp-toggle ${ck?'on':''}" onclick="toggleCalSel('${c.id.replace(/'/g,"\\'")}',this)"></div><div style="width:14px;height:14px;border-radius:4px;background:${c.bg};flex-shrink:0"></div><div style="flex:1;font-weight:700;font-size:14px">${c.summary}</div></div>`});el.innerHTML=h}
+function toggleCalSel(calId,el){let sel=D.settings.selectedCalendars||[];if(sel.includes(calId)){sel=sel.filter(x=>x!==calId);el.classList.remove('on')}else{sel.push(calId);el.classList.add('on')}D.settings.selectedCalendars=sel;saveD()}
+async function fetchGE(){if(!gapiReady||!gapi?.client?.getToken()){toast('Not connected','err');return}const sel=D.settings.selectedCalendars||[];if(!sel.length){toast('Select calendars in Settings first','info');return}try{const now=new Date();const tMin=new Date(now.getFullYear(),now.getMonth()-1,1).toISOString();const tMax=new Date(now.getFullYear(),now.getMonth()+3,0).toISOString();let all=[];const cn={};(D.gcalCalendars||[]).forEach(c=>{cn[c.id]=c.summary});for(const cid of sel){try{const r=await gapi.client.calendar.events.list({calendarId:cid,timeMin:tMin,timeMax:tMax,singleEvents:true,orderBy:'startTime',maxResults:250});all=all.concat((r.result.items||[]).map(ev=>({...ev,_cn:cn[cid]||cid})))}catch(e){console.warn('[GCal]',cid,e?.result?.error?.message)}}
+  D.gcalImported=all.map(ev=>{const sdt=ev.start?.dateTime,sd=ev.start?.date,edt=ev.end?.dateTime;let date='',st='',et='';if(sdt){const d=new Date(sdt);date=d.toISOString().split('T')[0];st=d.toTimeString().substr(0,5)}else if(sd)date=sd;if(edt)et=new Date(edt).toTimeString().substr(0,5);return{gcalId:ev.id,summary:ev.summary||'',date,startTime:st,endTime:et,calendarId:ev._cid,calendarName:ev._cn,importedFromGoogle:true}});
+  saveD();updGUI(true);rCal();rDash();rGCalImp();toast(`✅ ${all.length} events from ${sel.length} calendars`,'ok')}catch(e){toast(`Fetch error: ${e?.result?.error?.message||e}`,'err')}}
+async function addGCal(d){if(!gapiReady||!gapi?.client?.getToken()){toast('Not connected — saved locally','err');return}try{const st=D.students.find(s=>s.id===d.studentId);const sum=`${SB[d.subject]?.l||d.subject} — ${st?(st.nickname||st.name):'Tutoring'}`;const r={summary:sum,description:d.topic||'',start:{dateTime:`${d.date}T${d.start}:00+07:00`,timeZone:'Asia/Bangkok'},end:{dateTime:`${d.date}T${d.end}:00+07:00`,timeZone:'Asia/Bangkok'}};await gapi.client.calendar.events.insert({calendarId:D.settings.calendarId||'primary',resource:r});toast(`✅ Added to GCal: ${sum}`,'ok');setTimeout(fetchGE,1000)}catch(e){toast(`GCal Error: ${e?.result?.error?.message||e}`,'err',8000)}}
 
-function initG(){
-  if(!D.settings.clientId)return;
-  // Load GAPI client
-  const s1=document.createElement('script');
-  s1.src='https://apis.google.com/js/api.js';
-  s1.onload=()=>{
-    gapi.load('client',async()=>{
-      try{
-        await gapi.client.init({discoveryDocs:['https://www.googleapis.com/discovery/v1/apis/calendar/v3/rest']});
-        gapiReady=true;
-        console.log('[GCal] GAPI client initialized');
-        chkGC();
-      }catch(e){console.error('[GCal] GAPI init failed:',e)}
-    });
-  };
-  document.head.appendChild(s1);
-  // Load GIS (Google Identity Services)
-  const s2=document.createElement('script');
-  s2.src='https://accounts.google.com/gsi/client';
-  s2.onload=()=>{
-    try{
-      tokC=google.accounts.oauth2.initTokenClient({
-        client_id:D.settings.clientId,
-        scope:'https://www.googleapis.com/auth/calendar.events https://www.googleapis.com/auth/calendar.readonly https://www.googleapis.com/auth/calendar',
-        callback:(resp)=>{
-          if(resp.error){
-            console.error('[GCal] Auth error:',resp);
-            toast(`Google Auth Error: ${resp.error}`,'err');
-            return;
-          }
-          console.log('[GCal] Auth success, token received');
-          gisReady=true;
-          updGUI(true);
-          // Auto-fetch calendar list if not loaded yet
-          if(!(D.gcalCalendars||[]).length){fetchCalList().then(()=>{if((D.settings.selectedCalendars||[]).length)fetchGE()})}
-          else{fetchGE()}
-        },
-      });
-      console.log('[GCal] GIS token client created');
-    }catch(e){console.error('[GCal] GIS init failed:',e)}
-  };
-  document.head.appendChild(s2);
-}
-
-function handleGCal(){
-  if(!D.settings.clientId){go('settings');toast('Enter Client ID in Settings first','err');return}
-  if(!tokC){
-    initG();
-    setTimeout(()=>{if(tokC){tokC.requestAccessToken({prompt:'consent'})}else{toast('Google scripts still loading, try again','err')}},2500);
-    return;
-  }
-  tokC.requestAccessToken({prompt:'consent'});
-}
-
-function chkGC(){
-  const hasToken=gapiReady&&gapi?.client?.getToken();
-  updGUI(!!hasToken);
-}
-
-function updGUI(c){
-  _('gcalDot').className='gcal-dot '+(c?'on':'off');
-  _('gcalLbl').textContent=c?'Connected':'Not connected';
-  const b=_('gcalBtn');b.textContent=c?'Refresh Events':'Connect Calendar';
-  b.onclick=c?fetchGE:handleGCal;
-  const cnt=(D.gcalImported||[]).length;
-  _('gcalCount').textContent=cnt?`${cnt} events imported`:'';
-}
-
-// FETCH calendar list so user can pick which ones to import
-async function fetchCalList(){
-  if(!gapiReady||!gapi?.client?.getToken()){toast('Connect Google Calendar first','err');return}
-  try{
-    console.log('[GCal] Fetching calendar list...');
-    const resp=await gapi.client.calendar.calendarList.list();
-    const cals=(resp.result.items||[]).map(c=>({id:c.id,summary:c.summary||c.id,bg:c.backgroundColor||'#4285f4',primary:c.primary||false}));
-    D.gcalCalendars=cals;
-    saveD();
-    renderCalList();
-    toast(`✅ Found ${cals.length} calendars`,'ok');
-  }catch(e){
-    const errMsg=e?.result?.error?.message||e?.message||JSON.stringify(e);
-    console.error('[GCal] Calendar list error:',e);
-    toast(`Failed to load calendars: ${errMsg}`,'err',6000);
-  }
-}
-
-function renderCalList(){
-  const el=_('calListPicker');if(!el)return;
-  const cals=D.gcalCalendars||[];
-  if(!cals.length){el.innerHTML='<div style="color:var(--tx3);font-size:13px;padding:8px 0">No calendars loaded yet</div>';return}
-  const sel=D.settings.selectedCalendars||[];
-  let h='';
-  cals.forEach(c=>{
-    const checked=sel.includes(c.id);
-    h+=`<div class="imp-item" style="margin-bottom:6px">
-      <div class="imp-toggle ${checked?'on':''}" onclick="toggleCalSel('${c.id.replace(/'/g,"\\'")}',this)"></div>
-      <div style="width:14px;height:14px;border-radius:4px;background:${c.bg};flex-shrink:0"></div>
-      <div style="flex:1;font-weight:700;font-size:14px">${c.summary}${c.primary?' <span style="font-size:11px;color:var(--tx3)">(primary)</span>':''}</div>
-    </div>`;
-  });
-  el.innerHTML=h;
-}
-
-function toggleCalSel(calId,el){
-  let sel=D.settings.selectedCalendars||[];
-  if(sel.includes(calId)){sel=sel.filter(x=>x!==calId);el.classList.remove('on')}
-  else{sel.push(calId);el.classList.add('on')}
-  D.settings.selectedCalendars=sel;
-  saveD();
-}
-
-// FETCH events from all selected calendars
-async function fetchGE(){
-  if(!gapiReady||!gapi?.client?.getToken()){toast('Not connected to Google Calendar','err');return}
-  const selectedCals=D.settings.selectedCalendars||[];
-  if(!selectedCals.length){
-    toast('No calendars selected — go to Settings → Load My Calendars and pick which ones to import','info',5000);
-    return;
-  }
-  try{
-    const now=new Date();
-    const timeMin=new Date(now.getFullYear(),now.getMonth()-1,1).toISOString();
-    const timeMax=new Date(now.getFullYear(),now.getMonth()+3,0).toISOString();
-    let allItems=[];
-    // Build a map of calendar names
-    const calNames={};
-    (D.gcalCalendars||[]).forEach(c=>{calNames[c.id]=c.summary});
-    // Fetch from each selected calendar
-    for(const calId of selectedCals){
-      try{
-        console.log(`[GCal] Fetching from: ${calNames[calId]||calId}`);
-        const resp=await gapi.client.calendar.events.list({
-          calendarId:calId,
-          timeMin:timeMin,
-          timeMax:timeMax,
-          singleEvents:true,
-          orderBy:'startTime',
-          maxResults:250
-        });
-        const items=(resp.result.items||[]).map(ev=>({...ev,_calId:calId,_calName:calNames[calId]||calId}));
-        allItems=allItems.concat(items);
-      }catch(e){
-        console.warn(`[GCal] Error fetching ${calId}:`,e?.result?.error?.message||e);
-      }
-    }
-    console.log(`[GCal] Total fetched: ${allItems.length} events from ${selectedCals.length} calendars`);
-    // Parse and store
-    D.gcalImported=allItems.map(ev=>{
-      const startDT=ev.start?.dateTime;
-      const startD=ev.start?.date;
-      const endDT=ev.end?.dateTime;
-      let date='',startTime='',endTime='';
-      if(startDT){
-        const d=new Date(startDT);
-        date=d.toISOString().split('T')[0];
-        startTime=d.toTimeString().substr(0,5);
-      }else if(startD){date=startD}
-      if(endDT){endTime=new Date(endDT).toTimeString().substr(0,5)}
-      return{
-        gcalId:ev.id,
-        summary:ev.summary||'',
-        description:ev.description||'',
-        date,startTime,endTime,
-        calendarId:ev._calId,
-        calendarName:ev._calName,
-        importedFromGoogle:true
-      };
-    });
-    saveD();
-    updGUI(true);
-    rCal();rDash();rGCalImp();
-    toast(`✅ Imported ${allItems.length} events from ${selectedCals.length} calendar${selectedCals.length>1?'s':''}`,'ok');
-  }catch(e){
-    const errMsg=e?.result?.error?.message||e?.message||JSON.stringify(e);
-    console.error('[GCal] Fetch error:',e);
-    toast(`Failed to fetch: ${errMsg}`,'err',6000);
-  }
-}
-
-// INSERT event into Google Calendar — FIXED with proper error handling
-async function addGCal(sessionData){
-  if(!gapiReady||!gapi?.client?.getToken()){
-    toast('Not connected to Google Calendar — session saved locally only','err');
-    return;
-  }
-  try{
-    const calId=D.settings.calendarId||'primary';
-    const st=D.students.find(s=>s.id===sessionData.studentId);
-    const summary=`${SB[sessionData.subject]?.l||sessionData.subject} — ${st?(st.nickname||st.name):'Tutoring'}`;
-    // Build proper RFC3339 datetime strings
-    const startDT=`${sessionData.date}T${sessionData.start}:00+07:00`;
-    const endDT=`${sessionData.date}T${sessionData.end}:00+07:00`;
-    const eventResource={
-      summary:summary,
-      description:sessionData.topic?`Topic: ${sessionData.topic}`:'',
-      start:{dateTime:startDT,timeZone:'Asia/Bangkok'},
-      end:{dateTime:endDT,timeZone:'Asia/Bangkok'}
-    };
-    console.log('[GCal] Inserting event:',eventResource);
-    const resp=await gapi.client.calendar.events.insert({
-      calendarId:calId,
-      resource:eventResource
-    });
-    console.log('[GCal] Event created:',resp.result);
-    toast(`✅ Added to Google Calendar: ${summary}`,'ok');
-    // Refresh imported events to include the new one
-    setTimeout(()=>fetchGE(),1000);
-  }catch(e){
-    const errBody=e?.result?.error;
-    const errMsg=errBody?.message||e?.message||'Unknown error';
-    const errCode=errBody?.code||e?.status||'';
-    const fullErr=`Google Calendar Error${errCode?' ('+errCode+')':''}: ${errMsg}`;
-    console.error('[GCal] Insert error:',e);
-    console.error('[GCal] Error details:',JSON.stringify(e?.result||e));
-    toast(fullErr,'err',8000);
-  }
-}
-
-// === HELPERS ===
+// ============ HELPERS ============
 function eM(m){return['January','February','March','April','May','June','July','August','September','October','November','December'][m]}
 function fDT(ds){if(!ds)return'-';const[y,m,d]=ds.split('-').map(Number);return`${d} ${eM(m-1).substr(0,3)}`}
 function popMF(id){const sel=_(id);if(!sel)return;const mos=new Set();D.sessions.forEach(s=>{if(s.date)mos.add(s.date.substr(0,7))});D.transactions.forEach(t=>{if(t.date)mos.add(t.date.substr(0,7))});const now=new Date();const cm=`${now.getFullYear()}-${String(now.getMonth()+1).padStart(2,'0')}`;mos.add(cm);const sorted=[...mos].sort().reverse();const prev=sel.value;sel.innerHTML='<option value="">All Months</option>';sorted.forEach(m=>{const[y,mo]=m.split('-').map(Number);sel.innerHTML+=`<option value="${m}" ${m===prev?'selected':''}>${eM(mo-1)} ${y}</option>`});if(!prev)sel.value=cm;syncCSel(id)}
 
-// === CUSTOM SELECT ENGINE ===
+// ============ CUSTOM SELECT ============
 function toggleCSel(display){const csel=display.parentElement;const opts=csel.querySelector('.csel-opts');const isOpen=opts.classList.contains('show');closeAllCSel();if(!isOpen){display.classList.add('open');opts.classList.add('show');buildCSelOpts(csel)}}
 function closeAllCSel(){document.querySelectorAll('.csel-display.open').forEach(d=>d.classList.remove('open'));document.querySelectorAll('.csel-opts.show').forEach(o=>o.classList.remove('show'))}
 document.addEventListener('click',e=>{if(!e.target.closest('.csel'))closeAllCSel()});
-function buildCSelOpts(csel){const sel=csel.querySelector('select');const optsDiv=csel.querySelector('.csel-opts');if(!sel)return;let h='';Array.from(sel.options).forEach(opt=>{const icon=opt.dataset.icon||'';const isActive=opt.value===sel.value;h+=`<div class="csel-opt ${isActive?'active':''}" data-val="${opt.value}" onclick="pickCSel(this)">`;if(icon)h+=`<span class="opt-icon">${icon}</span>`;h+=`<span>${opt.textContent}</span></div>`});optsDiv.innerHTML=h}
-function pickCSel(optEl){const csel=optEl.closest('.csel');const sel=csel.querySelector('select');const display=csel.querySelector('.csel-display');const val=optEl.dataset.val;sel.value=val;const opt=sel.options[sel.selectedIndex];const icon=opt?.dataset?.icon||'';display.textContent=(icon?icon+' ':'')+opt.textContent;closeAllCSel();sel.dispatchEvent(new Event('change'))}
-function syncCSel(selId){const sel=_(selId);if(!sel)return;const csel=sel.closest('.csel');if(!csel)return;const display=csel.querySelector('.csel-display');const opt=sel.options[sel.selectedIndex];if(opt){const icon=opt.dataset?.icon||'';display.textContent=(icon?icon+' ':'')+opt.textContent}}
-function initAllCSel(){document.querySelectorAll('.csel').forEach(csel=>{const sel=csel.querySelector('select');if(sel&&sel.id)syncCSel(sel.id)})}
+function buildCSelOpts(csel){const sel=csel.querySelector('select');const od=csel.querySelector('.csel-opts');if(!sel)return;let h='';Array.from(sel.options).forEach(o=>{const ic=o.dataset.icon||'';h+=`<div class="csel-opt ${o.value===sel.value?'active':''}" data-val="${o.value}" onclick="pickCSel(this)">${ic?`<span class="opt-icon">${ic}</span>`:''}${o.textContent}</div>`});od.innerHTML=h}
+function pickCSel(el){const csel=el.closest('.csel');const sel=csel.querySelector('select');const disp=csel.querySelector('.csel-display');sel.value=el.dataset.val;const o=sel.options[sel.selectedIndex];disp.textContent=(o?.dataset?.icon?o.dataset.icon+' ':'')+o.textContent;closeAllCSel();sel.dispatchEvent(new Event('change'))}
+function syncCSel(id){const sel=_(id);if(!sel)return;const csel=sel.closest('.csel');if(!csel)return;const d=csel.querySelector('.csel-display');const o=sel.options[sel.selectedIndex];if(o)d.textContent=(o.dataset?.icon?o.dataset.icon+' ':'')+o.textContent}
+function initAllCSel(){document.querySelectorAll('.csel').forEach(c=>{const s=c.querySelector('select');if(s&&s.id)syncCSel(s.id)})}
 
 document.addEventListener('DOMContentLoaded',()=>{
   initAllCSel();rDash();if(D.settings.clientId)initG();
-  // Live fee preview listeners for convert modal
-  ['cvStart','cvEnd'].forEach(id=>{const el=_(id);if(el)el.addEventListener('input',updateCvFee)});
-  // Channel toggle: show/hide institute name field
+  // Live fee listeners
+  ['seS','seE','seSb','seSt','seCh','seAlgCourse','seGrpSize','seFee'].forEach(id=>{const el=_(id);if(el)el.addEventListener('change',updateSeFee);if(el&&(id==='seS'||id==='seE'||id==='seFee'))el.addEventListener('input',updateSeFee)});
+  ['cvStart','cvEnd','cvSubj','cvStudent','cvCh','cvAlgCourse','cvGrpSize','cvFee'].forEach(id=>{const el=_(id);if(el)el.addEventListener('change',updateCvFee);if(el&&(id==='cvStart'||id==='cvEnd'||id==='cvFee'))el.addEventListener('input',updateCvFee)});
   const seCh=_('seCh');if(seCh)seCh.addEventListener('change',()=>{_('seInstWrap').style.display=seCh.value==='institute'?'block':'none'});
   const cvCh=_('cvCh');if(cvCh)cvCh.addEventListener('change',()=>{_('cvInstWrap').style.display=cvCh.value==='institute'?'block':'none'});
 });
