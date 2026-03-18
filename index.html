@@ -518,15 +518,15 @@ function saveSes(){const date=_('seD').value;if(!date)return alert('Select a dat
 function delSes(id){const s=D.sessions.find(x=>x.id===id);if(!s)return;const stu=D.students.find(x=>x.id===s.studentId);if(!confirm(`Delete session: ${fDT(s.date)} ${s.start} ${stu?(stu.nickname||stu.name):''} (฿${(s.fee||0).toLocaleString()})?`))return;D.sessions=D.sessions.filter(x=>x.id!==id);saveD();rSes();rCal();rDash()}
 // #3 Session status actions
 function cancelSes(id){const s=D.sessions.find(x=>x.id===id);if(!s)return;s.sessionStatus='cancelled';s.fee=0;saveD();rSes();rCal();rDash();toast('Session cancelled','info');closeSesPopupForce()}
-function noShowSes(id){const s=D.sessions.find(x=>x.id===id);if(!s)return;s.sessionStatus='no-show';s.attendance='absent';saveD();rSes();rCal();rDash();toast('Marked as no-show','info');closeSesPopupForce()}
+function noShowSes(id){const s=D.sessions.find(x=>x.id===id);if(!s)return;s.sessionStatus='absent';s.attendance='absent';s.fee=0;saveD();rSes();rCal();rDash();toast('Marked as absent — fee set to ฿0','info');closeSesPopupForce()}
 function rSes(){popMF('sfm');syncCSel('sfs');const fm=_('sfm').value,fs=_('sfs').value;let list=[...D.sessions].sort((a,b)=>b.date.localeCompare(a.date)||(b.start||'').localeCompare(a.start||''));
   if(fm)list=list.filter(s=>s.date.startsWith(fm));if(fs)list=list.filter(s=>s.subject===fs);
   // exclude cancelled from default view? No — show all but mark visually
   if(!list.length){_('sesList').innerHTML='<div class="empty"><div class="empty-ic">📝</div>No sessions</div>';return}
   let h='<table><thead><tr><th>Date</th><th>Time</th><th>Ch.</th><th>Subject</th><th>Student</th><th>Topic</th><th>Hrs</th><th>Fee</th><th>Status</th><th></th></tr></thead><tbody>';
-  list.forEach(s=>{const st=D.students.find(x=>x.id===s.studentId);const isCx=s.sessionStatus==='cancelled';const isNS=s.sessionStatus==='no-show';const chBg=s.channel==='institute'?'bg-gcal':'bg-pd';
-    const payBadge=isCx?'<span class="bg bg-cancel">Cancelled</span>':isNS?'<span class="bg bg-ex">No-show</span>':s.paid==='paid'?'<span class="bg bg-pd">Paid</span>':s.paid==='end-of-month'?'<span class="bg bg-eom">📅 EoM</span>':'<span class="bg bg-up">Unpaid</span>';
-    h+=`<tr class="${isCx?'inactive-row':''}"><td style="white-space:nowrap">${fDT(s.date)}${s.reminder&&!s.reminderDone?' 🔔':''}</td><td class="mono" style="font-size:13px">${s.start}-${s.end}</td><td><span class="bg ${chBg}" style="font-size:10px">${s.channel==='institute'?'🏫':'🏠'}</span></td><td>${sbg(s.subject)}</td><td style="font-weight:700">${st?(st.nickname||st.name):'-'}</td><td style="font-size:13px">${s.topic||'-'}</td><td class="mono">${s.hours?.toFixed(1)||'-'}</td><td class="mono" style="font-weight:800${isCx?';text-decoration:line-through':''}">฿${(s.fee||0).toLocaleString()}</td><td>${payBadge}</td><td style="white-space:nowrap"><button class="btn btn-o btn-sm" onclick="openAtt('${s.id}')">📋</button> <button class="btn btn-o btn-sm" onclick="openSesM('${s.id}')">✏️</button> <button class="btn btn-d btn-sm" onclick="delSes('${s.id}')">🗑️</button></td></tr>`});
+  list.forEach(s=>{const st=D.students.find(x=>x.id===s.studentId);const isCx=s.sessionStatus==='cancelled';const isAbs=s.sessionStatus==='absent'||s.sessionStatus==='no-show';const chBg=s.channel==='institute'?'bg-gcal':'bg-pd';
+    const payBadge=isCx?'<span class="bg bg-cancel">Cancelled</span>':isAbs?'<span class="bg bg-ex">🚷 Absent</span>':s.paid==='paid'?'<span class="bg bg-pd">Paid</span>':s.paid==='end-of-month'?'<span class="bg bg-eom">📅 EoM</span>':'<span class="bg bg-up">Unpaid</span>';
+    h+=`<tr class="${isCx||isAbs?'inactive-row':''}"><td style="white-space:nowrap">${fDT(s.date)}${s.reminder&&!s.reminderDone?' 🔔':''}</td><td class="mono" style="font-size:13px">${s.start}-${s.end}</td><td><span class="bg ${chBg}" style="font-size:10px">${s.channel==='institute'?'🏫':'🏠'}</span></td><td>${sbg(s.subject)}</td><td style="font-weight:700">${st?(st.nickname||st.name):'-'}</td><td style="font-size:13px">${s.topic||'-'}</td><td class="mono">${s.hours?.toFixed(1)||'-'}</td><td class="mono" style="font-weight:800${isCx||isAbs?';text-decoration:line-through':''}">฿${(s.fee||0).toLocaleString()}</td><td>${payBadge}</td><td style="white-space:nowrap"><button class="btn btn-o btn-sm" onclick="openAtt('${s.id}')">📋</button> <button class="btn btn-o btn-sm" onclick="openSesM('${s.id}')">✏️</button> <button class="btn btn-d btn-sm" onclick="delSes('${s.id}')">🗑️</button></td></tr>`});
   h+='</tbody></table>';_('sesList').innerHTML=h}
 
 // ============ ATTENDANCE ============
@@ -541,14 +541,14 @@ function saveAtt(){const sid=_('attB').dataset.sid;const s=D.sessions.find(x=>x.
 // ============ #3 SESSION DETAIL POPUP (calendar click) ============
 function showSesPopup(sesId,evt){
   evt.stopPropagation();const s=D.sessions.find(x=>x.id===sesId);if(!s)return;const st=D.students.find(x=>x.id===s.studentId);const p=_('sesPopup');
-  const isCx=s.sessionStatus==='cancelled';const isNS=s.sessionStatus==='no-show';
+  const isCx=s.sessionStatus==='cancelled';const isAbs=s.sessionStatus==='absent'||s.sessionStatus==='no-show';
   p.innerHTML=`<div class="sp-title">${st?(st.nickname||st.name):'Unknown'} ${sbg(s.subject)}</div>
-    <div class="sp-meta">📅 ${fDT(s.date)} · ⏰ ${s.start}–${s.end}<br>💰 ฿${(s.fee||0).toLocaleString()} · ${isCx?'❌ Cancelled':isNS?'⚠️ No-show':s.paid==='paid'?'✅ Paid':'⏳ '+s.paid}${s.reminder&&!s.reminderDone?'<br>🔔 '+s.reminder:''}</div>
+    <div class="sp-meta">📅 ${fDT(s.date)} · ⏰ ${s.start}–${s.end}<br>💰 ฿${(s.fee||0).toLocaleString()} · ${isCx?'❌ Cancelled':isAbs?'⚠️ Absent':s.paid==='paid'?'✅ Paid':'⏳ '+s.paid}${s.reminder&&!s.reminderDone?'<br>🔔 '+s.reminder:''}</div>
     <div class="sp-actions">
       <button class="btn btn-o btn-sm" onclick="openSesM('${s.id}');closeSesPopupForce()">✏️ Edit</button>
       <button class="btn btn-o btn-sm" onclick="openAtt('${s.id}');closeSesPopupForce()">📋 Attend</button>
       ${!isCx?`<button class="btn btn-warn btn-sm" onclick="cancelSes('${s.id}')">🚫 Cancel</button>`:''}
-      ${!isNS&&!isCx?`<button class="btn btn-warn btn-sm" onclick="noShowSes('${s.id}')">👻 No-show</button>`:''}
+      ${!isAbs&&!isCx?`<button class="btn btn-warn btn-sm" onclick="noShowSes('${s.id}')">🚷 Absent</button>`:''}
       <button class="btn btn-d btn-sm" onclick="delSes('${s.id}');closeSesPopupForce()">🗑️ Delete</button>
     </div>`;
   // Position near click
@@ -652,7 +652,7 @@ function setIV(v){incV=v;document.querySelectorAll('#incViewTabs .tab').forEach(
 function setICh(c){incCh=c;document.querySelectorAll('#incChTabs .tab').forEach((t,i)=>t.classList.toggle('on',['all','private','institute'][i]===c));rInc()}
 function rInc(){popMF('incMo');const fm=_('incMo').value;
   // #3 exclude cancelled sessions from finance
-  let ses=D.sessions.filter(s=>s.sessionStatus!=='cancelled');if(fm)ses=ses.filter(s=>s.date.startsWith(fm));
+  let ses=D.sessions.filter(s=>s.sessionStatus!=='cancelled'&&s.sessionStatus!=='absent'&&s.sessionStatus!=='no-show');if(fm)ses=ses.filter(s=>s.date.startsWith(fm));
   let txs=[...D.transactions];if(fm)txs=txs.filter(t=>t.date.startsWith(fm));
   if(incCh!=='all')ses=ses.filter(s=>(s.channel||'private')===incCh);
   const sI=ses.reduce((s,x)=>s+(x.fee||0),0);const commTotal=ses.reduce((s,x)=>s+(x.commission||0),0);
