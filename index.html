@@ -740,6 +740,8 @@ function saveConvert(){
   const custom=parseFloat(_('cvFee').value);const fee=calcFee(subj,ch,hours,stId,grp,algId,custom>0?custom:null);
   const stu=D.students.find(s=>s.id===stId);
   D.sessions.push({id:uid(),date,start,end,subject:subj,studentId:stId,studentIds:stId?[stId]:[],topic:_('cvTopic').value.trim(),note:'',paid:_('cvPaid').value,hours,fee,customFee:custom>0?custom:null,channel:ch,algCourseId:algId,grpSize:grp,attendance:'present',gcalId,convertedFromGoogle:true,commission:stu?.commission||0,sessionStatus:'completed',classType:'private',billingMode:'per-student',createdAt:new Date().toISOString()});
+  // Auto-hide converted event from calendar view (can toggle back in Google Events page)
+  D.gcalHidden[gcalId]=true;
   saveD();clM('cvModal');toast(`✅ ${stu?.nickname||stu?.name} · ฿${fee.toLocaleString()}`,'ok');rGCalImp();rSes();rCal();rDash()}
 
 // ============ CALENDAR — #3 popup on click ============
