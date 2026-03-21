@@ -292,12 +292,13 @@ tr.inactive-row{opacity:.45}
 </div>
 <!-- CALENDAR -->
 <div class="page" id="page-calendar">
-  <div class="greet an"><h1>📅 Schedule</h1></div>
-  <div style="display:flex;gap:12px;align-items:center;flex-wrap:wrap;margin-bottom:16px" class="an a1">
-    <div class="tabs"><div class="tab on" onclick="setCV('month')">Month</div><div class="tab" onclick="setCV('week')">Week</div></div>
-    <label class="tw" style="font-size:13px"><div class="tg on" id="calShowGcal" onclick="this.classList.toggle('on');rCal()"></div>Show Google Events</label>
+  <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:16px" class="an">
+    <div style="display:flex;align-items:center;gap:14px"><h1 style="font-size:24px;font-weight:900">📅 Schedule</h1>
+      <div class="tabs"><div class="tab on" onclick="setCV('month')">Month</div><div class="tab" onclick="setCV('week')">Week</div></div>
+      <label class="tw" style="font-size:13px"><div class="tg on" id="calShowGcal" onclick="this.classList.toggle('on');rCal()"></div>Show Google Events</label>
+    </div>
   </div>
-  <div class="cd an a2"><div class="cc"><button class="btn btn-o btn-sm" onclick="calN(-1)">◀</button><div class="cl" id="calLbl"></div><button class="btn btn-o btn-sm" onclick="calN(1)">▶</button><button class="btn btn-o btn-sm" onclick="calT()">Today</button><div style="flex:1"></div><button class="btn btn-g btn-sm" onclick="openSesM()">+ Add</button></div>
+  <div class="cd an a1"><div class="cc"><button class="btn btn-o btn-sm" onclick="calN(-1)">◀</button><div class="cl" id="calLbl"></div><button class="btn btn-o btn-sm" onclick="calN(1)">▶</button><button class="btn btn-o btn-sm" onclick="calT()">Today</button><div style="flex:1"></div><button class="btn btn-g btn-sm" onclick="openSesM()">+ Add</button></div>
   <div style="display:flex;gap:16px"><div style="flex:1;min-width:0" id="calBox"></div><div id="calSideMC" style="width:260px;flex-shrink:0"></div></div></div>
 </div>
 <!-- STUDENTS -->
