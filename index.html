@@ -319,6 +319,7 @@ tr.inactive-row{opacity:.45}
 <div class="page" id="page-income">
   <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:20px" class="an"><h1 style="font-size:24px;font-weight:900">💰 Finance</h1><div style="display:flex;gap:8px"><button class="btn btn-blue btn-sm" onclick="printReport()">📄 Monthly Report</button><button class="btn btn-g btn-sm" onclick="openTxM()">+ Add Transaction</button></div></div>
   <div class="stats" id="incSt"></div>
+  <div class="cd an a1" style="margin-bottom:16px"><div class="cd-t" style="margin-bottom:8px">📊 Income Trend</div><div class="chart-wrap" id="finChart" style="height:160px"></div></div>
   <div style="display:flex;gap:12px;flex-wrap:wrap;margin-bottom:16px" class="an a1">
     <div class="tabs" id="incViewTabs"><div class="tab on" onclick="setIV('overview')">Overview</div><div class="tab" onclick="setIV('student')">By Student</div><div class="tab" onclick="setIV('transactions')">All</div></div>
     <div class="tabs" id="incChTabs"><div class="tab on" onclick="setICh('all')">All</div><div class="tab" onclick="setICh('private')">🏠 Private</div><div class="tab" onclick="setICh('institute')">🏫 Institute</div></div>
@@ -649,7 +650,8 @@ function rSes(){popMF('sfm');syncCSel('sfs');const fm=_('sfm').value,fs=_('sfs')
   let h='<table><thead><tr><th>Date</th><th>Time</th><th>Ch.</th><th>Subject</th><th>Student</th><th>Topic</th><th>Hrs</th><th>Fee</th><th>Status</th><th></th></tr></thead><tbody>';
   list.forEach(s=>{const st=D.students.find(x=>x.id===s.studentId);const isCx=s.sessionStatus==='cancelled';const isAbs=s.sessionStatus==='absent'||s.sessionStatus==='no-show';const chBg=s.channel==='institute'?'bg-gcal':'bg-pd';
     const payBadge=isCx?'<span class="bg bg-cancel">Cancelled</span>':isAbs?'<span class="bg bg-ex">🚷 Absent</span>':s.paid==='paid'?'<span class="bg bg-pd">Paid</span>':s.paid==='end-of-month'?'<span class="bg bg-eom">📅 EoM</span>':'<span class="bg bg-up">Unpaid</span>';
-    h+=`<tr class="${isCx||isAbs?'inactive-row':''}"><td style="white-space:nowrap">${fDT(s.date)}${s.reminder&&!s.reminderDone?' 🔔':''}</td><td class="mono" style="font-size:13px">${s.start}-${s.end}</td><td><span class="bg ${chBg}" style="font-size:10px">${s.channel==='institute'?'🏫':'🏠'}</span></td><td>${sbg(s.subject)}</td><td style="font-weight:700">${st?(st.nickname||st.name):'-'}</td><td style="font-size:13px">${s.topic||'-'}</td><td class="mono">${s.hours?.toFixed(1)||'-'}</td><td class="mono" style="font-weight:800${isCx||isAbs?';text-decoration:line-through':''}">฿${(s.fee||0).toLocaleString()}</td><td>${payBadge}</td><td style="white-space:nowrap">${(isCx||isAbs)?`<button class="btn btn-blue btn-sm" onclick="undoSesStatus('${s.id}')" title="Undo">↩️</button> `:''}<button class="btn btn-o btn-sm" onclick="openAtt('${s.id}')">📋</button> <button class="btn btn-o btn-sm" onclick="openSesM('${s.id}')">✏️</button> <button class="btn btn-d btn-sm" onclick="delSes('${s.id}')">🗑️</button></td></tr>`});
+    const stName=st?(st.nickname||st.name):'-';
+    h+=`<tr class="${isCx||isAbs?'inactive-row':''}"><td style="white-space:nowrap">${fDT(s.date)}${s.reminder&&!s.reminderDone?' 🔔':''}</td><td class="mono" style="font-size:13px">${s.start}-${s.end}</td><td><span class="bg ${chBg}" style="font-size:10px">${s.channel==='institute'?'🏫':'🏠'}</span></td><td>${sbg(s.subject)}</td><td><div style="display:flex;align-items:center;gap:6px;font-weight:700">${st?`<img src="${avatarUrl(stName)}" class="avatar" style="width:24px;height:24px">`:''}<span>${stName}</span></div></td><td style="font-size:13px">${s.topic||'-'}</td><td class="mono">${s.hours?.toFixed(1)||'-'}</td><td class="mono" style="font-weight:800${isCx||isAbs?';text-decoration:line-through':''}">฿${(s.fee||0).toLocaleString()}</td><td>${payBadge}</td><td style="white-space:nowrap">${(isCx||isAbs)?`<button class="btn btn-blue btn-sm" onclick="undoSesStatus('${s.id}')" title="Undo">↩️</button> `:''}<button class="btn btn-o btn-sm" onclick="openAtt('${s.id}')">📋</button> <button class="btn btn-o btn-sm" onclick="openSesM('${s.id}')">✏️</button> <button class="btn btn-d btn-sm" onclick="delSes('${s.id}')">🗑️</button></td></tr>`});
   h+='</tbody></table>';_('sesList').innerHTML=h}
 
 // ============ ATTENDANCE ============
@@ -663,10 +665,10 @@ function saveAtt(){const sid=_('attB').dataset.sid;const s=D.sessions.find(x=>x.
 
 // ============ #3 SESSION DETAIL POPUP (calendar click) ============
 function showSesPopup(sesId,evt){
-  evt.stopPropagation();const s=D.sessions.find(x=>x.id===sesId);if(!s)return;const st=D.students.find(x=>x.id===s.studentId);const p=_('sesPopup');
+  evt.stopPropagation();const s=D.sessions.find(x=>x.id===sesId);if(!s)return;const st=D.students.find(x=>x.id===s.studentId);const p=_('sesPopup');const name=st?(st.nickname||st.name):'Unknown';
   const isCx=s.sessionStatus==='cancelled';const isAbs=s.sessionStatus==='absent'||s.sessionStatus==='no-show';
-  p.innerHTML=`<div class="sp-title">${st?(st.nickname||st.name):'Unknown'} ${sbg(s.subject)}</div>
-    <div class="sp-meta">📅 ${fDT(s.date)} · ⏰ ${s.start}–${s.end}<br>💰 ฿${(s.fee||0).toLocaleString()} · ${isCx?'❌ Cancelled':isAbs?'⚠️ Absent':s.paid==='paid'?'✅ Paid':'⏳ '+s.paid}${s.reminder&&!s.reminderDone?'<br>🔔 '+s.reminder:''}</div>
+  p.innerHTML=`<div style="display:flex;align-items:center;gap:10px;margin-bottom:10px">${avatarImg(name,'avatar-md')}<div><div class="sp-title" style="margin-bottom:0">${name}</div><div>${sbg(s.subject)}</div></div></div>
+    <div class="sp-meta">📅 ${fDT(s.date)} · ⏰ ${s.start}–${s.end} (${(s.hours||0).toFixed(1)}hr)<br>💰 ฿${(s.fee||0).toLocaleString()} · ${isCx?'❌ Cancelled':isAbs?'⚠️ Absent':s.paid==='paid'?'✅ Paid':'⏳ '+s.paid}${s.topic?'<br>📝 '+s.topic:''}${s.reminder&&!s.reminderDone?'<br>🔔 '+s.reminder:''}</div>
     <div class="sp-actions">
       <button class="btn btn-o btn-sm" onclick="openSesM('${s.id}');closeSesPopupForce()">✏️ Edit</button>
       <button class="btn btn-o btn-sm" onclick="openAtt('${s.id}');closeSesPopupForce()">📋 Attend</button>
@@ -797,10 +799,11 @@ function rInc(){popMF('incMo');const fm=_('incMo').value;
     ['math','physics','computer'].forEach(sub=>{const ss=ses.filter(s=>s.subject===sub);h+=`<tr><td>${sbg(sub)}</td><td class="mono">${ss.length}</td><td class="mono">${ss.reduce((s,x)=>s+(x.hours||0),0).toFixed(1)}</td><td class="mono" style="font-weight:800">฿${ss.reduce((s,x)=>s+(x.fee||0),0).toLocaleString()}</td><td class="mono" style="color:var(--orgF)">฿${ss.reduce((s,x)=>s+(x.commission||0),0).toLocaleString()}</td></tr>`});h+='</tbody></table>';_('incB').innerHTML=h}
   else if(incV==='student'){let h='<table><thead><tr><th>Student</th><th>Sessions</th><th>Income</th><th>Comm.</th><th>Net</th></tr></thead><tbody>';
     const bs={};ses.forEach(s=>{const k=s.studentId||'_';if(!bs[k])bs[k]={n:0,i:0,c:0};bs[k].n++;bs[k].i+=s.fee||0;bs[k].c+=s.commission||0});
-    Object.entries(bs).forEach(([id,d])=>{const st=D.students.find(s=>s.id===id);h+=`<tr><td style="font-weight:800">${st?(st.nickname||st.name):'Unknown'}</td><td class="mono">${d.n}</td><td class="mono" style="color:var(--grn3);font-weight:800">฿${d.i.toLocaleString()}</td><td class="mono" style="color:var(--orgF)">฿${d.c.toLocaleString()}</td><td class="mono" style="font-weight:800">฿${(d.i-d.c).toLocaleString()}</td></tr>`});h+='</tbody></table>';_('incB').innerHTML=h}
+    Object.entries(bs).forEach(([id,d])=>{const st=D.students.find(s=>s.id===id);const stName=st?(st.nickname||st.name):'Unknown';h+=`<tr><td><div style="display:flex;align-items:center;gap:6px;font-weight:800">${st?`<img src="${avatarUrl(stName)}" class="avatar" style="width:24px;height:24px">`:''}<span>${stName}</span></div></td><td class="mono">${d.n}</td><td class="mono" style="color:var(--grn3);font-weight:800">฿${d.i.toLocaleString()}</td><td class="mono" style="color:var(--orgF)">฿${d.c.toLocaleString()}</td><td class="mono" style="font-weight:800">฿${(d.i-d.c).toLocaleString()}</td></tr>`});h+='</tbody></table>';_('incB').innerHTML=h}
   else{const all=[];ses.forEach(s=>{all.push({date:s.date,type:'income',amount:s.fee||0,desc:`${SB[s.subject]?.l||s.subject}`,studentId:s.studentId,src:'ses',id:s.id})});txs.forEach(t=>{all.push({...t,src:'tx'})});all.sort((a,b)=>b.date.localeCompare(a.date));
     let h='<table><thead><tr><th>Date</th><th>Type</th><th>Desc</th><th>Student</th><th>Amount</th><th></th></tr></thead><tbody>';
-    all.forEach(t=>{const st=D.students.find(s=>s.id===t.studentId);const isI=t.type==='income';h+=`<tr><td style="white-space:nowrap">${fDT(t.date)}</td><td>${isI?'<span class="bg bg-in">In</span>':'<span class="bg bg-ex">Out</span>'}</td><td style="font-size:13px">${t.desc||'-'}</td><td>${st?(st.nickname||st.name):'-'}</td><td class="mono" style="font-weight:800;color:${isI?'var(--grn3)':'var(--redF)'}">฿${(t.amount||0).toLocaleString()}</td><td>${t.src==='tx'?`<button class="btn btn-o btn-sm" onclick="openTxM('${t.id}')">✏️</button> <button class="btn btn-d btn-sm" onclick="delTx('${t.id}')">🗑️</button>`:''}</td></tr>`});h+='</tbody></table>';_('incB').innerHTML=h}}
+    all.forEach(t=>{const st=D.students.find(s=>s.id===t.studentId);const isI=t.type==='income';h+=`<tr><td style="white-space:nowrap">${fDT(t.date)}</td><td>${isI?'<span class="bg bg-in">In</span>':'<span class="bg bg-ex">Out</span>'}</td><td style="font-size:13px">${t.desc||'-'}</td><td>${st?(st.nickname||st.name):'-'}</td><td class="mono" style="font-weight:800;color:${isI?'var(--grn3)':'var(--redF)'}">฿${(t.amount||0).toLocaleString()}</td><td>${t.src==='tx'?`<button class="btn btn-o btn-sm" onclick="openTxM('${t.id}')">✏️</button> <button class="btn btn-d btn-sm" onclick="delTx('${t.id}')">🗑️</button>`:''}</td></tr>`});h+='</tbody></table>';_('incB').innerHTML=h}
+  renderFinChart()}
 
 // ============ GCAL IMPORTED EVENTS ============
 function getVisibleGCalForDate(ds){return(D.gcalImported||[]).filter(ev=>{
@@ -1211,6 +1214,28 @@ function batchPay(){
   saveD();rSes();rInc();rDash();toast(`✅ ${unpaid.length} sessions marked as Paid (฿${total.toLocaleString()})`,'ok')}
 
 // ============ A: MONTHLY REPORT (print) ============
+// #6: Finance income trend chart — last 6 months
+function renderFinChart(){const el=_('finChart');if(!el)return;
+  const now=new Date();const months=[];
+  for(let i=5;i>=0;i--){const d=new Date(now.getFullYear(),now.getMonth()-i,1);
+    const moStr=`${d.getFullYear()}-${String(d.getMonth()+1).padStart(2,'0')}`;
+    const ses=D.sessions.filter(s=>s.date.startsWith(moStr)&&s.sessionStatus!=='cancelled'&&s.sessionStatus!=='absent');
+    const priv=ses.filter(s=>(s.channel||'private')==='private').reduce((a,x)=>a+(x.fee||0),0);
+    const inst=ses.filter(s=>s.channel==='institute').reduce((a,x)=>a+(x.fee||0),0);
+    months.push({label:eM(d.getMonth()).substr(0,3),priv,inst,total:priv+inst})}
+  const maxV=Math.max(...months.map(m=>m.total),1);
+  let h='';months.forEach(m=>{const pctP=Math.max(2,m.priv/maxV*100);const pctI=Math.max(0,m.inst/maxV*100);
+    h+=`<div style="flex:1;display:flex;flex-direction:column;align-items:center;gap:2px">
+      <div style="font-size:10px;font-weight:800;color:var(--tx2)">฿${m.total>=1000?(m.total/1000).toFixed(1)+'k':m.total}</div>
+      <div style="width:100%;flex:1;display:flex;flex-direction:column;justify-content:flex-end;gap:1px">
+        ${m.inst?`<div style="height:${pctI}%;background:var(--gcalB);border-radius:4px 4px 0 0;min-height:${m.inst?3:0}px"></div>`:''}
+        <div style="height:${pctP}%;background:var(--grn);border-radius:${m.inst?'0 0 4px 4px':'4px 4px 4px 4px'};min-height:3px"></div>
+      </div>
+      <div style="font-size:9px;font-weight:700;color:var(--tx3)">${m.label}</div>
+    </div>`});
+  h+=`<div style="position:absolute;bottom:-22px;right:0;font-size:10px;color:var(--tx3)"><span style="display:inline-block;width:8px;height:8px;background:var(--grn);border-radius:2px;margin-right:3px"></span>Private <span style="display:inline-block;width:8px;height:8px;background:var(--gcalB);border-radius:2px;margin:0 3px 0 8px"></span>Institute</div>`;
+  el.innerHTML=h}
+
 function printReport(){
   const fm=_('incMo')?.value;if(!fm){toast('Select a month first','info');return}
   const[ry,rmo]=fm.split('-').map(Number);const moName=eM(rmo-1)+' '+ry;
@@ -1252,7 +1277,7 @@ function printReport(){
   </div>`;
   // Open in new window for printing
   const win=window.open('','_blank');
-  win.document.write(`<!DOCTYPE html><html><head><title>Report ${moName}</title><link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;700;900&display=swap" rel="stylesheet"><style>body{margin:0;font-family:Nunito,sans-serif}</style></head><body>${rptEl.innerHTML}<script>setTimeout(()=>window.print(),500)<\/script></body></html>`);
+  win.document.write(`<!DOCTYPE html><html><head><title>Report ${moName}</title><link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;700;900&display=swap" rel="stylesheet"><style>body{margin:0;font-family:Nunito,sans-serif}.no-print{text-align:center;padding:10px;background:#e8f6ef;margin-bottom:16px;border-radius:10px;font-size:13px}@media print{.no-print{display:none}}</style></head><body><div class="no-print">💡 To save as PDF: choose <strong>"Save as PDF"</strong> in the print dialog below<br><button onclick="window.print()" style="margin-top:6px;padding:8px 20px;background:#2ecc71;color:#fff;border:none;border-radius:8px;font-weight:700;cursor:pointer;font-family:Nunito">🖨️ Print / Save PDF</button></div>${rptEl.innerHTML}</body></html>`);
   win.document.close()}
 
 document.addEventListener('DOMContentLoaded',()=>{
