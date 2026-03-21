@@ -115,7 +115,11 @@ tr.inactive-row{opacity:.45}
 .wh.wtd{color:var(--grn2)}.wh .wdn{font-size:20px;font-weight:900;display:block;margin-top:2px}
 .wt{padding:2px 6px;font-size:11px;color:var(--tx3);text-align:right;border-right:1px solid var(--border2);height:50px;font-family:'JetBrains Mono',monospace;font-weight:500}
 .ws{height:50px;border-bottom:1px solid var(--border2);border-right:1px solid var(--border2);position:relative;cursor:pointer}.ws:hover{background:var(--bg2)}
-.we{position:absolute;left:2px;right:2px;padding:3px 6px;border-radius:8px;font-size:11px;font-weight:700;overflow:hidden;z-index:2;cursor:pointer;border-left:3px solid}
+.we{position:absolute;left:2px;right:2px;padding:3px 6px;border-radius:8px;font-size:11px;font-weight:700;overflow:hidden;z-index:2;cursor:pointer;border-left:3px solid;transition:box-shadow .15s}
+.we.dragging{opacity:.7;box-shadow:0 4px 20px rgba(0,0,0,.25);z-index:100;cursor:grabbing}
+.we.drag-src{cursor:grab}
+.we .we-resize{position:absolute;bottom:0;left:0;right:0;height:6px;cursor:ns-resize;border-radius:0 0 6px 6px}
+.ws.drag-over{background:var(--grnL)!important}
 .sch-card{display:flex;gap:14px;padding:14px;background:var(--bg2);border-radius:var(--r2);margin-bottom:10px;border:1.5px solid var(--border2);transition:all .2s;cursor:pointer}
 .sch-card:hover{border-color:var(--grn);box-shadow:var(--sh)}
 .sch-thumb{width:56px;height:56px;border-radius:var(--r2);display:flex;align-items:center;justify-content:center;font-size:26px;flex-shrink:0}
@@ -763,14 +767,110 @@ function rMo(){const y=cD.getFullYear(),m=cD.getMonth();_('calLbl').textContent=
   const rem=(fd+dim)%7===0?0:7-(fd+dim)%7;for(let i=1;i<=rem;i++)h+=`<div class="ce ot"><div class="dn">${i}</div></div>`;h+='</div>';_('calBox').innerHTML=h}
 function rWk(){const sow=new Date(cD);sow.setDate(sow.getDate()-sow.getDay());const eow=new Date(sow);eow.setDate(eow.getDate()+6);
   _('calLbl').textContent=`${sow.getDate()} ${eM(sow.getMonth()).substr(0,3)} — ${eow.getDate()} ${eM(eow.getMonth()).substr(0,3)} ${eow.getFullYear()}`;
-  const now=new Date();const days=['Sun','Mon','Tue','Wed','Thu','Fri','Sat'];let h='<div class="wg"><div class="wh"></div>';
-  for(let i=0;i<7;i++){const d=new Date(sow);d.setDate(d.getDate()+i);h+=`<div class="wh ${d.toDateString()===now.toDateString()?'wtd':''}">${days[i]}<span class="wdn">${d.getDate()}</span></div>`}
-  for(let hr=8;hr<22;hr++){h+=`<div class="wt">${String(hr).padStart(2,'0')}:00</div>`;for(let i=0;i<7;i++){const d=new Date(sow);d.setDate(d.getDate()+i);const ds=d.toISOString().split('T')[0];h+=`<div class="ws" onclick="openSesM(null,'${ds}')">`;
-    D.sessions.filter(s=>s.date===ds&&s.sessionStatus!=='cancelled').forEach(ev=>{const[esh]=ev.start.split(':').map(Number),[eeh,eem]=ev.end.split(':').map(Number);if(esh===hr){const dur=((eeh*60+eem)-esh*60)/60;const ht=Math.max(28,dur*50);const cols={math:'var(--mathF)',physics:'var(--phyF)',computer:'var(--compF)'};const bgs={math:'var(--mathBg)',physics:'var(--phyBg)',computer:'var(--compBg)'};const st=D.students.find(s=>s.id===ev.studentId);
-      h+=`<div class="we" style="top:0;height:${ht}px;background:${bgs[ev.subject]||'var(--gcalBg)'};color:${cols[ev.subject]||'var(--gcalF)'};border-left-color:${cols[ev.subject]||'var(--gcalB)'}" onclick="showSesPopup('${ev.id}',event)">${ev.start} ${st?(st.nickname||st.name):''}</div>`}});
-    if(showGCal()){getVisibleGCalForDate(ds).forEach(g=>{if(!g.startTime)return;const[gh]=g.startTime.split(':').map(Number);if(gh===hr){let ght=50;if(g.endTime){const[geh,gem]=g.endTime.split(':').map(Number);ght=Math.max(28,((geh*60+gem)-gh*60)/60*50)}
-      h+=`<div class="we" style="top:0;height:${ght}px;background:var(--gcalBg);color:var(--gcalF);border-left-color:var(--gcalB)" onclick="showGCalPopup('${g.gcalId}',event)">${g.startTime} ${g.summary||''}</div>`}})}
-    h+='</div>'}}h+='</div>';_('calBox').innerHTML=h}
+  const now=new Date();const days=['Sun','Mon','Tue','Wed','Thu','Fri','Sat'];let h='<div class="wg" id="wkGrid"><div class="wh"></div>';
+  const dateCols=[];
+  for(let i=0;i<7;i++){const d=new Date(sow);d.setDate(d.getDate()+i);const ds=d.toISOString().split('T')[0];dateCols.push(ds);h+=`<div class="wh ${d.toDateString()===now.toDateString()?'wtd':''}">${days[i]}<span class="wdn">${d.getDate()}</span></div>`}
+  for(let hr=8;hr<22;hr++){h+=`<div class="wt">${String(hr).padStart(2,'0')}:00</div>`;for(let i=0;i<7;i++){const ds=dateCols[i];h+=`<div class="ws" data-date="${ds}" data-hr="${hr}" data-col="${i}" onclick="openSesM(null,'${ds}')">`;
+    D.sessions.filter(s=>s.date===ds&&s.sessionStatus!=='cancelled').forEach(ev=>{const[esh,esm]=ev.start.split(':').map(Number),[eeh,eem]=ev.end.split(':').map(Number);if(esh===hr){const startMin=esm;const dur=((eeh*60+eem)-(esh*60+esm))/60;const ht=Math.max(28,dur*50);const topOff=startMin*(50/60);const cols={math:'var(--mathF)',physics:'var(--phyF)',computer:'var(--compF)'};const bgs={math:'var(--mathBg)',physics:'var(--phyBg)',computer:'var(--compBg)'};const st=D.students.find(s=>s.id===ev.studentId);
+      h+=`<div class="we drag-src" data-sid="${ev.id}" style="top:${topOff}px;height:${ht}px;background:${bgs[ev.subject]||'var(--gcalBg)'};color:${cols[ev.subject]||'var(--gcalF)'};border-left-color:${cols[ev.subject]||'var(--gcalB)'}" onmousedown="startDrag(event,'${ev.id}')" onclick="showSesPopup('${ev.id}',event)">${ev.start} ${st?(st.nickname||st.name):''}<div class="we-resize" onmousedown="startResize(event,'${ev.id}')"></div></div>`}});
+    if(showGCal()){getVisibleGCalForDate(ds).forEach(g=>{if(!g.startTime)return;const[gh,gm]=g.startTime.split(':').map(Number);if(gh===hr){let ght=50;if(g.endTime){const[geh,gem]=g.endTime.split(':').map(Number);ght=Math.max(28,((geh*60+gem)-(gh*60+gm))/60*50)}const topOff=gm*(50/60);
+      h+=`<div class="we" style="top:${topOff}px;height:${ght}px;background:var(--gcalBg);color:var(--gcalF);border-left-color:var(--gcalB)" onclick="showGCalPopup('${g.gcalId}',event)">${g.startTime} ${g.summary||''}</div>`}})}
+    h+='</div>'}}h+='</div>';_('calBox').innerHTML=h;
+  // Store week dates for drag calculations
+  _('calBox').dataset.wkDates=JSON.stringify(dateCols)}
+
+// ============ PHASE 2: DRAG & DROP (Week view) ============
+let dragState=null;
+function startDrag(e,sesId){
+  if(e.target.classList.contains('we-resize'))return; // let resize handle it
+  e.preventDefault();e.stopPropagation();
+  const el=e.target.closest('.we');if(!el)return;
+  const grid=_('wkGrid');if(!grid)return;
+  const gridRect=grid.getBoundingClientRect();
+  const elRect=el.getBoundingClientRect();
+  dragState={type:'move',sesId,el,startX:e.clientX,startY:e.clientY,
+    origLeft:elRect.left-gridRect.left,origTop:elRect.top-gridRect.top,
+    offsetX:e.clientX-elRect.left,offsetY:e.clientY-elRect.top,moved:false};
+  el.classList.add('dragging');
+  document.addEventListener('mousemove',onDrag);
+  document.addEventListener('mouseup',endDrag);
+}
+function startResize(e,sesId){
+  e.preventDefault();e.stopPropagation();
+  const el=e.target.closest('.we');if(!el)return;
+  dragState={type:'resize',sesId,el,startY:e.clientY,origHeight:el.offsetHeight,moved:false};
+  el.classList.add('dragging');
+  document.addEventListener('mousemove',onDrag);
+  document.addEventListener('mouseup',endDrag);
+}
+function onDrag(e){
+  if(!dragState)return;dragState.moved=true;
+  if(dragState.type==='resize'){
+    const dy=e.clientY-dragState.startY;
+    const newH=Math.max(25,dragState.origHeight+dy);
+    // Snap to 15-min increments (50px/hr = 12.5px per 15min)
+    const snapped=Math.round(newH/12.5)*12.5;
+    dragState.el.style.height=snapped+'px';
+  }else{
+    // Move: reposition element as fixed overlay
+    dragState.el.style.position='fixed';
+    dragState.el.style.left=(e.clientX-dragState.offsetX)+'px';
+    dragState.el.style.top=(e.clientY-dragState.offsetY)+'px';
+    dragState.el.style.width='120px';dragState.el.style.zIndex='100';
+    // Highlight drop target
+    document.querySelectorAll('.ws.drag-over').forEach(c=>c.classList.remove('drag-over'));
+    const target=document.elementFromPoint(e.clientX,e.clientY);
+    if(target){const cell=target.closest('.ws');if(cell)cell.classList.add('drag-over')}
+  }
+}
+function endDrag(e){
+  document.removeEventListener('mousemove',onDrag);
+  document.removeEventListener('mouseup',endDrag);
+  if(!dragState)return;
+  document.querySelectorAll('.ws.drag-over').forEach(c=>c.classList.remove('drag-over'));
+  const ses=D.sessions.find(s=>s.id===dragState.sesId);
+  if(!ses||!dragState.moved){dragState.el.classList.remove('dragging');dragState=null;return}
+  
+  if(dragState.type==='resize'){
+    // Calculate new end time from height
+    const newH=parseInt(dragState.el.style.height);
+    const durHrs=newH/50; // 50px per hour
+    const[sh,sm]=ses.start.split(':').map(Number);
+    const endMin=sh*60+sm+Math.round(durHrs*60/15)*15; // snap to 15min
+    const eh=Math.floor(endMin/60),em=endMin%60;
+    const newEnd=String(eh).padStart(2,'0')+':'+String(em).padStart(2,'0');
+    if(newEnd!==ses.end){
+      ses.end=newEnd;ses.hours=Math.max(0,(endMin-(sh*60+sm))/60);
+      if(!ses.customFee)ses.fee=calcFee(ses.subject,ses.channel||'private',ses.hours,ses.studentId,ses.grpSize,ses.algCourseId,null);
+      saveD();toast(`Resized: ${ses.start}-${ses.end} (${ses.hours.toFixed(1)}hr) ฿${ses.fee}`,'ok');
+    }
+  }else{
+    // Move: find drop target cell
+    const target=document.elementFromPoint(e.clientX,e.clientY);
+    const cell=target?.closest?.('.ws');
+    if(cell&&cell.dataset.date){
+      const newDate=cell.dataset.date;
+      const newHr=parseInt(cell.dataset.hr);
+      // Calculate minute offset within cell from cursor position
+      const cellRect=cell.getBoundingClientRect();
+      const yInCell=e.clientY-cellRect.top;
+      const minOff=Math.round((yInCell/50)*60/15)*15; // snap 15min
+      const newStartMin=newHr*60+minOff;
+      const durMin=ses.hours*60||60;
+      const newEndMin=newStartMin+durMin;
+      const newStart=String(Math.floor(newStartMin/60)).padStart(2,'0')+':'+String(newStartMin%60).padStart(2,'0');
+      const newEnd=String(Math.floor(newEndMin/60)).padStart(2,'0')+':'+String(newEndMin%60).padStart(2,'0');
+      if(newDate!==ses.date||newStart!==ses.start){
+        ses.date=newDate;ses.start=newStart;ses.end=newEnd;
+        ses.hours=Math.max(0,durMin/60);
+        if(!ses.customFee)ses.fee=calcFee(ses.subject,ses.channel||'private',ses.hours,ses.studentId,ses.grpSize,ses.algCourseId,null);
+        saveD();const st=D.students.find(s=>s.id===ses.studentId);
+        toast(`Moved: ${fDT(newDate)} ${newStart}-${newEnd} ฿${ses.fee}`,'ok');
+      }
+    }
+  }
+  dragState=null;rCal();rDash();
+}
 
 // ============ #10 DASHBOARD — fix upcoming to exclude past today ============
 function rDash(){const now=new Date(),hr=now.getHours();_('greetH').textContent=`${hr<12?'Good Morning':hr<17?'Good Afternoon':'Good Evening'}! 👋`;
@@ -827,7 +927,37 @@ function renderCalList(){const el=_('calListPicker');if(!el)return;const cals=D.
 function toggleCalSel(calId,el){let sel=D.settings.selectedCalendars||[];if(sel.includes(calId)){sel=sel.filter(x=>x!==calId);el.classList.remove('on')}else{sel.push(calId);el.classList.add('on')}D.settings.selectedCalendars=sel;saveD()}
 async function fetchGE(){if(!gapiReady||!gapi?.client?.getToken()){toast('Not connected','err');return}const sel=D.settings.selectedCalendars||[];if(!sel.length){toast('Select calendars in Settings first','info');return}try{const now=new Date();const tMin=new Date(now.getFullYear(),now.getMonth()-1,1).toISOString();const tMax=new Date(now.getFullYear(),now.getMonth()+3,0).toISOString();let all=[];const cn={};(D.gcalCalendars||[]).forEach(c=>{cn[c.id]=c.summary});for(const cid of sel){try{const r=await gapi.client.calendar.events.list({calendarId:cid,timeMin:tMin,timeMax:tMax,singleEvents:true,orderBy:'startTime',maxResults:250});all=all.concat((r.result.items||[]).map(ev=>({...ev,_cn:cn[cid]||cid})))}catch(e){console.warn('[GCal]',cid,e?.result?.error?.message)}}
   D.gcalImported=all.map(ev=>{const sdt=ev.start?.dateTime,sd=ev.start?.date,edt=ev.end?.dateTime;let date='',st='',et='';if(sdt){const d=new Date(sdt);date=d.toISOString().split('T')[0];st=d.toTimeString().substr(0,5)}else if(sd)date=sd;if(edt)et=new Date(edt).toTimeString().substr(0,5);return{gcalId:ev.id,summary:ev.summary||'',date,startTime:st,endTime:et,calendarName:ev._cn,importedFromGoogle:true}});
-  saveD();updGUI(true);rCal();rDash();rGCalImp();toast(`✅ ${all.length} events from ${sel.length} calendars`,'ok')}catch(e){toast(`Error: ${e?.result?.error?.message||e}`,'err')}}
+  // PHASE 1: Sync linked sessions — update time/date/fee if Google Calendar event changed
+  const syncCount=syncLinkedSessions();
+  saveD();updGUI(true);rCal();rDash();rGCalImp();
+  let msg=`✅ ${all.length} events from ${sel.length} calendars`;
+  if(syncCount>0)msg+=` · 🔄 Updated ${syncCount} linked session${syncCount>1?'s':''}`;
+  toast(msg,'ok')}catch(e){toast(`Error: ${e?.result?.error?.message||e}`,'err')}}
+
+// Phase 1: Sync sessions that were converted from Google Calendar
+function syncLinkedSessions(){
+  let count=0;
+  D.sessions.forEach(ses=>{
+    if(!ses.gcalId||!ses.convertedFromGoogle)return;
+    const gev=(D.gcalImported||[]).find(e=>e.gcalId===ses.gcalId);
+    if(!gev)return;
+    // Check if time/date changed
+    const changed=ses.date!==gev.date||ses.start!==gev.startTime||ses.end!==gev.endTime;
+    if(!changed)return;
+    // Update session
+    const oldFee=ses.fee;
+    ses.date=gev.date;ses.start=gev.startTime;ses.end=gev.endTime;
+    // Recalculate hours and fee
+    if(ses.start&&ses.end){
+      const[sh,sm]=ses.start.split(':').map(Number),[eh,em]=ses.end.split(':').map(Number);
+      ses.hours=Math.max(0,((eh*60+em)-(sh*60+sm))/60);
+      if(!ses.customFee)ses.fee=calcFee(ses.subject,ses.channel||'private',ses.hours,ses.studentId,ses.grpSize,ses.algCourseId,null);
+    }
+    console.log(`[Sync] ${ses.date} ${ses.start}-${ses.end} fee:${oldFee}→${ses.fee}`);
+    count++;
+  });
+  return count;
+}
 async function addGCal(d){if(!gapiReady||!gapi?.client?.getToken()){toast('Not connected — saved locally','err');return}try{const st=D.students.find(s=>s.id===d.studentId);const sum=`${SB[d.subject]?.l||d.subject} — ${st?(st.nickname||st.name):'Tutoring'}`;await gapi.client.calendar.events.insert({calendarId:D.settings.calendarId||'primary',resource:{summary:sum,description:d.topic||'',start:{dateTime:`${d.date}T${d.start}:00+07:00`,timeZone:'Asia/Bangkok'},end:{dateTime:`${d.date}T${d.end}:00+07:00`,timeZone:'Asia/Bangkok'}}});toast(`✅ Added to GCal: ${sum}`,'ok');setTimeout(fetchGE,1000)}catch(e){toast(`GCal Error: ${e?.result?.error?.message||e}`,'err',8000)}}
 
 // ============ HELPERS ============
