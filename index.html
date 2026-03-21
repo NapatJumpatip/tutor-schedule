@@ -352,7 +352,17 @@ tr.inactive-row{opacity:.45}
 
 <!-- STUDENT MODAL -->
 <div class="mo" id="stModal"><div class="mo-box"><div class="mo-t" id="stMT">Add Student</div>
-<div class="fg"><label>Nickname *</label><input id="stNK" placeholder="e.g. Beam, Ploy"></div>
+<div style="text-align:center;margin-bottom:16px"><img id="stAvPrev" class="avatar avatar-lg" style="width:80px;height:80px" src="https://api.dicebear.com/9.x/adventurer/svg?seed=default"><div style="margin-top:6px"><span class="sa" onclick="_('stAvEdit').style.display=_('stAvEdit').style.display==='none'?'block':'none'">✏️ Customize Avatar</span></div></div>
+<div id="stAvEdit" style="display:none;margin-bottom:14px;padding:14px;background:var(--bg2);border-radius:var(--r3)">
+  <div class="fr"><div class="fg"><label>Hair</label><select id="avHair" onchange="prevAvatar()" style="padding:8px;border-radius:8px;border:1.5px solid var(--border);font-family:Nunito;font-size:13px;width:100%"><option value="">Random</option><option value="short01">Short 1</option><option value="short02">Short 2</option><option value="short03">Short 3</option><option value="short04">Short 4</option><option value="short05">Short 5</option><option value="long01">Long 1</option><option value="long02">Long 2</option><option value="long03">Long 3</option><option value="long04">Long 4</option><option value="long05">Long 5</option><option value="long06">Long 6</option><option value="long07">Long 7</option><option value="long08">Long 8</option><option value="long09">Long 9</option><option value="long10">Long 10</option><option value="long11">Long 11</option><option value="long12">Long 12</option><option value="long13">Long 13</option></select></div>
+  <div class="fg"><label>Hair Color</label><select id="avHairColor" onchange="prevAvatar()" style="padding:8px;border-radius:8px;border:1.5px solid var(--border);font-family:Nunito;font-size:13px;width:100%"><option value="">Random</option><option value="0e0e0e">Black</option><option value="3a2c1f">Dark Brown</option><option value="6a4e35">Brown</option><option value="b27b4a">Light Brown</option><option value="d4a04c">Blonde</option><option value="c93305">Red</option><option value="e8e1e1">Gray/White</option><option value="f59797">Pink</option><option value="76c9e8">Blue</option></select></div></div>
+  <div class="fr"><div class="fg"><label>Skin</label><select id="avSkin" onchange="prevAvatar()" style="padding:8px;border-radius:8px;border:1.5px solid var(--border);font-family:Nunito;font-size:13px;width:100%"><option value="">Random</option><option value="f2d3b1">Light</option><option value="ecad80">Medium Light</option><option value="d08b5b">Medium</option><option value="ae5d29">Tan</option><option value="614335">Dark</option></select></div>
+  <div class="fg"><label>Eyes</label><select id="avEyes" onchange="prevAvatar()" style="padding:8px;border-radius:8px;border:1.5px solid var(--border);font-family:Nunito;font-size:13px;width:100%"><option value="">Random</option><option value="variant01">Style 1</option><option value="variant02">Style 2</option><option value="variant03">Style 3</option><option value="variant04">Style 4</option><option value="variant05">Style 5</option><option value="variant06">Style 6</option><option value="variant07">Style 7</option><option value="variant12">Style 12</option><option value="variant13">Style 13</option><option value="variant20">Style 20</option><option value="variant26">Style 26</option></select></div></div>
+  <div class="fr"><div class="fg"><label>Glasses</label><select id="avGlasses" onchange="prevAvatar()" style="padding:8px;border-radius:8px;border:1.5px solid var(--border);font-family:Nunito;font-size:13px;width:100%"><option value="">None/Random</option><option value="variant01">Round</option><option value="variant02">Square</option><option value="variant03">Cat-eye</option><option value="variant04">Pilot</option><option value="variant05">Half-rim</option></select></div>
+  <div class="fg"><label>Earrings</label><select id="avEarring" onchange="prevAvatar()" style="padding:8px;border-radius:8px;border:1.5px solid var(--border);font-family:Nunito;font-size:13px;width:100%"><option value="">None</option><option value="variant01">Stud</option><option value="variant02">Hoop</option><option value="variant03">Pendant</option><option value="variant04">Drop</option><option value="variant05">Double</option></select></div></div>
+  <div style="margin-top:6px"><button class="btn btn-o btn-sm" onclick="randomAvatar()">🎲 Randomize</button></div>
+</div>
+<div class="fg"><label>Nickname *</label><input id="stNK" placeholder="e.g. Beam, Ploy" oninput="prevAvatar()"></div>
 <div class="fr"><div class="fg"><label>Full Name</label><input id="stN" placeholder="Optional"></div><div class="fg"><label>Year / Grade</label><input id="stYr" placeholder="e.g. ม.4, Year 2"></div></div>
 <div class="fg"><label>Start Date</label><input type="date" id="stSD"></div>
 <div class="fg"><label>Status</label><div class="csel"><div class="csel-display" onclick="toggleCSel(this)">🟢 Active</div><div class="csel-opts"></div><select id="stStat"><option value="active" data-icon="🟢">Active</option><option value="paused" data-icon="⏸️">Paused (temporary break)</option><option value="stopped" data-icon="🔴">Stopped (ended)</option></select></div></div>
@@ -490,9 +500,60 @@ function toast(msg,type='info',dur=4000){const t=_('toast');t.textContent=msg;t.
 const SB={math:{l:'Math',i:'🔢',c:'m',em:'📐'},physics:{l:'Physics',i:'⚛️',c:'ph',em:'🔭'},computer:{l:'Computer',i:'💻',c:'comp',em:'💻'}};
 function sbg(s){const x=SB[s]||{l:s,c:'m',i:'📚'};return`<span class="bg bg-${x.c}">${x.i} ${x.l}</span>`}
 
-// AVATAR HELPER — DiceBear adventurer style
-function avatarUrl(name,size){return`https://api.dicebear.com/7.x/adventurer/svg?seed=${encodeURIComponent(name||'default')}&size=${size||48}`}
+// AVATAR SYSTEM — DiceBear adventurer with customization
+function buildAvatarParams(opts){
+  let params=[];
+  if(opts?.hair)params.push('hair='+opts.hair);
+  if(opts?.hairColor)params.push('hairColor='+opts.hairColor);
+  if(opts?.skinColor)params.push('skinColor='+opts.skinColor);
+  if(opts?.eyes)params.push('eyes='+opts.eyes);
+  if(opts?.glasses)params.push('glasses='+opts.glasses);
+  if(opts?.glassesProbability)params.push('glassesProbability='+opts.glassesProbability);
+  if(opts?.earrings)params.push('earrings='+opts.earrings);
+  if(opts?.earringsProbability)params.push('earringsProbability='+opts.earringsProbability);
+  return params.join('&');
+}
+function avatarUrl(name,size,opts){
+  let url=`https://api.dicebear.com/9.x/adventurer/svg?seed=${encodeURIComponent(name||'default')}`;
+  if(size)url+=`&size=${size}`;
+  // Use saved avatar options if available
+  if(!opts){const stu=D.students.find(s=>(s.nickname||s.name)===name);if(stu?.avatarOpts)opts=stu.avatarOpts}
+  if(opts){const p=buildAvatarParams(opts);if(p)url+='&'+p}
+  return url;
+}
 function avatarImg(name,cls){return`<img src="${avatarUrl(name)}" class="avatar ${cls||'avatar-md'}" alt="${name||''}" loading="lazy">`}
+// Avatar editor preview
+function prevAvatar(){
+  const name=_('stNK')?.value||'preview';
+  const opts=getAvFormOpts();
+  _('stAvPrev').src=avatarUrl(name,120,opts);
+}
+function getAvFormOpts(){
+  const o={};
+  const h=_('avHair')?.value;if(h)o.hair=h;
+  const hc=_('avHairColor')?.value;if(hc)o.hairColor=hc;
+  const sk=_('avSkin')?.value;if(sk)o.skinColor=sk;
+  const ey=_('avEyes')?.value;if(ey)o.eyes=ey;
+  const gl=_('avGlasses')?.value;if(gl){o.glasses=gl;o.glassesProbability=100}
+  const er=_('avEarring')?.value;if(er){o.earrings=er;o.earringsProbability=100}
+  return Object.keys(o).length?o:null;
+}
+function setAvFormOpts(opts){
+  if(!opts)return;
+  if(opts.hair)_('avHair').value=opts.hair;
+  if(opts.hairColor)_('avHairColor').value=opts.hairColor;
+  if(opts.skinColor)_('avSkin').value=opts.skinColor;
+  if(opts.eyes)_('avEyes').value=opts.eyes;
+  if(opts.glasses)_('avGlasses').value=opts.glasses;
+  if(opts.earrings)_('avEarring').value=opts.earrings;
+}
+function resetAvForm(){['avHair','avHairColor','avSkin','avEyes','avGlasses','avEarring'].forEach(id=>{if(_(id))_(id).value=''})}
+function randomAvatar(){resetAvForm();
+  // Set random seed suffix to get different random avatar
+  const nick=_('stNK')?.value||'';
+  _('stNK').value=nick; // keep name, DiceBear will randomize from options
+  _('stAvPrev').src=avatarUrl(nick+'_'+Math.random().toString(36).substr(2,4),120,null);
+}
 
 // GOAL RING RENDERER
 function renderGoalRing(){const el=_('goalRing');if(!el)return;
@@ -557,11 +618,14 @@ function setStStat(v){stStatF=v;document.querySelectorAll('#stStatTabs .tab').fo
 function openStM(eid){
   if(eid){const s=D.students.find(x=>x.id===eid);if(!s)return;_('stMT').textContent='Edit Student';_('stN').value=s.name||'';_('stNK').value=s.nickname||'';_('stYr').value=s.year||'';_('stSD').value=s.startDate||'';_('stStat').value=s.status||'active';_('stTy').value=s.type||'individual';_('stGN').value=s.groupName||'';_('stC').value=s.contact||'';_('stNo').value=s.note||'';_('stComm').value=s.commission||'';_('stRM').value=s.rates?.math||'';_('stRP').value=s.rates?.physics||'';_('stRC').value=s.rates?.computer||'';
     _('stSM').classList.toggle('on',(s.subjects||[]).includes('math'));_('stSP').classList.toggle('on',(s.subjects||[]).includes('physics'));_('stSC').classList.toggle('on',(s.subjects||[]).includes('computer'));_('stEI').value=eid;
+    resetAvForm();if(s.avatarOpts)setAvFormOpts(s.avatarOpts);_('stAvPrev').src=avatarUrl(s.nickname||s.name,120,s.avatarOpts);_('stAvEdit').style.display='none';
     const yh=s.yearHistory||[];if(yh.length){let yl='<div style="padding:12px;background:var(--bg2);border-radius:var(--r3);font-size:13px"><div style="font-weight:800;margin-bottom:6px">📚 Year History</div>';yh.forEach(y=>{yl+=`<div style="color:var(--tx2)">• ${y.year} <span style="color:var(--tx3)">(since ${fDT(y.date)})</span></div>`});yl+='</div>';_('stYearLog').innerHTML=yl;_('stYearLog').style.display='block'}else _('stYearLog').style.display='none'
-  }else{_('stMT').textContent='Add Student';['stN','stNK','stGN','stC','stNo','stRM','stRP','stRC','stYr','stSD','stComm'].forEach(id=>_(id).value='');_('stStat').value='active';_('stTy').value=stV==='group'?'group':'individual';['stSM','stSP','stSC'].forEach(id=>_(id).classList.remove('on'));_('stEI').value='';_('stYearLog').style.display='none'}
+  }else{_('stMT').textContent='Add Student';['stN','stNK','stGN','stC','stNo','stRM','stRP','stRC','stYr','stSD','stComm'].forEach(id=>_(id).value='');_('stStat').value='active';_('stTy').value=stV==='group'?'group':'individual';['stSM','stSP','stSC'].forEach(id=>_(id).classList.remove('on'));_('stEI').value='';_('stYearLog').style.display='none';
+    resetAvForm();_('stAvPrev').src=avatarUrl('default',120);_('stAvEdit').style.display='none'}
   _('stGW').style.display=_('stTy').value==='group'?'block':'none';syncCSel('stTy');syncCSel('stStat');opM('stModal')}
 function saveSt(){const nick=_('stNK').value.trim();if(!nick)return alert('Enter a nickname');const subs=[];if(_('stSM').classList.contains('on'))subs.push('math');if(_('stSP').classList.contains('on'))subs.push('physics');if(_('stSC').classList.contains('on'))subs.push('computer');const newYear=_('stYr').value.trim();
-  const d={name:_('stN').value.trim(),nickname:nick,year:newYear,startDate:_('stSD').value||'',status:_('stStat').value||'active',type:_('stTy').value,groupName:_('stGN').value.trim(),subjects:subs,rates:{math:parseInt(_('stRM').value)||null,physics:parseInt(_('stRP').value)||null,computer:parseInt(_('stRC').value)||null},commission:parseInt(_('stComm').value)||0,contact:_('stC').value.trim(),note:_('stNo').value.trim()};
+  const avatarOpts=getAvFormOpts();
+  const d={name:_('stN').value.trim(),nickname:nick,year:newYear,startDate:_('stSD').value||'',status:_('stStat').value||'active',type:_('stTy').value,groupName:_('stGN').value.trim(),subjects:subs,rates:{math:parseInt(_('stRM').value)||null,physics:parseInt(_('stRP').value)||null,computer:parseInt(_('stRC').value)||null},commission:parseInt(_('stComm').value)||0,contact:_('stC').value.trim(),note:_('stNo').value.trim(),avatarOpts};
   const eid=_('stEI').value;if(eid){const i=D.students.findIndex(s=>s.id===eid);if(i!==-1){const old=D.students[i];d.yearHistory=old.yearHistory||[];if(newYear&&old.year&&newYear!==old.year)d.yearHistory.push({year:newYear,date:new Date().toISOString().split('T')[0]});else if(newYear&&!old.year)d.yearHistory.push({year:newYear,date:d.startDate||new Date().toISOString().split('T')[0]});D.students[i]={...old,...d}}}
   else{d.id=uid();d.createdAt=new Date().toISOString();d.yearHistory=newYear?[{year:newYear,date:d.startDate||new Date().toISOString().split('T')[0]}]:[];if(!d.startDate)d.startDate=new Date().toISOString().split('T')[0];D.students.push(d)}saveD();clM('stModal');rStu()}
 // #9 delete with impact count
