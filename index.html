@@ -131,7 +131,39 @@ tr.inactive-row{opacity:.45}
 .sch-thumb.math{background:var(--mathBg)}.sch-thumb.physics{background:var(--phyBg)}.sch-thumb.computer{background:var(--compBg)}.sch-thumb.gcal{background:var(--gcalBg)}
 .sch-info{flex:1;min-width:0}.sch-name{font-weight:800;font-size:14px;margin-bottom:2px}.sch-meta{font-size:12px;color:var(--tx3);font-weight:600}
 .sch-price{font-weight:900;font-size:16px;color:var(--grn3);white-space:nowrap;align-self:center}
-.dc{display:grid;grid-template-columns:1fr 330px;gap:16px}
+.dc3{display:grid;grid-template-columns:1fr 340px;gap:16px}
+.dc3-main{min-width:0}.dc3-side{min-width:0}
+/* Stat cards — softer */
+.st{padding:22px;border-radius:20px;position:relative;overflow:hidden;transition:transform .2s,box-shadow .2s;cursor:default;backdrop-filter:blur(10px)}
+.st:hover{transform:translateY(-4px);box-shadow:var(--sh2)}
+/* Cards — glassmorphism-lite */
+.cd{background:var(--white);border:1px solid var(--border);border-radius:22px;padding:22px;margin-bottom:14px;box-shadow:var(--sh);transition:box-shadow .2s}
+.cd:hover{box-shadow:var(--sh2)}
+/* Goal card */
+.goal-card{text-align:center}
+.goal-ring{position:relative;width:140px;height:140px;margin:0 auto 10px}
+.goal-ring svg{width:140px;height:140px;transform:rotate(-90deg)}
+.goal-ring .gr-bg{fill:none;stroke:var(--border);stroke-width:10}
+.goal-ring .gr-fg{fill:none;stroke:var(--grn);stroke-width:10;stroke-linecap:round;transition:stroke-dashoffset .8s ease}
+.goal-ring .gr-text{position:absolute;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center}
+.goal-ring .gr-pct{font-size:32px;font-weight:900;color:var(--grn3);letter-spacing:-1px}
+.goal-ring .gr-sub{font-size:11px;color:var(--tx3);font-weight:700}
+/* Avatar */
+.avatar{border-radius:50%;background:var(--bg2);border:2px solid var(--border);object-fit:cover;flex-shrink:0}
+.avatar-sm{width:36px;height:36px}
+.avatar-md{width:48px;height:48px}
+.avatar-lg{width:72px;height:72px}
+/* Today timeline with avatars */
+.tl-item{display:flex;gap:12px;padding:12px 0;border-bottom:1px solid var(--border2);align-items:center;transition:all .15s}
+.tl-item:last-child{border-bottom:none}
+.tl-item:hover{padding-left:4px}
+.tl-time{font-family:'JetBrains Mono',monospace;font-size:12px;font-weight:600;color:var(--tx3);min-width:50px}
+.tl-info{flex:1;min-width:0}
+.tl-name{font-weight:800;font-size:14px}
+.tl-meta{font-size:12px;color:var(--tx3)}
+/* Upcoming cards with avatar */
+.up-card{display:flex;gap:14px;padding:14px;background:var(--bg2);border-radius:16px;margin-bottom:10px;border:1.5px solid var(--border2);transition:all .2s;cursor:pointer;align-items:center}
+.up-card:hover{border-color:var(--grn);box-shadow:var(--sh);transform:translateX(3px)}
 .mc-nav{display:flex;align-items:center;justify-content:space-between;margin-bottom:8px}.mc-lbl{font-size:16px;font-weight:900}
 .mc-g{display:grid;grid-template-columns:repeat(7,1fr);gap:2px;text-align:center}
 .mc-h{font-size:11px;font-weight:800;color:var(--tx3);padding:4px}
@@ -185,7 +217,7 @@ tr.inactive-row{opacity:.45}
 .empty{text-align:center;padding:48px 20px;color:var(--tx3);font-weight:600}
 .empty-ic{font-size:48px;margin-bottom:12px;opacity:.35}
 .mob{display:none;position:fixed;top:14px;left:14px;z-index:200;background:var(--white);border:1.5px solid var(--border);border-radius:var(--r3);padding:8px 12px;color:var(--tx);cursor:pointer;font-size:18px;box-shadow:var(--sh)}
-@media(max-width:900px){.mob{display:block}.sb{transform:translateX(-100%);z-index:300}.sb.open{transform:translateX(0);box-shadow:var(--sh2)}.mn{margin-left:0;padding:20px 16px;padding-top:56px}.stats{grid-template-columns:1fr 1fr}.dc{grid-template-columns:1fr}.ce{min-height:60px}.fr{grid-template-columns:1fr}}
+@media(max-width:900px){.mob{display:block}.sb{transform:translateX(-100%);z-index:300}.sb.open{transform:translateX(0);box-shadow:var(--sh2)}.mn{margin-left:0;padding:20px 16px;padding-top:56px}.stats{grid-template-columns:1fr 1fr}.dc3{grid-template-columns:1fr}.ce{min-height:60px}.fr{grid-template-columns:1fr}}
 ::-webkit-scrollbar{width:5px}::-webkit-scrollbar-thumb{background:var(--border);border-radius:3px}
 @keyframes up{from{opacity:0;transform:translateY(14px)}to{opacity:1;transform:translateY(0)}}.an{animation:up .45s ease-out both}.a1{animation-delay:.06s}.a2{animation-delay:.12s}.a3{animation-delay:.18s}
 /* E: Search bar */
@@ -229,16 +261,20 @@ tr.inactive-row{opacity:.45}
 <div class="page active" id="page-dashboard">
   <div class="greet an"><h1 id="greetH">Hello! 👋</h1><p id="greetP"></p></div>
   <div class="stats" id="dashSt"></div>
-  <div class="dc"><div>
-    <div class="cd an a2" id="dashRemCard" style="display:none"><div class="cd-h"><div class="cd-t">🔔 Reminders</div></div><div id="dashReminders"></div></div>
-    <div class="cd an a2"><div class="cd-h"><div class="cd-t">Upcoming Sessions</div><span class="sa" onclick="go('sessions')">Show all →</span></div><div id="upcoming"></div></div>
-    <div class="cd an a3"><div class="cd-h"><div class="cd-t">Monthly Summary 💰</div></div><div id="dashFin"></div></div>
-  </div><div>
-    <div class="cd an a2"><div class="mc" id="dashMC"></div><button class="btn btn-g" style="width:100%;justify-content:center;border-radius:var(--r2)" onclick="openSesM()">+ Add New Session</button></div>
-    <div class="cd an a3"><div class="cd-t" style="margin-bottom:14px">My Schedule</div><div id="todayTL"></div></div>
-    <div class="cd an a3"><div class="cd-t" style="margin-bottom:8px">⚡ Quick Add</div><div id="quickAdd"></div></div>
-    <div class="cd an a3"><div class="cd-t" style="margin-bottom:8px">📊 Teaching Hours</div><div class="chart-wrap" id="hoursChart"></div></div>
-  </div></div>
+  <div class="dc3">
+    <div class="dc3-main">
+      <div class="cd an a2" id="dashRemCard" style="display:none"><div class="cd-h"><div class="cd-t">🔔 Reminders</div></div><div id="dashReminders"></div></div>
+      <div class="cd an a2"><div class="cd-h"><div class="cd-t">Upcoming Sessions</div><span class="sa" onclick="go('sessions')">Show all →</span></div><div id="upcoming"></div></div>
+      <div class="cd an a3"><div class="cd-h"><div class="cd-t">Monthly Summary 💰</div></div><div id="dashFin"></div></div>
+    </div>
+    <div class="dc3-side">
+      <div class="cd an a1 goal-card"><div class="cd-t" style="margin-bottom:12px">🎯 Monthly Goal</div><div id="goalRing"></div></div>
+      <div class="cd an a2"><div class="mc" id="dashMC"></div><button class="btn btn-g" style="width:100%;justify-content:center;border-radius:var(--r2)" onclick="openSesM()">+ Add Session</button></div>
+      <div class="cd an a3"><div class="cd-t" style="margin-bottom:10px">📋 Today's Schedule</div><div id="todayTL"></div></div>
+      <div class="cd an a3"><div class="cd-t" style="margin-bottom:8px">⚡ Quick Add</div><div id="quickAdd"></div></div>
+      <div class="cd an a3"><div class="cd-t" style="margin-bottom:8px">📊 Weekly Hours</div><div class="chart-wrap" id="hoursChart"></div></div>
+    </div>
+  </div>
 </div>
 <!-- CALENDAR -->
 <div class="page" id="page-calendar">
@@ -300,6 +336,8 @@ tr.inactive-row{opacity:.45}
     <div id="calListPicker"><div style="color:var(--tx3);font-size:13px">Connect Google Calendar first</div></div>
     <button class="btn btn-blue btn-sm" style="margin-top:10px" onclick="fetchCalList()">📋 Load My Calendars</button>
     <div style="padding:12px 16px;background:var(--orgL);border-radius:var(--r3);font-size:13px;color:var(--orgF);font-weight:600;margin-top:12px">⚠️ Add <code style="font-weight:800">https://napatjumpatip.github.io</code> to Authorized JavaScript Origins</div></div>
+  <div class="cd an a2"><div class="cd-t" style="margin-bottom:16px">🎯 Monthly Goal</div>
+    <div class="fg"><label>Target income ฿/month</label><input type="number" id="sGoal" placeholder="15000" onchange="saveSett()"></div></div>
   <div class="cd an a2"><div class="cd-t" style="margin-bottom:16px">🏠 Default Private Rates (฿/hr)</div>
     <div class="fr"><div class="fg"><label>🔢 Math</label><input type="number" id="sRM" placeholder="300" onchange="saveSett()"></div><div class="fg"><label>⚛️ Physics</label><input type="number" id="sRP" placeholder="300" onchange="saveSett()"></div></div>
     <div class="fg" style="max-width:calc(50% - 6px)"><label>💻 Computer</label><input type="number" id="sRC" placeholder="300" onchange="saveSett()"></div>
@@ -416,7 +454,7 @@ function defD(){return{students:[],sessions:[],transactions:[],gcalImported:[],g
     {id:'visprog',name:'Visual Programming / IECC',duration:1.5,privateRate:500,groupRate:600},
     {id:'game-python',name:'Game (G5+) / Python (G7+)',duration:1.5,privateRate:600,groupRate:700}
   ],
-  settings:{clientId:'',calendarId:'primary',selectedCalendars:[],rateMath:300,ratePhysics:300,rateComputer:300}}}
+  settings:{clientId:'',calendarId:'primary',selectedCalendars:[],rateMath:300,ratePhysics:300,rateComputer:300,monthlyGoal:0}}}
 function loadD(){try{const d=JSON.parse(localStorage.getItem(K));if(!d)return defD();const def=defD();
   d.settings={...def.settings,...(d.settings||{}),selectedCalendars:d.settings?.selectedCalendars||[]};
   // #6 migrate python→computer in settings
@@ -451,6 +489,24 @@ function toast(msg,type='info',dur=4000){const t=_('toast');t.textContent=msg;t.
 // #6 SUBJECTS — renamed python→computer
 const SB={math:{l:'Math',i:'🔢',c:'m',em:'📐'},physics:{l:'Physics',i:'⚛️',c:'ph',em:'🔭'},computer:{l:'Computer',i:'💻',c:'comp',em:'💻'}};
 function sbg(s){const x=SB[s]||{l:s,c:'m',i:'📚'};return`<span class="bg bg-${x.c}">${x.i} ${x.l}</span>`}
+
+// AVATAR HELPER — DiceBear adventurer style
+function avatarUrl(name,size){return`https://api.dicebear.com/7.x/adventurer/svg?seed=${encodeURIComponent(name||'default')}&size=${size||48}`}
+function avatarImg(name,cls){return`<img src="${avatarUrl(name)}" class="avatar ${cls||'avatar-md'}" alt="${name||''}" loading="lazy">`}
+
+// GOAL RING RENDERER
+function renderGoalRing(){const el=_('goalRing');if(!el)return;
+  const goal=D.settings.monthlyGoal||0;
+  if(!goal){el.innerHTML='<div style="font-size:13px;color:var(--tx3);padding:20px">Set a monthly goal in Settings → 🎯</div>';return}
+  const now=new Date();const tm=`${now.getFullYear()}-${String(now.getMonth()+1).padStart(2,'0')}`;
+  const income=D.sessions.filter(s=>s.date.startsWith(tm)&&s.sessionStatus!=='cancelled'&&s.sessionStatus!=='absent').reduce((a,x)=>a+(x.fee||0),0);
+  const pct=Math.min(100,Math.round(income/goal*100));
+  const circumference=2*Math.PI*55;const offset=circumference-(pct/100)*circumference;
+  const color=pct>=80?'var(--grn)':pct>=50?'var(--org)':'var(--red)';
+  el.innerHTML=`<div class="goal-ring">
+    <svg viewBox="0 0 130 130"><circle class="gr-bg" cx="65" cy="65" r="55"/><circle class="gr-fg" cx="65" cy="65" r="55" style="stroke:${color};stroke-dasharray:${circumference};stroke-dashoffset:${offset}"/></svg>
+    <div class="gr-text"><div class="gr-pct" style="color:${color}">${pct}%</div><div class="gr-sub">฿${income.toLocaleString()} / ฿${goal.toLocaleString()}</div></div>
+  </div><div style="font-size:12px;color:var(--tx3);font-weight:700">${pct>=100?'🎉 Goal reached!':pct>=80?'Almost there!':pct>=50?'Keep going!':'Let\'s go!'}</div>`}
 function opM(id){_(id).classList.add('show')}
 function clM(id){_(id).classList.remove('show')}
 function go(p){document.querySelectorAll('.page').forEach(x=>x.classList.remove('active'));_('page-'+p).classList.add('active');document.querySelectorAll('.ni').forEach(n=>n.classList.remove('on'));const nav=document.querySelector(`.ni[data-p="${p}"]`);if(nav)nav.classList.add('on');_('sidebar').classList.remove('open');({dashboard:rDash,calendar:rCal,students:rStu,sessions:rSes,income:rInc,settings:loadSett,gcalimport:rGCalImp,reminders:rRemPage})[p]?.()}
@@ -518,7 +574,7 @@ function rStu(){let list=D.students.filter(s=>(s.type||'individual')===stV);
   const el=_('stList');if(!list.length){el.innerHTML='<div class="empty"><div class="empty-ic">👥</div>No students</div>';return}
   let h='<div class="tbl-wrap"><table><thead><tr><th>Nickname</th><th>Year</th><th>Rate</th><th>Comm.</th><th>Since</th><th>Status</th><th></th></tr></thead><tbody>';
   list.forEach(s=>{const isOff=s.status==='inactive'||s.status==='paused'||s.status==='stopped';const statBg=s.status==='active'?'bg-pd':s.status==='paused'?'bg-eom':'bg-inactive';const statTxt=s.status==='active'?'🟢 Active':s.status==='paused'?'⏸️ Paused':'🔴 Stopped';
-    h+=`<tr class="${isOff?'inactive-row':''}"><td style="font-weight:800;font-size:15px"><span style="cursor:pointer" onclick="openStProf('${s.id}')">${s.nickname||s.name}</span></td><td><span class="bg bg-gcal" style="font-size:12px">${s.year||'-'}</span></td><td class="mono" style="font-size:12px">${fR(s)}</td><td class="mono" style="font-size:12px">${s.commission?'฿'+s.commission:'-'}</td><td style="font-size:12px;color:var(--tx3)">${s.startDate?fDT(s.startDate):'-'}</td><td><span class="bg ${statBg}" style="font-size:11px">${statTxt}</span></td><td style="white-space:nowrap"><button class="btn btn-blue btn-sm" onclick="openStProf('${s.id}')" title="Profile">👤</button> <button class="btn btn-o btn-sm" onclick="openStM('${s.id}')">✏️</button> <button class="btn btn-d btn-sm" onclick="delSt('${s.id}')">🗑️</button></td></tr>`});
+    h+=`<tr class="${isOff?'inactive-row':''}"><td style="font-weight:800;font-size:15px"><div style="display:flex;align-items:center;gap:10px;cursor:pointer" onclick="openStProf('${s.id}')">${avatarImg(s.nickname||s.name,'avatar-sm')}<span>${s.nickname||s.name}</span></div></td><td><span class="bg bg-gcal" style="font-size:12px">${s.year||'-'}</span></td><td class="mono" style="font-size:12px">${fR(s)}</td><td class="mono" style="font-size:12px">${s.commission?'฿'+s.commission:'-'}</td><td style="font-size:12px;color:var(--tx3)">${s.startDate?fDT(s.startDate):'-'}</td><td><span class="bg ${statBg}" style="font-size:11px">${statTxt}</span></td><td style="white-space:nowrap"><button class="btn btn-o btn-sm" onclick="openStM('${s.id}')">✏️</button> <button class="btn btn-d btn-sm" onclick="delSt('${s.id}')">🗑️</button></td></tr>`});
   h+='</tbody></table></div>';el.innerHTML=h}
 function fR(s){return(s.subjects||[]).map(sub=>{const r=s.rates?.[sub]||D.settings['rate'+(sub==='math'?'Math':sub==='physics'?'Physics':'Computer')]||'-';return`${SB[sub]?.i||''} ฿${r}`}).join(' ')||'-'}
 
@@ -661,14 +717,17 @@ function openStProf(stId){
   const totalComm=ses.reduce((a,x)=>a+(x.commission||0),0);
   const attended=ses.filter(x=>x.attendance==='present').length;
   const attRate=ses.length?Math.round(attended/ses.length*100):0;
-  const yh=s.yearHistory||[];
+  const yh=s.yearHistory||[];const name=s.nickname||s.name;
   const body=_('stProfBody');body.dataset.sid=stId;
-  _('stProfTitle').textContent=`${s.nickname||s.name}`;
-  let h=`<div style="display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-bottom:16px">
-    <div style="padding:14px;background:var(--grnL2);border-radius:var(--r3)"><div style="font-size:12px;color:var(--tx3);font-weight:700">Total Sessions</div><div class="mono" style="font-size:24px;font-weight:900;color:var(--grn3)">${ses.length}</div><div style="font-size:11px;color:var(--tx3)">${totalHrs.toFixed(1)} hours</div></div>
-    <div style="padding:14px;background:var(--bluL);border-radius:var(--r3)"><div style="font-size:12px;color:var(--tx3);font-weight:700">Total Income</div><div class="mono" style="font-size:24px;font-weight:900;color:var(--bluF)">฿${totalFee.toLocaleString()}</div>${totalComm?`<div style="font-size:11px;color:var(--orgF)">Comm: ฿${totalComm.toLocaleString()}</div>`:''}</div>
-    <div style="padding:14px;background:var(--orgL);border-radius:var(--r3)"><div style="font-size:12px;color:var(--tx3);font-weight:700">Attendance</div><div class="mono" style="font-size:24px;font-weight:900;color:var(--orgF)">${attRate}%</div><div style="font-size:11px;color:var(--tx3)">${attended}/${ses.length} present</div></div>
-    <div style="padding:14px;background:var(--bg2);border-radius:var(--r3)"><div style="font-size:12px;color:var(--tx3);font-weight:700">Info</div><div style="font-size:13px;font-weight:700;margin-top:4px">${s.year||'-'} · Since ${s.startDate?fDT(s.startDate):'-'}</div><div style="font-size:12px;color:var(--tx3)">${s.contact||'-'}</div></div></div>`;
+  _('stProfTitle').textContent='Student Profile';
+  let h=`<div style="text-align:center;margin-bottom:18px"><img src="${avatarUrl(name,120)}" class="avatar avatar-lg" style="width:90px;height:90px;margin-bottom:8px"><div style="font-size:20px;font-weight:900">${name}</div>${s.name&&s.nickname?`<div style="font-size:13px;color:var(--tx3)">${s.name}</div>`:''}
+    <div style="margin-top:6px">${(s.subjects||[]).map(x=>sbg(x)).join(' ')}</div>
+    <div style="font-size:12px;color:var(--tx3);margin-top:4px">${s.year||''} · ${s.status==='active'?'🟢 Active':s.status==='paused'?'⏸️ Paused':'🔴 Stopped'}</div></div>
+  <div style="display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:16px">
+    <div style="padding:14px;background:var(--grnL2);border-radius:16px;text-align:center"><div style="font-size:28px;font-weight:900;color:var(--grn3)">${ses.length}</div><div style="font-size:11px;color:var(--tx3);font-weight:700">Sessions · ${totalHrs.toFixed(1)}hr</div></div>
+    <div style="padding:14px;background:var(--bluL);border-radius:16px;text-align:center"><div style="font-size:28px;font-weight:900;color:var(--bluF)">฿${totalFee.toLocaleString()}</div><div style="font-size:11px;color:var(--tx3);font-weight:700">Income${totalComm?' · Comm ฿'+totalComm.toLocaleString():''}</div></div>
+    <div style="padding:14px;background:var(--orgL);border-radius:16px;text-align:center"><div style="font-size:28px;font-weight:900;color:var(--orgF)">${attRate}%</div><div style="font-size:11px;color:var(--tx3);font-weight:700">Attendance</div></div>
+    <div style="padding:14px;background:var(--bg2);border-radius:16px;text-align:center"><div style="font-size:13px;font-weight:800;margin-top:6px">Since ${s.startDate?fDT(s.startDate):'-'}</div><div style="font-size:11px;color:var(--tx3)">${s.contact||'-'}</div></div></div>`;
   // Year history
   if(yh.length){h+='<div style="margin-bottom:14px;padding:12px;background:var(--bg2);border-radius:var(--r3);font-size:13px"><div style="font-weight:800;margin-bottom:6px">📚 Year History</div>';yh.forEach(y=>{h+=`<div style="color:var(--tx2)">• ${y.year} (since ${fDT(y.date)})</div>`});h+='</div>'}
   // Recent sessions
@@ -912,11 +971,11 @@ function rDash(){const now=new Date(),hr=now.getHours();_('greetH').textContent=
     <div class="st o an a1"><div class="st-ic">📝</div><div class="st-lb">Sessions</div><div class="st-v">${ms.length}</div><div class="st-s">${totH.toFixed(1)} hrs</div></div>
     <div class="st b an a2"><div class="st-ic">💰</div><div class="st-lb">Income</div><div class="st-v">฿${totF.toLocaleString()}</div></div>
     <div class="st p an a3"><div class="st-ic">🛒</div><div class="st-lb">Expenses</div><div class="st-v">฿${moExp.toLocaleString()}</div></div>`;
-  renderReminders();
+  renderReminders();renderGoalRing();
   // #10 FIX: upcoming excludes sessions whose end time has passed today
   const up=D.sessions.filter(s=>s.sessionStatus!=='cancelled'&&(s.date>ts||(s.date===ts&&(s.end||'99:99')>nowTime))).sort((a,b)=>a.date.localeCompare(b.date)||(a.start||'').localeCompare(b.start||'')).slice(0,5);
   if(!up.length)_('upcoming').innerHTML='<div class="empty"><div class="empty-ic">📅</div>No upcoming sessions</div>';
-  else{let h='';up.forEach(s=>{const st=D.students.find(x=>x.id===s.studentId);h+=`<div class="sch-card" onclick="openSesM('${s.id}')"><div class="sch-thumb ${s.subject}">${SB[s.subject]?.em||'📚'}</div><div class="sch-info"><div class="sch-name">${st?(st.nickname||st.name):'-'}${s.reminder&&!s.reminderDone?' 🔔':''}</div><div class="sch-meta">📅 ${fDT(s.date)} · ⏰ ${s.start}–${s.end}</div></div><div class="sch-price">฿${(s.fee||0).toLocaleString()}</div></div>`});_('upcoming').innerHTML=h}
+  else{let h='';up.forEach(s=>{const st=D.students.find(x=>x.id===s.studentId);const name=st?(st.nickname||st.name):'-';h+=`<div class="up-card" onclick="openSesM('${s.id}')">${avatarImg(name,'avatar-md')}<div style="flex:1;min-width:0"><div class="tl-name">${name}${s.reminder&&!s.reminderDone?' 🔔':''} ${sbg(s.subject)}</div><div class="tl-meta">📅 ${fDT(s.date)} · ⏰ ${s.start}–${s.end}</div></div><div style="font-weight:900;font-size:16px;color:var(--grn3);white-space:nowrap">฿${(s.fee||0).toLocaleString()}</div></div>`});_('upcoming').innerHTML=h}
   let fh='<div style="display:grid;grid-template-columns:repeat(3,1fr);gap:10px">';
   ['math','physics','computer'].forEach(sub=>{const ss=ms.filter(x=>x.subject===sub);const fee=ss.reduce((s,x)=>s+(x.fee||0),0);
     fh+=`<div style="padding:16px;background:var(--${sub==='math'?'math':sub==='physics'?'phy':'comp'}Bg);border-radius:var(--r2)">${sbg(sub)}<div class="mono" style="font-size:22px;font-weight:900;margin-top:8px;color:var(--${sub==='math'?'math':sub==='physics'?'phy':'comp'}F)">฿${fee.toLocaleString()}</div><div style="font-size:12px;opacity:.6;font-weight:700">${ss.length} sessions</div></div>`});
@@ -927,8 +986,8 @@ function rDash(){const now=new Date(),hr=now.getHours();_('greetH').textContent=
   _('dashFin').innerHTML=fh;renderMC();renderQuickAdd();renderHoursChart();
   const todayGCal=getVisibleGCalForDate(ts);
   if(!tds.length&&!todayGCal.length)_('todayTL').innerHTML='<div style="color:var(--tx3);font-size:14px;padding:12px 0">No sessions today ☀️</div>';
-  else{let h='';tds.sort((a,b)=>(a.start||'').localeCompare(b.start||'')).forEach(s=>{const st=D.students.find(x=>x.id===s.studentId);h+=`<div class="ms-item" onclick="openSesM('${s.id}')"><div class="ms-thumb ${s.subject}">${SB[s.subject]?.em||'📚'}</div><div class="ms-info"><div class="ms-name">${st?(st.nickname||st.name):'-'}</div><div class="ms-meta">⏰ ${s.start}–${s.end} · ${s.topic||''}</div></div></div>`});
-    todayGCal.forEach(g=>{h+=`<div class="ms-item"><div class="ms-thumb gcal">📅</div><div class="ms-info"><div class="ms-name">${g.summary||'(No title)'}</div><div class="ms-meta">⏰ ${g.startTime||''}${g.endTime?' – '+g.endTime:''}</div></div></div>`});_('todayTL').innerHTML=h}}
+  else{let h='';tds.sort((a,b)=>(a.start||'').localeCompare(b.start||'')).forEach(s=>{const st=D.students.find(x=>x.id===s.studentId);const name=st?(st.nickname||st.name):'-';h+=`<div class="tl-item" onclick="openSesM('${s.id}')" style="cursor:pointer">${avatarImg(name,'avatar-sm')}<div class="tl-time">${s.start}</div><div class="tl-info"><div class="tl-name">${name}</div><div class="tl-meta">${s.start}–${s.end} · ${sbg(s.subject)}</div></div></div>`});
+    todayGCal.forEach(g=>{h+=`<div class="tl-item"><img src="${avatarUrl('gcal')}" class="avatar avatar-sm"><div class="tl-time">${g.startTime||''}</div><div class="tl-info"><div class="tl-name" style="color:var(--gcalF)">${g.summary||'(No title)'}</div><div class="tl-meta">${g.startTime||''}${g.endTime?' – '+g.endTime:''}</div></div></div>`});_('todayTL').innerHTML=h}}
 function renderMC(){const now=new Date(),y=now.getFullYear(),m=now.getMonth();const fd=new Date(y,m,1).getDay();const fdM=fd===0?6:fd-1;const dim=new Date(y,m+1,0).getDate();
   const days=['Mo','Tu','We','Th','Fr','Sa','Su'];let h=`<div class="mc-nav"><span class="mc-lbl">${eM(m)} ${y}</span></div><div class="mc-g">`;
   days.forEach(d=>h+=`<div class="mc-h">${d}</div>`);const pd=new Date(y,m,0).getDate();
@@ -937,8 +996,8 @@ function renderMC(){const now=new Date(),y=now.getFullYear(),m=now.getMonth();co
   const tot=fdM+dim;const rem=tot%7===0?0:7-tot%7;for(let i=1;i<=rem;i++)h+=`<div class="mc-d ot">${i}</div>`;h+='</div>';_('dashMC').innerHTML=h}
 
 // ============ SETTINGS ============
-function loadSett(){_('sCI').value=D.settings.clientId||'';_('sCL').value=D.settings.calendarId||'primary';_('sRM').value=D.settings.rateMath||'';_('sRP').value=D.settings.ratePhysics||'';_('sRC').value=D.settings.rateComputer||'';renderCalList();renderAlgCourses()}
-function saveSett(){D.settings.clientId=_('sCI').value.trim();D.settings.calendarId=_('sCL').value.trim()||'primary';D.settings.rateMath=parseInt(_('sRM').value)||300;D.settings.ratePhysics=parseInt(_('sRP').value)||300;D.settings.rateComputer=parseInt(_('sRC').value)||300;saveD()}
+function loadSett(){_('sCI').value=D.settings.clientId||'';_('sCL').value=D.settings.calendarId||'primary';_('sRM').value=D.settings.rateMath||'';_('sRP').value=D.settings.ratePhysics||'';_('sRC').value=D.settings.rateComputer||'';_('sGoal').value=D.settings.monthlyGoal||'';renderCalList();renderAlgCourses()}
+function saveSett(){D.settings.clientId=_('sCI').value.trim();D.settings.calendarId=_('sCL').value.trim()||'primary';D.settings.rateMath=parseInt(_('sRM').value)||300;D.settings.ratePhysics=parseInt(_('sRP').value)||300;D.settings.rateComputer=parseInt(_('sRC').value)||300;D.settings.monthlyGoal=parseInt(_('sGoal').value)||0;saveD()}
 function expD(){D.lastExport=new Date().toISOString();saveD();const b=new Blob([JSON.stringify(D,null,2)],{type:'application/json'});const a=document.createElement('a');a.href=URL.createObjectURL(b);a.download=`tutor-${new Date().toISOString().split('T')[0]}.json`;a.click();toast('✅ Data exported','ok')}
 function impD(e){const f=e.target.files[0];if(!f)return;const r=new FileReader();r.onload=ev=>{try{const d=JSON.parse(ev.target.result);if(confirm('Replace current data?')){D={...defD(),...d};saveD();location.reload()}}catch{alert('Invalid file')}};r.readAsText(f)}
 function clrD(){if(confirm('Clear all data?')&&confirm('Sure?')){localStorage.removeItem(K);D=defD();location.reload()}}
