@@ -939,13 +939,21 @@ function syncLinkedSessions(){
   let count=0;
   D.sessions.forEach(ses=>{
     if(!ses.gcalId||!ses.convertedFromGoogle)return;
-    const gev=(D.gcalImported||[]).find(e=>e.gcalId===ses.gcalId);
-    if(!gev)return;
+    // Primary match: exact gcalId
+    let gev=(D.gcalImported||[]).find(e=>e.gcalId===ses.gcalId);
+    // Fallback: if event ID changed (e.g. recurring event modified), try matching by summary + close date
+    if(!gev&&ses.topic){
+      gev=(D.gcalImported||[]).find(e=>
+        e.summary===ses.topic&&!D.sessions.some(other=>other.gcalId===e.gcalId&&other.id!==ses.id)
+      );
+      if(gev){console.log(`[Sync] Re-linked by summary: "${ses.topic}" → new gcalId: ${gev.gcalId}`);ses.gcalId=gev.gcalId}
+    }
+    if(!gev){console.log(`[Sync] No match for session ${ses.id} gcalId:${ses.gcalId}`);return}
     // Check if time/date changed
     const changed=ses.date!==gev.date||ses.start!==gev.startTime||ses.end!==gev.endTime;
     if(!changed)return;
     // Update session
-    const oldFee=ses.fee;
+    const oldDate=ses.date,oldStart=ses.start,oldEnd=ses.end,oldFee=ses.fee;
     ses.date=gev.date;ses.start=gev.startTime;ses.end=gev.endTime;
     // Recalculate hours and fee
     if(ses.start&&ses.end){
@@ -953,7 +961,7 @@ function syncLinkedSessions(){
       ses.hours=Math.max(0,((eh*60+em)-(sh*60+sm))/60);
       if(!ses.customFee)ses.fee=calcFee(ses.subject,ses.channel||'private',ses.hours,ses.studentId,ses.grpSize,ses.algCourseId,null);
     }
-    console.log(`[Sync] ${ses.date} ${ses.start}-${ses.end} fee:${oldFee}→${ses.fee}`);
+    console.log(`[Sync] Updated: ${oldDate} ${oldStart}-${oldEnd} → ${ses.date} ${ses.start}-${ses.end} fee:${oldFee}→${ses.fee}`);
     count++;
   });
   return count;
