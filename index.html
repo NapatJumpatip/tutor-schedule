@@ -803,7 +803,15 @@ function rInc(){popMF('incMo');const fm=_('incMo').value;
     all.forEach(t=>{const st=D.students.find(s=>s.id===t.studentId);const isI=t.type==='income';h+=`<tr><td style="white-space:nowrap">${fDT(t.date)}</td><td>${isI?'<span class="bg bg-in">In</span>':'<span class="bg bg-ex">Out</span>'}</td><td style="font-size:13px">${t.desc||'-'}</td><td>${st?(st.nickname||st.name):'-'}</td><td class="mono" style="font-weight:800;color:${isI?'var(--grn3)':'var(--redF)'}">฿${(t.amount||0).toLocaleString()}</td><td>${t.src==='tx'?`<button class="btn btn-o btn-sm" onclick="openTxM('${t.id}')">✏️</button> <button class="btn btn-d btn-sm" onclick="delTx('${t.id}')">🗑️</button>`:''}</td></tr>`});h+='</tbody></table>';_('incB').innerHTML=h}}
 
 // ============ GCAL IMPORTED EVENTS ============
-function getVisibleGCalForDate(ds){return(D.gcalImported||[]).filter(ev=>!D.gcalHidden[ev.gcalId]&&ev.date===ds)}
+function getVisibleGCalForDate(ds){return(D.gcalImported||[]).filter(ev=>{
+  if(D.gcalHidden[ev.gcalId])return false;
+  if(ev.date!==ds)return false;
+  // Also hide if this event has been converted to a session (by gcalId match)
+  if(D.sessions.some(s=>s.gcalId===ev.gcalId))return false;
+  // Also hide if a session was converted from an event with same summary+date (covers ID changes)
+  if(D.sessions.some(s=>s.convertedFromGoogle&&s.date===ev.date&&s.topic===ev.summary))return false;
+  return true;
+})}
 let gcalFilter='all';
 function setGCalFilter(f){gcalFilter=f;rGCalImp()}
 function rGCalImp(){const evts=D.gcalImported||[];const calNames=new Set();evts.forEach(ev=>{if(ev.calendarName)calNames.add(ev.calendarName)});
@@ -1104,7 +1112,13 @@ function syncLinkedSessions(){
       gev=(D.gcalImported||[]).find(e=>
         e.summary===ses.topic&&!D.sessions.some(other=>other.gcalId===e.gcalId&&other.id!==ses.id)
       );
-      if(gev){console.log(`[Sync] Re-linked by summary: "${ses.topic}" → new gcalId: ${gev.gcalId}`);ses.gcalId=gev.gcalId}
+      if(gev){
+        const oldId=ses.gcalId;
+        console.log(`[Sync] Re-linked by summary: "${ses.topic}" → new gcalId: ${gev.gcalId}`);
+        ses.gcalId=gev.gcalId;
+        // Transfer hidden status to new ID
+        if(D.gcalHidden[oldId]){D.gcalHidden[gev.gcalId]=true;delete D.gcalHidden[oldId]}
+      }
     }
     if(!gev){console.log(`[Sync] No match for session ${ses.id} gcalId:${ses.gcalId}`);return}
     // Check if time/date changed
