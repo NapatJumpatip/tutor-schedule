@@ -20,6 +20,11 @@
 --r:20px;--r2:14px;--r3:10px;
 --sh:0 2px 16px rgba(0,0,0,.05);--sh2:0 8px 32px rgba(0,0,0,.07);
 }
+/* D: Dark mode */
+.dark{--bg:#111;--bg2:#1a1a1a;--white:#222;--sidebar:#1a1a1a;--border:#333;--border2:#2a2a2a;--tx:#e8e8e8;--tx2:#aaa;--tx3:#666;
+--grnL:rgba(46,204,113,.15);--grnL2:rgba(46,204,113,.2);--orgL:rgba(243,156,18,.15);--pnkL:rgba(232,67,147,.15);--bluL:rgba(52,152,219,.15);--redL:rgba(231,76,60,.15);
+--mathBg:#332b10;--mathF:#ffd54f;--phyBg:#331422;--phyF:#f48fb1;--compBg:#0d2926;--compF:#80cbc4;--gcalBg:#0d1f33;--gcalF:#64b5f6;--gcalB:#2196f3;
+--sh:0 2px 16px rgba(0,0,0,.3);--sh2:0 8px 32px rgba(0,0,0,.4)}
 *{margin:0;padding:0;box-sizing:border-box}
 body{font-family:'Nunito',sans-serif;background:var(--bg);color:var(--tx);min-height:100vh;line-height:1.55}
 .mono{font-family:'JetBrains Mono',monospace}
@@ -183,6 +188,20 @@ tr.inactive-row{opacity:.45}
 @media(max-width:900px){.mob{display:block}.sb{transform:translateX(-100%);z-index:300}.sb.open{transform:translateX(0);box-shadow:var(--sh2)}.mn{margin-left:0;padding:20px 16px;padding-top:56px}.stats{grid-template-columns:1fr 1fr}.dc{grid-template-columns:1fr}.ce{min-height:60px}.fr{grid-template-columns:1fr}}
 ::-webkit-scrollbar{width:5px}::-webkit-scrollbar-thumb{background:var(--border);border-radius:3px}
 @keyframes up{from{opacity:0;transform:translateY(14px)}to{opacity:1;transform:translateY(0)}}.an{animation:up .45s ease-out both}.a1{animation-delay:.06s}.a2{animation-delay:.12s}.a3{animation-delay:.18s}
+/* E: Search bar */
+.search-bar{padding:10px 14px;border:1.5px solid var(--border);border-radius:var(--r3);background:var(--bg2);font-family:'Nunito',sans-serif;font-size:14px;font-weight:600;color:var(--tx);width:100%;max-width:300px;outline:none;transition:all .2s}
+.search-bar:focus{border-color:var(--grn);background:var(--white);box-shadow:0 0 0 3px rgba(46,204,113,.12)}
+/* F: Chart */
+.chart-wrap{height:180px;display:flex;align-items:flex-end;gap:4px;padding:12px 0}
+.chart-bar{border-radius:6px 6px 0 0;min-width:20px;flex:1;transition:height .3s;position:relative;cursor:default}
+.chart-bar:hover{opacity:.8}
+.chart-bar .cb-val{position:absolute;top:-18px;left:50%;transform:translateX(-50%);font-size:10px;font-weight:800;white-space:nowrap}
+.chart-bar .cb-lbl{position:absolute;bottom:-18px;left:50%;transform:translateX(-50%);font-size:9px;font-weight:700;color:var(--tx3);white-space:nowrap}
+/* D: Dark mode toggle in sidebar */
+.dm-toggle{display:flex;align-items:center;gap:8px;padding:10px 14px;font-size:13px;font-weight:600;color:var(--tx3);cursor:pointer;border-radius:var(--r3);margin-top:6px}
+.dm-toggle:hover{background:var(--grnL)}
+/* A: Print report */
+@media print{.sb,.mob,.toast,.ses-popup,.btn,.tabs,.search-bar,.dm-toggle,.gcal-box{display:none!important}.mn{margin-left:0!important;padding:10px!important}.app{display:block!important}.page{display:none!important}.page.print-active{display:block!important}.stats{grid-template-columns:repeat(4,1fr)!important}}
 </style>
 </head>
 <body>
@@ -201,6 +220,7 @@ tr.inactive-row{opacity:.45}
   <div class="ni" data-p="gcalimport" onclick="go('gcalimport')"><span class="ni-i">📥</span>Google Events</div>
   <div class="ni-sep"></div>
   <div class="ni" data-p="settings" onclick="go('settings')"><span class="ni-i">⚙️</span>Settings</div>
+  <div class="dm-toggle" onclick="toggleDark()"><span id="dmIcon">🌙</span> <span id="dmLabel">Dark Mode</span></div>
   <div class="sb-promo"><div class="sb-promo-title">📚 Reminders</div><div class="sb-promo-sub" id="sbRemCount">No pending reminders</div></div>
   <div class="gcal-box"><div><span class="gcal-dot off" id="gcalDot"></span><span class="gcal-lbl" id="gcalLbl">Not connected</span></div><button class="gcal-btn" id="gcalBtn" onclick="handleGCal()">Connect Calendar</button><div class="gcal-count" id="gcalCount"></div></div>
 </aside>
@@ -216,6 +236,8 @@ tr.inactive-row{opacity:.45}
   </div><div>
     <div class="cd an a2"><div class="mc" id="dashMC"></div><button class="btn btn-g" style="width:100%;justify-content:center;border-radius:var(--r2)" onclick="openSesM()">+ Add New Session</button></div>
     <div class="cd an a3"><div class="cd-t" style="margin-bottom:14px">My Schedule</div><div id="todayTL"></div></div>
+    <div class="cd an a3"><div class="cd-t" style="margin-bottom:8px">⚡ Quick Add</div><div id="quickAdd"></div></div>
+    <div class="cd an a3"><div class="cd-t" style="margin-bottom:8px">📊 Teaching Hours</div><div class="chart-wrap" id="hoursChart"></div></div>
   </div></div>
 </div>
 <!-- CALENDAR -->
@@ -229,7 +251,7 @@ tr.inactive-row{opacity:.45}
 </div>
 <!-- STUDENTS -->
 <div class="page" id="page-students">
-  <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:20px" class="an"><h1 style="font-size:24px;font-weight:900">👥 Students</h1><button class="btn btn-g btn-sm" onclick="openStM()">+ Add Student</button></div>
+  <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:20px" class="an"><h1 style="font-size:24px;font-weight:900">👥 Students</h1><div style="display:flex;gap:8px"><input class="search-bar" id="stuSearch" placeholder="🔍 Search..." oninput="rStu()" style="width:180px"><button class="btn btn-g btn-sm" onclick="openStM()">+ Add</button></div></div>
   <div style="display:flex;gap:12px;flex-wrap:wrap;margin-bottom:16px" class="an a1">
     <div class="tabs" id="stTypeTabs"><div class="tab on" onclick="setSV('individual')">Individual</div><div class="tab" onclick="setSV('group')">Group</div></div>
     <div class="tabs" id="stStatTabs"><div class="tab on" onclick="setStStat('active')">🟢 Active</div><div class="tab" onclick="setStStat('paused')">⏸️ Paused</div><div class="tab" onclick="setStStat('stopped')">🔴 Stopped</div><div class="tab" onclick="setStStat('all')">All</div></div>
@@ -238,12 +260,12 @@ tr.inactive-row{opacity:.45}
 </div>
 <!-- SESSIONS -->
 <div class="page" id="page-sessions">
-  <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:20px" class="an"><h1 style="font-size:24px;font-weight:900">📝 Sessions</h1><button class="btn btn-g btn-sm" onclick="openSesM()">+ Add Session</button></div>
-  <div class="cd an a1"><div class="cd-h"><div style="display:flex;gap:8px"><div class="csel" style="width:180px"><div class="csel-display" onclick="toggleCSel(this)">All Months</div><div class="csel-opts"></div><select id="sfm" onchange="rSes()"></select></div><div class="csel" style="width:160px"><div class="csel-display" onclick="toggleCSel(this)">All Subjects</div><div class="csel-opts"></div><select id="sfs" onchange="rSes()"><option value="">All Subjects</option><option value="math" data-icon="🔢">Math</option><option value="physics" data-icon="⚛️">Physics</option><option value="computer" data-icon="💻">Computer</option></select></div></div></div><div class="tbl-wrap" id="sesList"></div></div>
+  <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:20px" class="an"><h1 style="font-size:24px;font-weight:900">📝 Sessions</h1><div style="display:flex;gap:8px"><button class="btn btn-blue btn-sm" onclick="batchPay()">💳 Batch Pay</button><button class="btn btn-g btn-sm" onclick="openSesM()">+ Add Session</button></div></div>
+  <div class="cd an a1"><div class="cd-h"><div style="display:flex;gap:8px;flex-wrap:wrap"><input class="search-bar" id="sesSearch" placeholder="🔍 Search student, topic..." oninput="rSes()"><div class="csel" style="width:180px"><div class="csel-display" onclick="toggleCSel(this)">All Months</div><div class="csel-opts"></div><select id="sfm" onchange="rSes()"></select></div><div class="csel" style="width:160px"><div class="csel-display" onclick="toggleCSel(this)">All Subjects</div><div class="csel-opts"></div><select id="sfs" onchange="rSes()"><option value="">All Subjects</option><option value="math" data-icon="🔢">Math</option><option value="physics" data-icon="⚛️">Physics</option><option value="computer" data-icon="💻">Computer</option></select></div></div></div><div class="tbl-wrap" id="sesList"></div></div>
 </div>
 <!-- FINANCE -->
 <div class="page" id="page-income">
-  <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:20px" class="an"><h1 style="font-size:24px;font-weight:900">💰 Finance</h1><button class="btn btn-g btn-sm" onclick="openTxM()">+ Add Transaction</button></div>
+  <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:20px" class="an"><h1 style="font-size:24px;font-weight:900">💰 Finance</h1><div style="display:flex;gap:8px"><button class="btn btn-blue btn-sm" onclick="printReport()">📄 Monthly Report</button><button class="btn btn-g btn-sm" onclick="openTxM()">+ Add Transaction</button></div></div>
   <div class="stats" id="incSt"></div>
   <div style="display:flex;gap:12px;flex-wrap:wrap;margin-bottom:16px" class="an a1">
     <div class="tabs" id="incViewTabs"><div class="tab on" onclick="setIV('overview')">Overview</div><div class="tab" onclick="setIV('student')">By Student</div><div class="tab" onclick="setIV('transactions')">All</div></div>
@@ -490,6 +512,9 @@ function saveSt(){const nick=_('stNK').value.trim();if(!nick)return alert('Enter
 function delSt(id){const cnt=D.sessions.filter(s=>s.studentId===id).length;if(!confirm(`This student has ${cnt} session${cnt!==1?'s':''}. Delete anyway? (Sessions will remain but show "Unknown")`))return;D.students=D.students.filter(s=>s.id!==id);saveD();rStu()}
 function rStu(){let list=D.students.filter(s=>(s.type||'individual')===stV);
   if(stStatF!=='all')list=list.filter(s=>(s.status||'active')===stStatF);
+  // E: search filter
+  const sq=(_('stuSearch')?.value||'').toLowerCase();
+  if(sq)list=list.filter(s=>(s.nickname||'').toLowerCase().includes(sq)||(s.name||'').toLowerCase().includes(sq)||(s.year||'').toLowerCase().includes(sq));
   const el=_('stList');if(!list.length){el.innerHTML='<div class="empty"><div class="empty-ic">👥</div>No students</div>';return}
   let h='<div class="tbl-wrap"><table><thead><tr><th>Nickname</th><th>Year</th><th>Rate</th><th>Comm.</th><th>Since</th><th>Status</th><th></th></tr></thead><tbody>';
   list.forEach(s=>{const isOff=s.status==='inactive'||s.status==='paused'||s.status==='stopped';const statBg=s.status==='active'?'bg-pd':s.status==='paused'?'bg-eom':'bg-inactive';const statTxt=s.status==='active'?'🟢 Active':s.status==='paused'?'⏸️ Paused':'🔴 Stopped';
@@ -532,6 +557,9 @@ function undoSesStatus(id){const s=D.sessions.find(x=>x.id===id);if(!s)return;
   saveD();rSes();rCal();rDash();rGCalImp();toast(`✅ Restored! Fee: ฿${s.fee.toLocaleString()}`,'ok');closeSesPopupForce()}
 function rSes(){popMF('sfm');syncCSel('sfs');const fm=_('sfm').value,fs=_('sfs').value;let list=[...D.sessions].sort((a,b)=>b.date.localeCompare(a.date)||(b.start||'').localeCompare(a.start||''));
   if(fm)list=list.filter(s=>s.date.startsWith(fm));if(fs)list=list.filter(s=>s.subject===fs);
+  // E: search filter
+  const sq=(_('sesSearch')?.value||'').toLowerCase();
+  if(sq)list=list.filter(s=>{const st=D.students.find(x=>x.id===s.studentId);return(st?.nickname||'').toLowerCase().includes(sq)||(st?.name||'').toLowerCase().includes(sq)||(s.topic||'').toLowerCase().includes(sq)});
   // exclude cancelled from default view? No — show all but mark visually
   if(!list.length){_('sesList').innerHTML='<div class="empty"><div class="empty-ic">📝</div>No sessions</div>';return}
   let h='<table><thead><tr><th>Date</th><th>Time</th><th>Ch.</th><th>Subject</th><th>Student</th><th>Topic</th><th>Hrs</th><th>Fee</th><th>Status</th><th></th></tr></thead><tbody>';
@@ -896,7 +924,7 @@ function rDash(){const now=new Date(),hr=now.getHours();_('greetH').textContent=
   // #16 backup reminder
   const lastExp=D.lastExport;const daysSinceExp=lastExp?Math.floor((Date.now()-new Date(lastExp).getTime())/(1000*60*60*24)):999;
   if(daysSinceExp>=7)fh+=`<div style="margin-top:12px;padding:12px 16px;background:var(--orgL);border-radius:var(--r3);display:flex;justify-content:space-between;align-items:center;font-size:13px"><div style="font-weight:700;color:var(--orgF)">💾 ${lastExp?'Last backup: '+daysSinceExp+' days ago':'Never backed up — data is in browser only!'}</div><button class="btn btn-o btn-sm" onclick="expD()">📤 Export</button></div>`;
-  _('dashFin').innerHTML=fh;renderMC();
+  _('dashFin').innerHTML=fh;renderMC();renderQuickAdd();renderHoursChart();
   const todayGCal=getVisibleGCalForDate(ts);
   if(!tds.length&&!todayGCal.length)_('todayTL').innerHTML='<div style="color:var(--tx3);font-size:14px;padding:12px 0">No sessions today ☀️</div>';
   else{let h='';tds.sort((a,b)=>(a.start||'').localeCompare(b.start||'')).forEach(s=>{const st=D.students.find(x=>x.id===s.studentId);h+=`<div class="ms-item" onclick="openSesM('${s.id}')"><div class="ms-thumb ${s.subject}">${SB[s.subject]?.em||'📚'}</div><div class="ms-info"><div class="ms-name">${st?(st.nickname||st.name):'-'}</div><div class="ms-meta">⏰ ${s.start}–${s.end} · ${s.topic||''}</div></div></div>`});
@@ -982,8 +1010,109 @@ function pickCSel(el){const csel=el.closest('.csel');const sel=csel.querySelecto
 function syncCSel(id){const sel=_(id);if(!sel)return;const csel=sel.closest('.csel');if(!csel)return;const d=csel.querySelector('.csel-display');const o=sel.options[sel.selectedIndex];if(o)d.textContent=(o.dataset?.icon?o.dataset.icon+' ':'')+o.textContent}
 function initAllCSel(){document.querySelectorAll('.csel').forEach(c=>{const s=c.querySelector('select');if(s&&s.id)syncCSel(s.id)})}
 
+// ============ D: DARK MODE ============
+function toggleDark(){document.documentElement.classList.toggle('dark');const isDark=document.documentElement.classList.contains('dark');localStorage.setItem('tutorDark',isDark?'1':'0');_('dmIcon').textContent=isDark?'☀️':'🌙';_('dmLabel').textContent=isDark?'Light Mode':'Dark Mode'}
+function loadDark(){if(localStorage.getItem('tutorDark')==='1'){document.documentElement.classList.add('dark');_('dmIcon').textContent='☀️';_('dmLabel').textContent='Light Mode'}}
+
+// ============ B: QUICK ADD ============
+function renderQuickAdd(){const el=_('quickAdd');if(!el)return;
+  const active=D.students.filter(s=>(s.status||'active')==='active');
+  if(!active.length){el.innerHTML='<div style="font-size:13px;color:var(--tx3)">No active students</div>';return}
+  // Show most recent students first (by last session)
+  const sorted=[...active].sort((a,b)=>{
+    const aLast=D.sessions.filter(s=>s.studentId===a.id).sort((x,y)=>y.date.localeCompare(x.date))[0];
+    const bLast=D.sessions.filter(s=>s.studentId===b.id).sort((x,y)=>y.date.localeCompare(x.date))[0];
+    return(bLast?.date||'').localeCompare(aLast?.date||'')});
+  let h='<div style="display:flex;gap:6px;flex-wrap:wrap">';
+  sorted.slice(0,8).forEach(s=>{
+    h+=`<button class="btn btn-o btn-sm" onclick="quickAddSession('${s.id}')" style="font-size:12px">${s.nickname||s.name}</button>`});
+  h+='</div>';el.innerHTML=h}
+function quickAddSession(stId){
+  const stu=D.students.find(s=>s.id===stId);if(!stu)return;
+  // Pre-fill session modal with this student's defaults
+  openSesM();
+  _('seSt').value=stId;syncCSel('seSt');
+  // Set subject to student's first subject
+  if(stu.subjects?.length){_('seSb').value=stu.subjects[0];syncCSel('seSb')}
+  updateSeFee()}
+
+// ============ F: TEACHING HOURS CHART ============
+function renderHoursChart(){const el=_('hoursChart');if(!el)return;
+  const now=new Date();const weeks=[];
+  for(let w=3;w>=0;w--){
+    const end=new Date(now);end.setDate(end.getDate()-w*7);
+    const start=new Date(end);start.setDate(start.getDate()-6);
+    const startStr=start.toISOString().split('T')[0];const endStr=end.toISOString().split('T')[0];
+    const ses=D.sessions.filter(s=>s.date>=startStr&&s.date<=endStr&&s.sessionStatus!=='cancelled'&&s.sessionStatus!=='absent');
+    const hrs=ses.reduce((a,x)=>a+(x.hours||0),0);const fee=ses.reduce((a,x)=>a+(x.fee||0),0);
+    weeks.push({label:`${start.getDate()}/${start.getMonth()+1}`,hrs,fee,count:ses.length})}
+  const maxH=Math.max(...weeks.map(w=>w.hrs),1);
+  let h='';
+  weeks.forEach((w,i)=>{const pct=Math.max(5,w.hrs/maxH*100);
+    const colors=['var(--grn)','var(--blu)','var(--org)','var(--grn2)'];
+    h+=`<div class="chart-bar" style="height:${pct}%;background:${colors[i%4]}" title="${w.hrs.toFixed(1)}hr · ฿${w.fee.toLocaleString()} · ${w.count} sessions"><div class="cb-val">${w.hrs.toFixed(1)}h</div><div class="cb-lbl">${w.label}</div></div>`});
+  el.innerHTML=h}
+
+// ============ C: BATCH PAYMENT ============
+function batchPay(){
+  const fm=_('sfm')?.value;const unpaid=D.sessions.filter(s=>s.paid!=='paid'&&s.sessionStatus!=='cancelled'&&s.sessionStatus!=='absent'&&(!fm||s.date.startsWith(fm)));
+  if(!unpaid.length){toast('No unpaid sessions','info');return}
+  // Group by student
+  const byStudent={};unpaid.forEach(s=>{const k=s.studentId||'_';if(!byStudent[k])byStudent[k]=[];byStudent[k].push(s)});
+  let msg='Mark as Paid:\n';let total=0;
+  Object.entries(byStudent).forEach(([id,sessions])=>{const st=D.students.find(s=>s.id===id);const fee=sessions.reduce((a,x)=>a+(x.fee||0),0);total+=fee;msg+=`• ${st?(st.nickname||st.name):'Unknown'}: ${sessions.length} sessions = ฿${fee.toLocaleString()}\n`});
+  msg+=`\nTotal: ฿${total.toLocaleString()}\n\nMark all as Paid?`;
+  if(!confirm(msg))return;
+  unpaid.forEach(s=>{s.paid='paid'});
+  saveD();rSes();rInc();rDash();toast(`✅ ${unpaid.length} sessions marked as Paid (฿${total.toLocaleString()})`,'ok')}
+
+// ============ A: MONTHLY REPORT (print) ============
+function printReport(){
+  const fm=_('incMo')?.value;if(!fm){toast('Select a month first','info');return}
+  const[ry,rmo]=fm.split('-').map(Number);const moName=eM(rmo-1)+' '+ry;
+  const ses=D.sessions.filter(s=>s.date.startsWith(fm)&&s.sessionStatus!=='cancelled'&&s.sessionStatus!=='absent');
+  const txs=D.transactions.filter(t=>t.date.startsWith(fm));
+  const privSes=ses.filter(s=>(s.channel||'private')==='private');const instSes=ses.filter(s=>s.channel==='institute');
+  const privInc=privSes.reduce((a,x)=>a+(x.fee||0),0);const instInc=instSes.reduce((a,x)=>a+(x.fee||0),0);
+  const comm=ses.reduce((a,x)=>a+(x.commission||0),0);
+  const exp=txs.filter(t=>t.type==='expense').reduce((a,x)=>a+x.amount,0);
+  const totalHrs=ses.reduce((a,x)=>a+(x.hours||0),0);
+  // Build print-friendly report
+  const rptEl=document.createElement('div');
+  rptEl.innerHTML=`<div style="padding:20px;font-family:Nunito,sans-serif;max-width:700px;margin:0 auto">
+    <h1 style="font-size:24px;margin-bottom:4px">📄 Monthly Report: ${moName}</h1>
+    <p style="color:#666;font-size:13px;margin-bottom:20px">Generated ${new Date().toLocaleDateString()}</p>
+    <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:12px;margin-bottom:20px">
+      <div style="padding:16px;background:#e8f6ef;border-radius:12px"><div style="font-size:12px;color:#666">Total Income</div><div style="font-size:28px;font-weight:900;color:#1e8449">฿${(privInc+instInc).toLocaleString()}</div></div>
+      <div style="padding:16px;background:#fce4ec;border-radius:12px"><div style="font-size:12px;color:#666">Expenses + Comm.</div><div style="font-size:28px;font-weight:900;color:#a93226">฿${(exp+comm).toLocaleString()}</div></div>
+      <div style="padding:16px;background:#e3f2fd;border-radius:12px"><div style="font-size:12px;color:#666">Net Profit</div><div style="font-size:28px;font-weight:900;color:#2271a3">฿${(privInc+instInc-exp-comm).toLocaleString()}</div></div>
+    </div>
+    <table style="width:100%;border-collapse:collapse;font-size:13px;margin-bottom:20px">
+      <thead><tr style="border-bottom:2px solid #ddd"><th style="text-align:left;padding:8px">Channel</th><th>Sessions</th><th>Hours</th><th>Income</th></tr></thead>
+      <tbody>
+        <tr><td style="padding:8px;font-weight:700">🏠 Private</td><td style="text-align:center">${privSes.length}</td><td style="text-align:center">${privSes.reduce((a,x)=>a+(x.hours||0),0).toFixed(1)}</td><td style="text-align:right;font-weight:800">฿${privInc.toLocaleString()}</td></tr>
+        <tr><td style="padding:8px;font-weight:700">🏫 Institute</td><td style="text-align:center">${instSes.length}</td><td style="text-align:center">${instSes.reduce((a,x)=>a+(x.hours||0),0).toFixed(1)}</td><td style="text-align:right;font-weight:800">฿${instInc.toLocaleString()}</td></tr>
+        <tr style="border-top:2px solid #ddd;font-weight:900"><td style="padding:8px">Total</td><td style="text-align:center">${ses.length}</td><td style="text-align:center">${totalHrs.toFixed(1)}</td><td style="text-align:right">฿${(privInc+instInc).toLocaleString()}</td></tr>
+      </tbody>
+    </table>
+    <h3 style="margin-bottom:8px">By Subject</h3>
+    <table style="width:100%;border-collapse:collapse;font-size:13px;margin-bottom:20px">
+      <thead><tr style="border-bottom:2px solid #ddd"><th style="text-align:left;padding:8px">Subject</th><th>Sessions</th><th>Hours</th><th>Income</th></tr></thead>
+      <tbody>${['math','physics','computer'].map(sub=>{const ss=ses.filter(s=>s.subject===sub);return`<tr><td style="padding:8px">${SB[sub]?.l||sub}</td><td style="text-align:center">${ss.length}</td><td style="text-align:center">${ss.reduce((a,x)=>a+(x.hours||0),0).toFixed(1)}</td><td style="text-align:right;font-weight:800">฿${ss.reduce((a,x)=>a+(x.fee||0),0).toLocaleString()}</td></tr>`}).join('')}</tbody>
+    </table>
+    <h3 style="margin-bottom:8px">By Student</h3>
+    <table style="width:100%;border-collapse:collapse;font-size:13px">
+      <thead><tr style="border-bottom:2px solid #ddd"><th style="text-align:left;padding:8px">Student</th><th>Sessions</th><th>Income</th><th>Comm.</th></tr></thead>
+      <tbody>${(()=>{const bs={};ses.forEach(s=>{const k=s.studentId||'_';if(!bs[k])bs[k]={n:0,f:0,c:0};bs[k].n++;bs[k].f+=s.fee||0;bs[k].c+=s.commission||0});return Object.entries(bs).map(([id,d])=>{const st=D.students.find(s=>s.id===id);return`<tr><td style="padding:8px;font-weight:700">${st?(st.nickname||st.name):'Unknown'}</td><td style="text-align:center">${d.n}</td><td style="text-align:right;font-weight:800">฿${d.f.toLocaleString()}</td><td style="text-align:right;color:#9a6e10">฿${d.c.toLocaleString()}</td></tr>`}).join('')})()}</tbody>
+    </table>
+  </div>`;
+  // Open in new window for printing
+  const win=window.open('','_blank');
+  win.document.write(`<!DOCTYPE html><html><head><title>Report ${moName}</title><link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;700;900&display=swap" rel="stylesheet"><style>body{margin:0;font-family:Nunito,sans-serif}</style></head><body>${rptEl.innerHTML}<script>setTimeout(()=>window.print(),500)<\/script></body></html>`);
+  win.document.close()}
+
 document.addEventListener('DOMContentLoaded',()=>{
-  initAllCSel();rDash();if(D.settings.clientId)initG();
+  loadDark();initAllCSel();rDash();if(D.settings.clientId)initG();
   // Fee preview listeners
   ['seS','seE','seSb','seSt','seCh','seAlgCourse','seGrpSize','seFee','seCommOvr'].forEach(id=>{const el=_(id);if(el){el.addEventListener('change',updateSeFee);if('seS seE seFee seCommOvr'.includes(id))el.addEventListener('input',updateSeFee)}});
   ['cvStart','cvEnd','cvSubj','cvStudent','cvCh','cvAlgCourse','cvGrpSize','cvFee'].forEach(id=>{const el=_(id);if(el){el.addEventListener('change',updateCvFee);if('cvStart cvEnd cvFee'.includes(id))el.addEventListener('input',updateCvFee)}});
