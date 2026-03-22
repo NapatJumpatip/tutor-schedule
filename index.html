@@ -317,7 +317,7 @@ tr.inactive-row{opacity:.45}
 </div>
 <!-- FINANCE -->
 <div class="page" id="page-income">
-  <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:20px" class="an"><h1 style="font-size:24px;font-weight:900">💰 Finance</h1><div style="display:flex;gap:8px"><button class="btn btn-blue btn-sm" onclick="printReport()">📄 Monthly Report</button><button class="btn btn-g btn-sm" onclick="openTxM()">+ Add Transaction</button></div></div>
+  <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:20px" class="an"><h1 style="font-size:24px;font-weight:900">💰 Finance</h1><div style="display:flex;gap:8px"><button class="btn btn-blue btn-sm" onclick="openBillSummary()">📱 Bill Parent</button><button class="btn btn-blue btn-sm" onclick="printReport()">📄 Report</button><button class="btn btn-g btn-sm" onclick="openTxM()">+ Add</button></div></div>
   <div class="stats" id="incSt"></div>
   <div class="cd an a1" style="margin-bottom:16px"><div class="cd-t" style="margin-bottom:8px">📊 Income Trend</div><div class="chart-wrap" id="finChart" style="height:160px"></div></div>
   <div style="display:flex;gap:12px;flex-wrap:wrap;margin-bottom:16px" class="an a1">
@@ -453,7 +453,16 @@ tr.inactive-row{opacity:.45}
 
 <!-- #14 STUDENT PROFILE MODAL -->
 <div class="mo" id="stProfModal"><div class="mo-box"><div class="mo-t" id="stProfTitle">Student Profile</div><div id="stProfBody"></div>
-<div style="display:flex;gap:8px;justify-content:flex-end;margin-top:20px"><button class="btn btn-o" onclick="clM('stProfModal')">Close</button><button class="btn btn-g" onclick="clM('stProfModal');openStM(document.getElementById('stProfBody').dataset.sid)">✏️ Edit</button></div></div></div>
+<div style="display:flex;gap:8px;justify-content:flex-end;margin-top:20px"><button class="btn btn-blue" onclick="openBillSummary(document.getElementById('stProfBody').dataset.sid)">📱 สรุปค่าเรียน</button><button class="btn btn-o" onclick="clM('stProfModal')">Close</button><button class="btn btn-g" onclick="clM('stProfModal');openStM(document.getElementById('stProfBody').dataset.sid)">✏️ Edit</button></div></div></div>
+
+<!-- BILL SUMMARY MODAL -->
+<div class="mo" id="billModal"><div class="mo-box" style="max-width:520px"><div class="mo-t">📱 สรุปค่าเรียน</div>
+<div class="fr"><div class="fg"><label>นักเรียน</label><select id="billSt" onchange="genBill()" style="padding:10px;border-radius:8px;border:1.5px solid var(--border);font-family:Nunito;font-size:14px;width:100%"></select></div>
+<div class="fg"><label>เดือน</label><select id="billMo" onchange="genBill()" style="padding:10px;border-radius:8px;border:1.5px solid var(--border);font-family:Nunito;font-size:14px;width:100%"></select></div></div>
+<div class="fg"><label>ภาษา</label><div class="tabs" id="billLangTabs"><div class="tab on" onclick="billLang='th';genBill();document.querySelectorAll('#billLangTabs .tab').forEach((t,i)=>t.classList.toggle('on',i===0))">🇹🇭 ไทย</div><div class="tab" onclick="billLang='en';genBill();document.querySelectorAll('#billLangTabs .tab').forEach((t,i)=>t.classList.toggle('on',i===1))">🇬🇧 English</div></div></div>
+<div id="billPreview" style="margin-top:14px;padding:16px;background:var(--bg2);border-radius:var(--r3);font-family:'JetBrains Mono',monospace;font-size:13px;white-space:pre-wrap;line-height:1.6;max-height:350px;overflow-y:auto"></div>
+<div style="display:flex;gap:8px;justify-content:flex-end;margin-top:16px"><button class="btn btn-o" onclick="clM('billModal')">Close</button><button class="btn btn-g" onclick="copyBill()">📋 Copy to Clipboard</button></div>
+</div></div>
 
 <!-- #5 ALG COURSE EDIT MODAL -->
 <div class="mo" id="algModal"><div class="mo-box"><div class="mo-t" id="algMT">Add Course</div>
@@ -1214,6 +1223,54 @@ function batchPay(){
   saveD();rSes();rInc();rDash();toast(`✅ ${unpaid.length} sessions marked as Paid (฿${total.toLocaleString()})`,'ok')}
 
 // ============ A: MONTHLY REPORT (print) ============
+// ============ BILL SUMMARY — send to parent via Line ============
+let billLang='th';
+const thMo=['','มกราคม','กุมภาพันธ์','มีนาคม','เมษายน','พฤษภาคม','มิถุนายน','กรกฎาคม','สิงหาคม','กันยายน','ตุลาคม','พฤศจิกายน','ธันวาคม'];
+function openBillSummary(stId){
+  // Populate student dropdown
+  const sel=_('billSt');sel.innerHTML='';
+  D.students.filter(s=>(s.status||'active')==='active').forEach(s=>{sel.innerHTML+=`<option value="${s.id}">${s.nickname||s.name}</option>`});
+  if(stId)sel.value=stId;
+  // Populate month dropdown
+  const moSel=_('billMo');moSel.innerHTML='';
+  const mos=new Set();D.sessions.forEach(s=>{if(s.date)mos.add(s.date.substr(0,7))});
+  const now=new Date();const cm=`${now.getFullYear()}-${String(now.getMonth()+1).padStart(2,'0')}`;mos.add(cm);
+  [...mos].sort().reverse().forEach(m=>{const[y,mo]=m.split('-').map(Number);moSel.innerHTML+=`<option value="${m}">${eM(mo-1)} ${y}</option>`});
+  moSel.value=cm;
+  clM('stProfModal');genBill();opM('billModal')}
+function genBill(){
+  const stId=_('billSt').value;const moStr=_('billMo').value;
+  if(!stId||!moStr){_('billPreview').textContent='Select student & month';return}
+  const stu=D.students.find(s=>s.id===stId);if(!stu)return;
+  const name=stu.nickname||stu.name;
+  const[y,mo]=moStr.split('-').map(Number);
+  const ses=D.sessions.filter(s=>s.studentId===stId&&s.date.startsWith(moStr)&&s.sessionStatus!=='cancelled'&&s.sessionStatus!=='absent').sort((a,b)=>a.date.localeCompare(b.date));
+  const totalFee=ses.reduce((a,x)=>a+(x.fee||0),0);
+  const totalHrs=ses.reduce((a,x)=>a+(x.hours||0),0);
+  let txt='';
+  if(billLang==='th'){
+    txt+=`📋 สรุปค่าเรียน ${thMo[mo]} ${y+543}\n`;
+    txt+=`น้อง ${name}\n\n`;
+    ses.forEach(s=>{const[,,d]=s.date.split('-').map(Number);const subj=SB[s.subject]?.l||s.subject;
+      txt+=`📅 ${d} ${thMo[mo].substr(0,3)}. | ${s.start}-${s.end} | ${subj} | ฿${(s.fee||0).toLocaleString()}\n`});
+    txt+=`\n📊 รวม ${ses.length} ครั้ง | ${totalHrs.toFixed(1)} ชม. | ฿${totalFee.toLocaleString()}\n`;
+    if(ses.some(s=>s.paid!=='paid'))txt+=`\n💰 สถานะ: รอชำระ\n`;
+    else txt+=`\n✅ ชำระเรียบร้อย\n`;
+    txt+=`\nขอบคุณค่ะ 🙏`;
+  }else{
+    txt+=`📋 Tuition Summary — ${eM(mo-1)} ${y}\n`;
+    txt+=`Student: ${name}\n\n`;
+    ses.forEach(s=>{const subj=SB[s.subject]?.l||s.subject;
+      txt+=`📅 ${fDT(s.date)} | ${s.start}-${s.end} | ${subj} | ฿${(s.fee||0).toLocaleString()}\n`});
+    txt+=`\n📊 Total: ${ses.length} sessions | ${totalHrs.toFixed(1)} hrs | ฿${totalFee.toLocaleString()}\n`;
+    if(ses.some(s=>s.paid!=='paid'))txt+=`\n💰 Status: Payment pending\n`;
+    else txt+=`\n✅ Fully paid\n`;
+    txt+=`\nThank you 🙏`;}
+  _('billPreview').textContent=txt}
+function copyBill(){const txt=_('billPreview').textContent;navigator.clipboard.writeText(txt).then(()=>toast('📋 Copied! Paste in Line','ok')).catch(()=>{
+  // Fallback for older browsers
+  const ta=document.createElement('textarea');ta.value=txt;document.body.appendChild(ta);ta.select();document.execCommand('copy');document.body.removeChild(ta);toast('📋 Copied!','ok')})}
+
 // #6: Finance income trend chart — last 6 months
 function renderFinChart(){const el=_('finChart');if(!el)return;
   const now=new Date();const months=[];
