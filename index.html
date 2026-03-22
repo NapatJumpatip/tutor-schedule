@@ -456,11 +456,18 @@ tr.inactive-row{opacity:.45}
 <div style="display:flex;gap:8px;justify-content:flex-end;margin-top:20px"><button class="btn btn-blue" onclick="openBillSummary(document.getElementById('stProfBody').dataset.sid)">📱 สรุปค่าเรียน</button><button class="btn btn-o" onclick="clM('stProfModal')">Close</button><button class="btn btn-g" onclick="clM('stProfModal');openStM(document.getElementById('stProfBody').dataset.sid)">✏️ Edit</button></div></div></div>
 
 <!-- BILL SUMMARY MODAL -->
-<div class="mo" id="billModal"><div class="mo-box" style="max-width:520px"><div class="mo-t">📱 สรุปค่าเรียน</div>
-<div class="fr"><div class="fg"><label>นักเรียน</label><select id="billSt" onchange="genBill()" style="padding:10px;border-radius:8px;border:1.5px solid var(--border);font-family:Nunito;font-size:14px;width:100%"></select></div>
-<div class="fg"><label>เดือน</label><select id="billMo" onchange="genBill()" style="padding:10px;border-radius:8px;border:1.5px solid var(--border);font-family:Nunito;font-size:14px;width:100%"></select></div></div>
+<div class="mo" id="billModal"><div class="mo-box" style="max-width:560px"><div class="mo-t">📱 สรุปค่าเรียน</div>
+<div class="fg"><label>นักเรียน</label><div class="csel" style="width:100%"><div class="csel-display" onclick="toggleCSel(this)">Select student</div><div class="csel-opts"></div><select id="billSt" onchange="genBill()"></select></div></div>
+<div class="fg"><label>ช่วงเวลา</label><div class="tabs" id="billPeriodTabs" style="margin-bottom:10px">
+  <div class="tab on" onclick="setBillPeriod('week')">📅 สัปดาห์</div>
+  <div class="tab" onclick="setBillPeriod('month')">🗓️ เดือน</div>
+  <div class="tab" onclick="setBillPeriod('custom')">✏️ กำหนดเอง</div>
+</div></div>
+<div id="billPeriodWeek"><div class="fg"><label>สัปดาห์</label><div class="csel" style="width:100%"><div class="csel-display" onclick="toggleCSel(this)">Select week</div><div class="csel-opts"></div><select id="billWk" onchange="genBill()"></select></div></div></div>
+<div id="billPeriodMonth" style="display:none"><div class="fg"><label>เดือน</label><div class="csel" style="width:100%"><div class="csel-display" onclick="toggleCSel(this)">Select month</div><div class="csel-opts"></div><select id="billMo" onchange="genBill()"></select></div></div></div>
+<div id="billPeriodCustom" style="display:none"><div class="fr"><div class="fg"><label>ตั้งแต่</label><input type="date" id="billFrom" onchange="genBill()"></div><div class="fg"><label>ถึง</label><input type="date" id="billTo" onchange="genBill()"></div></div></div>
 <div class="fg"><label>ภาษา</label><div class="tabs" id="billLangTabs"><div class="tab on" onclick="billLang='th';genBill();document.querySelectorAll('#billLangTabs .tab').forEach((t,i)=>t.classList.toggle('on',i===0))">🇹🇭 ไทย</div><div class="tab" onclick="billLang='en';genBill();document.querySelectorAll('#billLangTabs .tab').forEach((t,i)=>t.classList.toggle('on',i===1))">🇬🇧 English</div></div></div>
-<div id="billPreview" style="margin-top:14px;padding:16px;background:var(--bg2);border-radius:var(--r3);font-family:'JetBrains Mono',monospace;font-size:13px;white-space:pre-wrap;line-height:1.6;max-height:350px;overflow-y:auto"></div>
+<div id="billPreview" style="margin-top:14px;padding:16px;background:var(--bg2);border-radius:var(--r3);font-family:'JetBrains Mono',monospace;font-size:13px;white-space:pre-wrap;line-height:1.6;max-height:350px;overflow-y:auto;border:1.5px solid var(--border2)"></div>
 <div style="display:flex;gap:8px;justify-content:flex-end;margin-top:16px"><button class="btn btn-o" onclick="clM('billModal')">Close</button><button class="btn btn-g" onclick="copyBill()">📋 Copy to Clipboard</button></div>
 </div></div>
 
@@ -1224,51 +1231,107 @@ function batchPay(){
 
 // ============ A: MONTHLY REPORT (print) ============
 // ============ BILL SUMMARY — send to parent via Line ============
-let billLang='th';
+let billLang='th',billPeriod='week';
 const thMo=['','มกราคม','กุมภาพันธ์','มีนาคม','เมษายน','พฤษภาคม','มิถุนายน','กรกฎาคม','สิงหาคม','กันยายน','ตุลาคม','พฤศจิกายน','ธันวาคม'];
+const thMoShort=['','ม.ค.','ก.พ.','มี.ค.','เม.ย.','พ.ค.','มิ.ย.','ก.ค.','ส.ค.','ก.ย.','ต.ค.','พ.ย.','ธ.ค.'];
+
+function setBillPeriod(p){billPeriod=p;
+  document.querySelectorAll('#billPeriodTabs .tab').forEach((t,i)=>t.classList.toggle('on',['week','month','custom'][i]===p));
+  _('billPeriodWeek').style.display=p==='week'?'block':'none';
+  _('billPeriodMonth').style.display=p==='month'?'block':'none';
+  _('billPeriodCustom').style.display=p==='custom'?'block':'none';
+  genBill()}
+
+function populateWeeks(){
+  const sel=_('billWk');sel.innerHTML='';
+  const now=new Date();
+  // Generate last 8 weeks
+  for(let w=0;w<8;w++){
+    const end=new Date(now);end.setDate(end.getDate()-w*7);
+    const endSun=new Date(end);endSun.setDate(endSun.getDate()-(endSun.getDay()));// start of week (Sun)
+    const start=new Date(endSun);
+    const endSat=new Date(start);endSat.setDate(endSat.getDate()+6);
+    const sv=start.toISOString().split('T')[0]+'|'+endSat.toISOString().split('T')[0];
+    const sd=start.getDate(),sm=start.getMonth()+1,ed=endSat.getDate(),em2=endSat.getMonth()+1;
+    const label=`${sd} ${thMoShort[sm]} - ${ed} ${thMoShort[em2]} ${endSat.getFullYear()+543}`;
+    sel.innerHTML+=`<option value="${sv}">${label}</option>`}
+  syncCSel('billWk')}
+
 function openBillSummary(stId){
   // Populate student dropdown
   const sel=_('billSt');sel.innerHTML='';
-  D.students.filter(s=>(s.status||'active')==='active').forEach(s=>{sel.innerHTML+=`<option value="${s.id}">${s.nickname||s.name}</option>`});
+  D.students.filter(s=>(s.status||'active')==='active').forEach(s=>{
+    sel.innerHTML+=`<option value="${s.id}" data-icon="${s.subjects?.includes('math')?'🔢':s.subjects?.includes('computer')?'💻':'📚'}">${s.nickname||s.name}</option>`});
   if(stId)sel.value=stId;
-  // Populate month dropdown
+  syncCSel('billSt');
+  // Populate weeks
+  populateWeeks();
+  // Populate months
   const moSel=_('billMo');moSel.innerHTML='';
   const mos=new Set();D.sessions.forEach(s=>{if(s.date)mos.add(s.date.substr(0,7))});
   const now=new Date();const cm=`${now.getFullYear()}-${String(now.getMonth()+1).padStart(2,'0')}`;mos.add(cm);
-  [...mos].sort().reverse().forEach(m=>{const[y,mo]=m.split('-').map(Number);moSel.innerHTML+=`<option value="${m}">${eM(mo-1)} ${y}</option>`});
-  moSel.value=cm;
-  clM('stProfModal');genBill();opM('billModal')}
+  [...mos].sort().reverse().forEach(m=>{const[y,mo]=m.split('-').map(Number);
+    moSel.innerHTML+=`<option value="${m}">${thMo[mo]} ${y+543} (${eM(mo-1)} ${y})</option>`});
+  moSel.value=cm;syncCSel('billMo');
+  // Set custom dates to this month
+  _('billFrom').value=`${now.getFullYear()}-${String(now.getMonth()+1).padStart(2,'0')}-01`;
+  _('billTo').value=now.toISOString().split('T')[0];
+  // Reset period
+  setBillPeriod('week');
+  clM('stProfModal');opM('billModal')}
+
+function getBillDateRange(){
+  if(billPeriod==='week'){
+    const v=_('billWk').value;if(!v)return null;
+    const[from,to]=v.split('|');return{from,to}}
+  if(billPeriod==='month'){
+    const moStr=_('billMo').value;if(!moStr)return null;
+    const[y,m]=moStr.split('-').map(Number);
+    const from=`${y}-${String(m).padStart(2,'0')}-01`;
+    const last=new Date(y,m,0).getDate();
+    const to=`${y}-${String(m).padStart(2,'0')}-${String(last).padStart(2,'0')}`;
+    return{from,to}}
+  if(billPeriod==='custom'){
+    return{from:_('billFrom').value,to:_('billTo').value}}
+  return null}
+
 function genBill(){
-  const stId=_('billSt').value;const moStr=_('billMo').value;
-  if(!stId||!moStr){_('billPreview').textContent='Select student & month';return}
+  const stId=_('billSt').value;const range=getBillDateRange();
+  if(!stId||!range||!range.from||!range.to){_('billPreview').textContent='เลือกนักเรียนและช่วงเวลา';return}
   const stu=D.students.find(s=>s.id===stId);if(!stu)return;
   const name=stu.nickname||stu.name;
-  const[y,mo]=moStr.split('-').map(Number);
-  const ses=D.sessions.filter(s=>s.studentId===stId&&s.date.startsWith(moStr)&&s.sessionStatus!=='cancelled'&&s.sessionStatus!=='absent').sort((a,b)=>a.date.localeCompare(b.date));
+  const ses=D.sessions.filter(s=>s.studentId===stId&&s.date>=range.from&&s.date<=range.to&&s.sessionStatus!=='cancelled'&&s.sessionStatus!=='absent').sort((a,b)=>a.date.localeCompare(b.date));
   const totalFee=ses.reduce((a,x)=>a+(x.fee||0),0);
   const totalHrs=ses.reduce((a,x)=>a+(x.hours||0),0);
+  // Format period label
+  const[fy,fm,fd]=(range.from||'').split('-').map(Number);
+  const[ty,tm,td]=(range.to||'').split('-').map(Number);
   let txt='';
   if(billLang==='th'){
-    txt+=`📋 สรุปค่าเรียน ${thMo[mo]} ${y+543}\n`;
+    const periodTxt=billPeriod==='month'?`${thMo[fm]} ${fy+543}`:`${fd} ${thMoShort[fm]} - ${td} ${thMoShort[tm]} ${ty+543}`;
+    txt+=`📋 สรุปค่าเรียน ${periodTxt}\n`;
     txt+=`น้อง ${name}\n\n`;
-    ses.forEach(s=>{const[,,d]=s.date.split('-').map(Number);const subj=SB[s.subject]?.l||s.subject;
-      txt+=`📅 ${d} ${thMo[mo].substr(0,3)}. | ${s.start}-${s.end} | ${subj} | ฿${(s.fee||0).toLocaleString()}\n`});
+    if(!ses.length){txt+='(ไม่มีคลาสเรียนในช่วงนี้)\n'}
+    else{ses.forEach(s=>{const[,sm,sd2]=s.date.split('-').map(Number);const subj=SB[s.subject]?.l||s.subject;
+      txt+=`📅 ${sd2} ${thMoShort[sm]} | ${s.start}-${s.end} | ${subj} | ฿${(s.fee||0).toLocaleString()}\n`});
     txt+=`\n📊 รวม ${ses.length} ครั้ง | ${totalHrs.toFixed(1)} ชม. | ฿${totalFee.toLocaleString()}\n`;
     if(ses.some(s=>s.paid!=='paid'))txt+=`\n💰 สถานะ: รอชำระ\n`;
-    else txt+=`\n✅ ชำระเรียบร้อย\n`;
+    else txt+=`\n✅ ชำระเรียบร้อย\n`}
     txt+=`\nขอบคุณค่ะ 🙏`;
   }else{
-    txt+=`📋 Tuition Summary — ${eM(mo-1)} ${y}\n`;
+    const periodTxt=billPeriod==='month'?`${eM(fm-1)} ${fy}`:`${fd} ${eM(fm-1).substr(0,3)} - ${td} ${eM(tm-1).substr(0,3)} ${ty}`;
+    txt+=`📋 Tuition Summary — ${periodTxt}\n`;
     txt+=`Student: ${name}\n\n`;
-    ses.forEach(s=>{const subj=SB[s.subject]?.l||s.subject;
+    if(!ses.length){txt+='(No sessions in this period)\n'}
+    else{ses.forEach(s=>{const subj=SB[s.subject]?.l||s.subject;
       txt+=`📅 ${fDT(s.date)} | ${s.start}-${s.end} | ${subj} | ฿${(s.fee||0).toLocaleString()}\n`});
     txt+=`\n📊 Total: ${ses.length} sessions | ${totalHrs.toFixed(1)} hrs | ฿${totalFee.toLocaleString()}\n`;
     if(ses.some(s=>s.paid!=='paid'))txt+=`\n💰 Status: Payment pending\n`;
-    else txt+=`\n✅ Fully paid\n`;
+    else txt+=`\n✅ Fully paid\n`}
     txt+=`\nThank you 🙏`;}
   _('billPreview').textContent=txt}
+
 function copyBill(){const txt=_('billPreview').textContent;navigator.clipboard.writeText(txt).then(()=>toast('📋 Copied! Paste in Line','ok')).catch(()=>{
-  // Fallback for older browsers
   const ta=document.createElement('textarea');ta.value=txt;document.body.appendChild(ta);ta.select();document.execCommand('copy');document.body.removeChild(ta);toast('📋 Copied!','ok')})}
 
 // #6: Finance income trend chart — last 6 months
